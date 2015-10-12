@@ -4,3 +4,6 @@ fos_rest:
     format_listener: true
     view:
         view_response_listener: 'force'
+    
+    routing_loader:
+        default_format: json
