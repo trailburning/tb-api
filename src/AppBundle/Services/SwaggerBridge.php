@@ -40,7 +40,7 @@ class SwaggerBridge
     public function generateJson() 
     {
         $configCache = new ConfigCache($this->getCachePath(), $this->isDebug);
-        if ($configCache->isFresh()) {
+        if ($configCache->isFresh() && $this->isDebug === false) {
             return file_get_contents($this->getCachePath());
         }
         

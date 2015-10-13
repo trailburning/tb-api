@@ -7,8 +7,20 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Info(
- *      title="Trailburning Journey API",
- *      version="1.0",
+ *   version="1.0",
+ *   title="Trailburning Journey API",
+ *   @SWG\Contact(
+ *     name="Matt Allbuery",
+ *     email="matt@trailburning.com",
+ *     url="http://www.trailburning.com/",
+ *   )
+ * )
+ *
+ * @SWG\Swagger(
+ *   basePath="/",
+ *   schemes={"http"},
+ *   produces={"application/json"},
+ *   consumes={"application/json"},
  * )
  */
 class AppBundle extends Bundle
