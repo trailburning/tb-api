@@ -20,12 +20,12 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "friendsofsymfony/rest-bundle": "^1.7",
         "jms/serializer-bundle": "^1.0",
-        "phpunit/phpunit": "^5.0",
-        "liip/functional-test-bundle": "^1.2",
         "zircote/swagger-php": "^2.0"
     },
     "require-dev": {
-        "sensio/generator-bundle": "~2.3"
+        "sensio/generator-bundle": "~2.3",
+        "phpunit/phpunit": "^5.0",
+        "liip/functional-test-bundle": "^1.2",
     },
     "scripts": {
         "post-install-cmd": [
