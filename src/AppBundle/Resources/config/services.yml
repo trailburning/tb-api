@@ -1,0 +1,8 @@
+services:
+    
+    tb.services.swagger_bridge:
+        class: AppBundle\Services\SwaggerBridge
+        arguments: 
+            - %kernel.root_dir%
+            - %kernel.environment%
+            - %kernel.debug%

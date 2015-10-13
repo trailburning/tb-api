@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b9a9e7bfc8f488a7e11b435d2e43c17f",
-    "content-hash": "3142fda927f251792fce1172bda30a23",
+    "hash": "67c2d25f8e6d1c59430bd47c59146264",
+    "content-hash": "8db4c263a4bffcb9eb1ba9de5b190a65",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -3132,6 +3132,66 @@
                 "negotiation"
             ],
             "time": "2015-10-01 07:42:40"
+        },
+        {
+            "name": "zircote/swagger-php",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zircote/swagger-php.git",
+                "reference": "236499b635b3d91059d8450407c471be003e45f8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/236499b635b3d91059d8450407c471be003e45f8",
+                "reference": "236499b635b3d91059d8450407c471be003e45f8",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "*",
+                "php": ">=5.4.0",
+                "symfony/finder": "*"
+            },
+            "require-dev": {
+                "zendframework/zend-form": "*"
+            },
+            "bin": [
+                "bin/swagger"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Swagger\\": "src"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache2"
+            ],
+            "authors": [
+                {
+                    "name": "Robert Allen",
+                    "email": "zircote@gmail.com",
+                    "homepage": "http://www.zircote.com"
+                },
+                {
+                    "name": "Bob Fanger",
+                    "email": "bfanger@gmail.com",
+                    "homepage": "http://bfanger.nl"
+                }
+            ],
+            "description": "Swagger-PHP - Generate interactive documentation for your RESTful API using phpdoc annotations",
+            "homepage": "https://github.com/zircote/swagger-php/",
+            "keywords": [
+                "api",
+                "json",
+                "rest",
+                "service discovery"
+            ],
+            "time": "2015-09-17 14:46:52"
         }
     ],
     "packages-dev": [
