@@ -55,6 +55,13 @@ class Journey
      * @ORM\ManyToOne(targetEntity="User", inversedBy="journeys")
      */
     private $user;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="user_id", type="integer")
+     */
+    private $userId;
 
     /*
      * ################################################################################################################
@@ -142,7 +149,7 @@ class Journey
     }
     
     /**
-     * @param AppBundle\Entity\User $user
+     * @param User $user
      * @return self
      */
     public function setUser(User $user = null)
@@ -153,7 +160,7 @@ class Journey
     }
 
     /**
-     * @return AppBundle\Entity\User 
+     * @return User 
      */
     public function getUser()
     {
