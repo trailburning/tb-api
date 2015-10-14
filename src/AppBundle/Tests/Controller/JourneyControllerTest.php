@@ -47,4 +47,31 @@ class JourneyControllerTest extends BaseWebTestCase
         $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
         $this->assertJsonResponse($client);
     }
+    
+    public function testGetByUserAction()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\JourneyData',
+        ]);
+        
+        $client = static::createClient();
+        $user = $this->getUser('mattallbeury');
+
+        $client->request('GET', '/v2/journeys/user/' . $user->getId());
+        $this->assertEquals(Response::HTTP_OK,  $client->getResponse()->getStatusCode());
+        $this->assertJsonResponse($client);
+    }
+    
+    public function testGetByUserActionUserNotFound()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\JourneyData',
+        ]);
+        
+        $client = static::createClient();
+
+        $client->request('GET', '/v2/journeys/user/99999999');
+        $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
+        $this->assertJsonResponse($client);
+    }
 }

@@ -29,11 +29,16 @@ class APIResponse
      * @var array
      */
     private $meta;
+    
+    /**
+     * @var array
+     */
+    private $messages;
 
-    public function __construct($statusCode = 200)
+    public function __construct($statusCode = 200, $status = self::STATUS_SUCCESS)
     {
         $this->setStatusCode($statusCode);
-        $this->setStatus(self::STATUS_SUCCESS);
+        $this->setStatus($status);
     }
 
     /**
@@ -90,5 +95,15 @@ class APIResponse
     public function setMeta($meta)
     {
         $this->meta = $meta;
+    }
+    
+    /**
+     * @param string $message
+     */
+    public function addMessage($message)
+    {
+        if ($this->messages === null) {
+            $this->messages[] = $message;
+        }
     }
 }

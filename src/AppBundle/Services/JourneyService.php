@@ -4,6 +4,8 @@ namespace AppBundle\Services;
 
 use AppBundle\Response\APIResponse;
 use AppBundle\Repository\JourneyRepository;
+use AppBundle\Repository\UserRepository;
+use AppBundle\Response\APIResponseBuilder;
 
 /**
  * Class JourneyService.
@@ -14,13 +16,27 @@ class JourneyService
      * @var JourneyRepository
      */
     protected $journeyRepository;
+    
+    /**
+     * @var UserRepository
+     */
+    protected $userRepository;
+    
+    /**
+     * @var APIResponseBuilder
+     */
+    protected $apiResponseBuilder;
 
     /**
      * @param JourneyRepository $journeyRepository
+     * @param UserRepository $userRepository
+     * @param APIResponseBuilder $apiResponseBuilder
      */
-    public function __construct(JourneyRepository $journeyRepository)
+    public function __construct(JourneyRepository $journeyRepository, UserRepository $userRepository, APIResponseBuilder $apiResponseBuilder)
     {
         $this->journeyRepository = $journeyRepository;
+        $this->userRepository = $userRepository;
+        $this->apiResponseBuilder = $apiResponseBuilder;
     }
     
     /**
@@ -29,21 +45,37 @@ class JourneyService
      */
     public function buildGetAPIResponse($id) 
     {
-        $response = new APIResponse();
-        $journey = $this->journeyRepository->findBy([
+        $journeys = $this->journeyRepository->findBy([
             'id' => $id,
             'publish' => true,
         ]);
         
-        if (count($journey) === 0) {
-            $response->setStatusCode(404);
-            $response->setStatus('error');
-            
-            return $response;
+        if (count($journeys) === 0) {
+            return $this->apiResponseBuilder->buildNotFoundResponse('Journey not found.');
         }
         
-        $response->addToBody($journey, 'journeys');
+        return $this->apiResponseBuilder->buildSuccessResponse($journeys, 'journeys');
+    }
+    
+    /**
+     * @param string $userId 
+     * @return APIResponse
+     */
+    public function buildGetByUserAPIResponse($userId) 
+    {
+        $user = $this->userRepository->findOneBy([
+            'id' => $userId,
+        ]);
+            
+        if ($user === null) {
+            return $this->apiResponseBuilder->buildNotFoundResponse('User not found.');
+        }
         
-        return $response;
+        $journeys = $this->journeyRepository->findBy([
+            'user' => $user,
+            'publish' => true,
+        ]);
+        
+        return $this->apiResponseBuilder->buildSuccessResponse($journeys, 'journeys');
     }
 }

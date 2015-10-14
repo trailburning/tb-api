@@ -63,4 +63,19 @@ abstract class BaseWebTestCase extends WebTestCase
 
         return $journey;
     }
+    
+    protected function getUser($name)
+    {
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $userRepository = $em->getRepository('AppBundle:User');
+        $user = $userRepository->findOneBy([
+            'name' => $name,
+        ]);
+
+        if (!$user) {
+            $this->fail(sprintf('Missing user with name "%s" in test DB', $name));
+        }
+
+        return $user;
+    }
 }
