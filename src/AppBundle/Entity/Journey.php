@@ -50,6 +50,30 @@ class Journey
     private $publish = false;
 
     /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="journeys")
+     */
+    private $user;
+
+    /*
+     * ################################################################################################################
+     *
+     *                                         User Defined
+     *
+     * ################################################################################################################
+     */
+
+
+    /*
+     * ################################################################################################################
+     *
+     *                                         Getters and Setters
+     *
+     * ################################################################################################################
+     */
+
+    /**
      * @return int
      */
     public function getId()
@@ -112,8 +136,27 @@ class Journey
     /**
      * @return bool
      */
-    public function getPublish()
+    public function isPublish()
     {
         return $this->publish;
+    }
+    
+    /**
+     * @param AppBundle\Entity\User $user
+     * @return self
+     */
+    public function setUser(User $user = null)
+    {
+        $this->user = $user;
+    
+        return $this;
+    }
+
+    /**
+     * @return AppBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }
