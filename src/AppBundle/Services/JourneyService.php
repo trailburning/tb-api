@@ -32,6 +32,7 @@ class JourneyService
         $response = new APIResponse();
         $journey = $this->journeyRepository->findBy([
             'id' => $id,
+            'publish' => true,
         ]);
         
         if (count($journey) === 0) {
