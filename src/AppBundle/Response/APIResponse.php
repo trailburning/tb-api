@@ -1,54 +1,53 @@
 <?php
-namespace AppBundle\Response;
 
-use JMS\Serializer\Annotation\Exclude;
+namespace AppBundle\Response;
 
 /**
  */
 class APIResponse
-{   
+{
     const STATUS_SUCCESS = 'success';
-    
+
     const STATUS_ERROR = 'error';
-    
+
     /**
      * @var string
      */
     private $status;
-    
+
     /**
      * @var string
      */
     private $statusCode;
-    
+
     /**
      * @var array
      */
     private $body;
-    
+
     /**
      * @var array
      */
     private $meta;
-    
-    public function __construct($statusCode = 200) 
+
+    public function __construct($statusCode = 200)
     {
         $this->setStatusCode($statusCode);
         $this->setStatus(self::STATUS_SUCCESS);
     }
-    
+
     /**
-     * @param string $status 
+     * @param string $status
      */
     public function setStatus($status)
     {
         if (in_array($status, [self::STATUS_SUCCESS, self::STATUS_ERROR]) === false) {
             throw new \Exception(sprintf('Invalid status: %s', $status));
         }
-        
+
         $this->status = $status;
     }
-    
+
     /**
      * @param int $statusCode
      */
@@ -56,39 +55,39 @@ class APIResponse
     {
         $this->statusCode = $statusCode;
     }
-    
+
     /**
      * @return int
      */
-    public function getStatusCode() 
+    public function getStatusCode()
     {
         return $this->statusCode;
     }
-    
+
     /**
-     * @param string $body 
+     * @param string $body
      */
-    public function setBody($body) 
+    public function setBody($body)
     {
         $this->body = $body;
     }
-    
+
     /**
-     * @param string $data 
+     * @param string $data
      */
-    public function addToBody($body, $name) 
+    public function addToBody($body, $name)
     {
         if (!is_array($this->body)) {
             $this->body = [];
         }
-        
+
         $this->body[$name] = $body;
     }
-    
+
     /**
-     * @param string $meta 
+     * @param string $meta
      */
-    public function setMeta($meta) 
+    public function setMeta($meta)
     {
         $this->meta = $meta;
     }

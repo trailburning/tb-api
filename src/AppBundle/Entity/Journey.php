@@ -3,12 +3,15 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
+use Swagger\Annotations as SWG;
 
 /**
  * Journey.
  *
  * @ORM\Table(name="api_journey")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\JourneyRepository")
+ * @SWG\Definition(required={"name", "about"}, @SWG\Xml(name="Journey"))
  */
 class Journey
 {
@@ -18,6 +21,7 @@ class Journey
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @SWG\Property(format="int32")
      */
     private $id;
 
@@ -25,6 +29,7 @@ class Journey
      * @var string
      *
      * @ORM\Column(type="string", length=255)
+     * @SWG\Property()
      */
     private $name;
 
@@ -32,6 +37,7 @@ class Journey
      * @var string
      *
      * @ORM\Column(type="text")
+     * @SWG\Property()
      */
     private $about;
     
@@ -39,6 +45,7 @@ class Journey
      * @var boolean
      *
      * @ORM\Column(name="publish", type="boolean", options={"default" = false})
+     * @Exclude
      */
     private $publish = false;
 
