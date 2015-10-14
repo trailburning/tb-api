@@ -48,4 +48,19 @@ abstract class BaseWebTestCase extends WebTestCase
         $this->assertJson($client->getResponse()->getContent(), 
             'Response is Valid JSON');
     }
+    
+    protected function getJourney($name)
+    {
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $journeyRepository = $em->getRepository('AppBundle:Journey');
+        $journey = $journeyRepository->findOneBy([
+            'name' => $name,
+        ]);
+
+        if (!$journey) {
+            $this->fail(sprintf('Missing journey with name "%s" in test DB', $name));
+        }
+
+        return $journey;
+    }
 }

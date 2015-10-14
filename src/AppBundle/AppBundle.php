@@ -17,7 +17,7 @@ use Swagger\Annotations as SWG;
  * )
  *
  * @SWG\Swagger(
- *   basePath="/",
+ *   basePath="/v2",
  *   schemes={"http"},
  *   produces={"application/json"},
  *   consumes={"application/json"},
@@ -25,5 +25,13 @@ use Swagger\Annotations as SWG;
  */
 class AppBundle extends Bundle
 {
+	public function boot()
+	{
+        $this->registerDoctrineTypeHstore();
+	}
     
+    private function registerDoctrineTypeHstore() 
+    {
+        $this->container->get('doctrine')->getManager()->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('hstore', 'hstore');
+    }
 }

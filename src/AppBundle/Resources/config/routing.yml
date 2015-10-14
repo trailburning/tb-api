@@ -5,3 +5,8 @@ default:
 swagger:
     path:   /swagger.json
     defaults: { _controller: AppBundle:Swagger:index, _format: json }
+    
+journey:
+    type:   rest
+    resource: AppBundle\Controller\JourneysController
+    prefix: /v2

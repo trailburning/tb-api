@@ -21,12 +21,21 @@
         "friendsofsymfony/rest-bundle": "^1.7",
         "jms/serializer-bundle": "^1.0",
         "zircote/swagger-php": "^2.0",
-        "sensio/generator-bundle": "~2.3"
+        "sensio/generator-bundle": "~2.3",
+        "creof/doctrine2-spatial": "^0.0.1",
+        "easybib/doctrinetypes": "*"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^2.2@dev",
         "phpunit/phpunit": "^5.0",
         "liip/functional-test-bundle": "^1.2"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "http://github.com/easybib/EasyBib_DoctrineTypes"
+        }
+    ],
     "scripts": {
         "post-install-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
@@ -48,6 +57,8 @@
     "config": {
         "bin-dir": "bin"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",

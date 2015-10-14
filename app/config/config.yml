@@ -55,7 +55,7 @@ assetic:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   pdo_mysql
+        driver:   pdo_pgsql
         host:     "%database_host%"
         port:     "%database_port%"
         dbname:   "%database_name%"
@@ -68,11 +68,31 @@ doctrine:
         #   2. Uncomment database_path in parameters.yml.dist
         #   3. Uncomment next line:
         #     path:     "%database_path%"
+        types:
+            # add and postgis types as provided by creof/doctrine2-spatial package
+            geometry:   CrEOF\Spatial\DBAL\Types\GeometryType
+            point:      CrEOF\Spatial\DBAL\Types\Geometry\PointType
+            polygon:    CrEOF\Spatial\DBAL\Types\Geometry\PolygonType
+            linestring: CrEOF\Spatial\DBAL\Types\Geometry\LineStringType
+            # add hstore type from http://github.com/easybiblabs/EasyBib_DoctrineTypes
+            hstore:     EasyBib\Doctrine\Types\Hstore
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
+        # postgis functions as provided by creof/doctrine2-spatial package
+        dql:
+            numeric_functions:
+                st_contains:     CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STContains
+                st_distance:     CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STDistance
+                st_area:         CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STArea
+                st_length:       CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STLength
+                st_geomfromtext: CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STGeomFromText
+                st_centroid:     CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STCentroid
+                st_astext:       CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STAsText
+                st_makeline:     CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STMakeLine
+                st_setsrid:      CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSetSRID
 
 # Swiftmailer Configuration
 swiftmailer:

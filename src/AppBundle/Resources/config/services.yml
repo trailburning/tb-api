@@ -1,8 +1,25 @@
 services:
     
-    tb.services.swagger_bridge:
+    tb.swagger_bridge:
         class: AppBundle\Services\SwaggerBridge
         arguments: 
             - %kernel.root_dir%
             - %kernel.environment%
             - %kernel.debug%
+            
+    tb.journey:
+        class: AppBundle\Services\JourneyService
+        arguments: 
+            - @tb.journey.repository
+            
+    tb.journey.repository:
+        class: AppBundle\Repository\JourneyRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\Journey
+    
+    tb.listener.api_response:
+        class: AppBundle\Listener\APIResponseListener
+        tags:
+            - { name: "kernel.event_listener", event: "kernel.view", method: "onKernelView", priority: 100 }

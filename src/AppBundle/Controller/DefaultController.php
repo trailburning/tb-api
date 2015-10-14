@@ -3,7 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use AppBundle\Response\ApiResponse;
+use AppBundle\Response\APIResponse;
 use Swagger\Annotations as SWG;
 
 class DefaultController extends Controller
@@ -20,10 +20,10 @@ class DefaultController extends Controller
      *     )
      * )
      *
-     * @return ApiResponse
+     * @return APIResponse
      */
     public function getAction()
     {
-        return new ApiResponse();
+        return new APIResponse();
     }
 }

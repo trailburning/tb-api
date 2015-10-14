@@ -5,7 +5,7 @@ use JMS\Serializer\Annotation\Exclude;
 
 /**
  */
-class ApiResponse
+class APIResponse
 {   
     const STATUS_SUCCESS = 'success';
     
@@ -17,6 +17,11 @@ class ApiResponse
     private $status;
     
     /**
+     * @var string
+     */
+    private $statusCode;
+    
+    /**
      * @var array
      */
     private $body;
@@ -26,15 +31,13 @@ class ApiResponse
      */
     private $meta;
     
-    public function __construct($body = null, $status = self::STATUS_SUCCESS, $meta = null) 
+    public function __construct($statusCode = 200) 
     {
-        $this->setStatus($status);
-        $this->setBody($body);
-        $this->setMeta($meta);
+        $this->setStatusCode($statusCode);
+        $this->setStatus(self::STATUS_SUCCESS);
     }
     
     /**
-     *
      * @param string $status 
      */
     public function setStatus($status)
@@ -47,11 +50,39 @@ class ApiResponse
     }
     
     /**
+     * @param int $statusCode
+     */
+    public function setStatusCode($statusCode)
+    {
+        $this->statusCode = $statusCode;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getStatusCode() 
+    {
+        return $this->statusCode;
+    }
+    
+    /**
      * @param string $body 
      */
     public function setBody($body) 
     {
         $this->body = $body;
+    }
+    
+    /**
+     * @param string $data 
+     */
+    public function addToBody($body, $name) 
+    {
+        if (!is_array($this->body)) {
+            $this->body = [];
+        }
+        
+        $this->body[$name] = $body;
     }
     
     /**
