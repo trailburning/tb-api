@@ -1,10 +1,14 @@
 default:
-    type:   rest
     resource: AppBundle\Controller\DefaultController
     
 swagger:
-    path:   /swagger.json
+    path:   /v2/swagger.json
     defaults: { _controller: AppBundle:Swagger:index, _format: json }
+    
+status:
+    type:   rest
+    resource: AppBundle\Controller\StatusController
+    prefix: /v2
     
 journey:
     type:   rest

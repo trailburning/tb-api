@@ -3,27 +3,24 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use AppBundle\Response\APIResponse;
-use Swagger\Annotations as SWG;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
     /**
-     * @SWG\Get(
-     *     path="/",
-     *     summary="",
-     *     tags={"Status"},
-     *     produces={"application/json"},
-     *     @SWG\Response(
-     *         response=200,
-     *         description="successful operation",
-     *     )
-     * )
-     *
-     * @return APIResponse
+     * @Route("/")
      */
-    public function getAction()
+    public function indexAction()
     {
-        return new APIResponse();
+        return new Response('Trailburning Journey API');
+    }
+    
+    /**
+     * @Route("/v2")
+     */
+    public function v2Action()
+    {
+        return $this->redirect($this->generateUrl('get'), 301);
     }
 }
