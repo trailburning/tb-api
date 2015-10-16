@@ -5,16 +5,17 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
+use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 
 /**
  * Journey.
  *
- * @ORM\Table(name="api_journey")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\JourneyRepository")
- * @SWG\Definition(required={"id", "name", "about", "coords"}, @SWG\Xml(name="Journey"))
+ * @ORM\Table(name="api_asset")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\AssetRepository")
+ * @SWG\Definition(required={"id", "name", "about", "category"}, @SWG\Xml(name="Asset"))
  * @Serializer\ExclusionPolicy("all")
  */
-class Journey
+class Asset
 {
     /**
      * @var int
@@ -46,37 +47,24 @@ class Journey
     private $about;
     
     /**
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(type="boolean", options={"default" = false})
+     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\AssetCategoryType")
+     * @ORM\Column(name="category", type="AssetCategoryType", nullable=false)
+     * @SWG\Property(enum={"Expedition","Flora","Fauna","Mountain","Time Capsule"})
+     * @Serializer\Expose
      */
-    private $publish = false;
-
-    /**
-     * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="journeys")
-     */
-    private $user;
+    private $category;
     
     /**
-     * @var integer
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $userId;
-    
-    /**
-     * @var Point point
-     *
-     * @ORM\Column(name="coords", type="point", columnDefinition="GEOMETRY(POINT,4326)")
-     */
-    private $coords;
-    
-    /**
-      * @ORM\OneToMany(targetEntity="Asset", mappedBy="journey")
+      * @ORM\ManyToOne(targetEntity="Media", inversedBy="assets")
       */
-    protected $assets;
+    protected $media;
+    
+    /**
+      * @ORM\ManyToOne(targetEntity="Journey", inversedBy="assets")
+      */
+    protected $journey;
 
     /*
      * ################################################################################################################
@@ -142,78 +130,61 @@ class Journey
     {
         return $this->about;
     }
-
-    /**
-     * @param bool $publish
-     *
-     * @return self
-     */
-    public function setPublish($publish)
-    {
-        $this->publish = $publish;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPublish()
-    {
-        return $this->publish;
-    }
     
     /**
-     * @param User $user
+     * @param string $category
      * @return self
      */
-    public function setUser(User $user)
+    public function setCategory($category)
     {
-        $this->user = $user;
+        $this->category = $category;
     
         return $this;
     }
 
     /**
-     * @return User 
+     * @return string
      */
-    public function getUser()
+    public function getCategory()
     {
-        return $this->user;
+        return $this->category;
     }
     
     /**
-     * @param point $coords
+     * @param Media $media
      * @return self
      */
-    public function setCoords($coords)
+    public function setMedia(Media $media)
     {
-        $this->coords = $coords;
+        $this->media = $media;
     
         return $this;
     }
 
     /**
-     * @return point 
+     * @return Media
      */
-    public function getCoords()
+    public function getMedia()
     {
-        return $this->coords;
+        return $this->media;
     }
     
     /**
-     * @param Asset $assets
+     * @param Journey $journey
+     * @return self
      */
-    public function removeAsset(Asset $asset)
+    public function setJourney(Journey $journey)
     {
-        $this->assets->removeElement($asset);
+        $this->journey = $journey;
+    
+        return $this;
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Journey
      */
-    public function getAssets()
+    public function getJourney()
     {
-        return $this->assets;
+        return $this->journey;
     }
 }

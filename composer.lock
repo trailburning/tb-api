@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "706803de40e444d7c5f75057d9b51ebd",
-    "content-hash": "7730e2fccb471d0fcecf5ba87b0ae613",
+    "hash": "a2d0b5fae683f53363b74c81037163c0",
+    "content-hash": "80ccb4bde248fa5cb962a3ff1d4f5e3d",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1017,6 +1017,67 @@
                 "issues": "https://github.com/easybiblabs/EasyBib_DoctrineTypes/issues"
             },
             "time": "2014-08-08 16:09:45"
+        },
+        {
+            "name": "fresh/doctrine-enum-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fre5h/DoctrineEnumBundle.git",
+                "reference": "ec99d9ac4501d8d5f1bd498711b75e4eeab84043"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fre5h/DoctrineEnumBundle/zipball/ec99d9ac4501d8d5f1bd498711b75e4eeab84043",
+                "reference": "ec99d9ac4501d8d5f1bd498711b75e4eeab84043",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/orm": "~2.2",
+                "php": ">=5.4.0",
+                "symfony/symfony": "~2.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.7",
+                "squizlabs/php_codesniffer": "~2.3"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Fresh\\DoctrineEnumBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Artem Genvald",
+                    "email": "genvaldartem@gmail.com",
+                    "role": "Creator"
+                },
+                {
+                    "name": "Community",
+                    "homepage": "https://github.com/fre5h/DoctrineEnumBundle/graphs/contributors",
+                    "role": "Developers"
+                }
+            ],
+            "description": "Provides support of ENUM type for Doctrine2 in Symfony2 applications.",
+            "homepage": "https://github.com/fre5h/DoctrineEnumBundle",
+            "keywords": [
+                "bundle",
+                "dbal",
+                "doctrine",
+                "entity",
+                "enum",
+                "mysql",
+                "postgresql",
+                "sqlite",
+                "symfony",
+                "type"
+            ],
+            "time": "2015-06-11 21:11:58"
         },
         {
             "name": "friendsofsymfony/rest-bundle",
@@ -3705,7 +3766,8 @@
     "stability-flags": {
         "doctrine/doctrine-fixtures-bundle": 20,
         "stof/doctrine-extensions-bundle": 20,
-        "friendsofsymfony/user-bundle": 20
+        "friendsofsymfony/user-bundle": 20,
+        "fresh/doctrine-enum-bundle": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

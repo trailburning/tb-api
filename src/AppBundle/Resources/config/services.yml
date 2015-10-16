@@ -35,3 +35,17 @@ services:
             
     tb.response.builder:
         class: AppBundle\Response\APIResponseBuilder
+        
+    tb.asset.repository:
+        class: AppBundle\Repository\AssetRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\Asset
+            
+    tb.media.repository:
+        class: AppBundle\Repository\MediaRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\Media

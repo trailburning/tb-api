@@ -71,14 +71,18 @@ doctrine:
         #   2. Uncomment database_path in parameters.yml.dist
         #   3. Uncomment next line:
         #     path:     "%database_path%"
+        mapping_types:
+            enum: string
         types:
             # add and postgis types as provided by creof/doctrine2-spatial package
-            geometry:   CrEOF\Spatial\DBAL\Types\GeometryType
-            point:      CrEOF\Spatial\DBAL\Types\Geometry\PointType
-            polygon:    CrEOF\Spatial\DBAL\Types\Geometry\PolygonType
-            linestring: CrEOF\Spatial\DBAL\Types\Geometry\LineStringType
+            geometry:               CrEOF\Spatial\DBAL\Types\GeometryType
+            point:                  CrEOF\Spatial\DBAL\Types\Geometry\PointType
+            polygon:                CrEOF\Spatial\DBAL\Types\Geometry\PolygonType
+            linestring:             CrEOF\Spatial\DBAL\Types\Geometry\LineStringType
             # add hstore type from http://github.com/easybiblabs/EasyBib_DoctrineTypes
-            hstore:     EasyBib\Doctrine\Types\Hstore
+            hstore:                 EasyBib\Doctrine\Types\Hstore
+            AssetCategoryType:      AppBundle\DBAL\Types\AssetCategoryType
+            MediaType:              AppBundle\DBAL\Types\MediaType
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
