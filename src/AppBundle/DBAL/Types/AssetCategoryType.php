@@ -10,7 +10,7 @@ class AssetCategoryType extends AbstractEnumType
     const FLORA = 'flora';
     const FAUNA = 'fauna';
     const MOUNTAIN = 'mountain';
-    const TIME_CAPSULE = 'time_capsule';
+    const TIME_CAPSULE = 'timecapsule';
 
     protected static $choices = [
         self::EXPEDITION => 'Expedition',
