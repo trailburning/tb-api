@@ -50,7 +50,7 @@ class Asset
      * @var string
      *
      * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\AssetCategoryType")
-     * @ORM\Column(name="category", type="AssetCategoryType", nullable=false)
+     * @ORM\Column(type="AssetCategoryType", nullable=false)
      * @SWG\Property(enum={"Expedition","Flora","Fauna","Mountain","Time Capsule"})
      * @Serializer\Expose
      */

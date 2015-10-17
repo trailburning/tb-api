@@ -41,7 +41,7 @@ class Media
      * @var string
      *
      * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\MediaType")
-     * @ORM\Column(name="category", type="MediaType", nullable=false)
+     * @ORM\Column(type="MediaType", nullable=false)
      * @SWG\Property(enum={"image"})
      * @Serializer\Expose
      */
