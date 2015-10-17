@@ -12,7 +12,7 @@ use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
  *
  * @ORM\Table(name="api_asset")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AssetRepository")
- * @SWG\Definition(required={"id", "name", "about", "category"}, @SWG\Xml(name="Asset"))
+ * @SWG\Definition(required={"id", "about", "category"}, @SWG\Xml(name="Asset"))
  * @Serializer\ExclusionPolicy("all")
  */
 class Asset
@@ -31,7 +31,7 @@ class Asset
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
      */
@@ -50,7 +50,7 @@ class Asset
      * @var string
      *
      * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\AssetCategoryType")
-     * @ORM\Column(type="AssetCategoryType", nullable=false)
+     * @ORM\Column(type="AssetCategoryType")
      * @SWG\Property(enum={"Expedition","Flora","Fauna","Mountain","Time Capsule"})
      * @Serializer\Expose
      */
