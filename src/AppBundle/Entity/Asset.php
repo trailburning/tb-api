@@ -57,9 +57,9 @@ class Asset
     private $category;
     
     /**
-      * @ORM\ManyToOne(targetEntity="Media", inversedBy="assets")
+      * @ORM\OneToMany(targetEntity="Media", mappedBy="asset")
       */
-    protected $media;
+    protected $medias;
     
     /**
       * @ORM\ManyToOne(targetEntity="Journey", inversedBy="assets")
@@ -151,23 +151,32 @@ class Asset
     }
     
     /**
-     * @param Media $media
-     * @return self
+     * @param Media $medias
+     * @return User
      */
-    public function setMedia(Media $media)
+    public function addMedia(Media $media)
     {
-        $this->media = $media;
-    
+        $this->medias[] = $media;
+
         return $this;
     }
 
     /**
-     * @return Media
+     * @param Media $medias
      */
-    public function getMedia()
+    public function removeMedia(Media $media)
     {
-        return $this->media;
+        $this->medias->removeElement($media);
     }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMedias()
+    {
+        return $this->medias;
+    }
+    
     
     /**
      * @param Journey $journey

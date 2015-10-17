@@ -48,9 +48,9 @@ class Media
     private $type;
     
     /**
-      * @ORM\OneToMany(targetEntity="Asset", mappedBy="media")
+      * @ORM\ManyToOne(targetEntity="Asset", inversedBy="medias")
       */
-    protected $assets;
+    protected $asset;
 
     /*
      * ################################################################################################################
@@ -117,29 +117,21 @@ class Media
     }
     
     /**
-     * @param Asset $assets
-     * @return User
+     * @param Asset $asset
+     * @return self
      */
-    public function addAsset(Asset $asset)
+    public function setAsset(Asset $asset)
     {
-        $this->assets[] = $asset;
-
+        $this->asset = $asset;
+    
         return $this;
     }
 
     /**
-     * @param Asset $assets
+     * @return Asset
      */
-    public function removeAsset(Asset $asset)
+    public function getAsset()
     {
-        $this->assets->removeElement($asset);
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getAssets()
-    {
-        return $this->assets;
+        return $this->asset;
     }
 }
