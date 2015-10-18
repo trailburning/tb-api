@@ -49,3 +49,17 @@ services:
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\Media
+
+    tb.event:
+        class: AppBundle\Services\EventService
+        arguments: 
+            - @tb.event.repository
+            - @tb.journey.repository
+            - @tb.response.builder
+            
+    tb.event.repository:
+        class: AppBundle\Repository\EventRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\Event

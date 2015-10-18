@@ -9,12 +9,12 @@ use Swagger\Annotations as SWG;
 /**
  * Journey.
  *
- * @ORM\Table(name="api_journey")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\JourneyRepository")
- * @SWG\Definition(required={"id", "name", "about"}, @SWG\Xml(name="Journey"))
+ * @ORM\Table(name="api_event")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\EventRepository")
+ * @SWG\Definition(required={"id", "name", "about", "coords"}, @SWG\Xml(name="Event"))
  * @Serializer\ExclusionPolicy("all")
  */
-class Journey
+class Event
 {
     /**
      * @var int
@@ -46,30 +46,34 @@ class Journey
     private $about;
     
     /**
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", options={"default" = false})
-     */
-    private $publish = false;
-
-    /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="journeys")
+     * @ORM\ManyToOne(targetEntity="Journey", inversedBy="events")
      */
-    private $user;
+    private $journey;
     
     /**
      * @var integer
      *
      * @ORM\Column(type="integer")
      */
-    private $userId;
+    private $journeyId;
     
     /**
-      * @ORM\OneToMany(targetEntity="Event", mappedBy="journey")
+     * @var Point point
+     *
+     * @ORM\Column(name="coords", type="point", columnDefinition="GEOMETRY(POINT,4326)")
+     */
+    private $coords;
+    
+    /**
+      * @var Asset[]
+      *
+      * @ORM\OneToMany(targetEntity="Asset", mappedBy="event")
+      * @SWG\Property(@SWG\Xml(name="asset",wrapped=true))
+      * @Serializer\Expose
       */
-    protected $events;
+    protected $assets;
 
     /*
      * ################################################################################################################
@@ -135,59 +139,58 @@ class Journey
     {
         return $this->about;
     }
-
-    /**
-     * @param bool $publish
-     *
-     * @return self
-     */
-    public function setPublish($publish)
-    {
-        $this->publish = $publish;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPublish()
-    {
-        return $this->publish;
-    }
     
     /**
-     * @param User $user
+     * @param Journey $journey
      * @return self
      */
-    public function setUser(User $user)
+    public function setJourney(Journey $journey)
     {
-        $this->user = $user;
+        $this->journey = $journey;
     
         return $this;
     }
 
     /**
-     * @return User 
+     * @return Journey 
      */
-    public function getUser()
+    public function getJourney()
     {
-        return $this->user;
+        return $this->journey;
     }
-        
+    
     /**
-     * @param Event $events
+     * @param point $coords
+     * @return self
      */
-    public function removeEvent(Event $event)
+    public function setCoords($coords)
     {
-        $this->events->removeElement($event);
+        $this->coords = $coords;
+    
+        return $this;
+    }
+
+    /**
+     * @return point 
+     */
+    public function getCoords()
+    {
+        return $this->coords;
+    }
+    
+    /**
+     * @param Asset $assets
+     */
+    public function removeAsset(Asset $asset)
+    {
+        $this->assets->removeElement($asset);
     }
 
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getEvents()
+    public function getAssets()
     {
-        return $this->events;
+        return $this->assets;
     }
 }

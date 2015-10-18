@@ -5,7 +5,7 @@ namespace AppBundle\Tests\Controller;
 use AppBundle\Tests\BaseWebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class JourneyControllerTest extends BaseWebTestCase
+class JourneysControllerTest extends BaseWebTestCase
 {
     public function testGetAction()
     {

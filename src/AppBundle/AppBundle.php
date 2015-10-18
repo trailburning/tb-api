@@ -18,7 +18,6 @@ use Swagger\Annotations as SWG;
  *
  * @SWG\Swagger(
  *   basePath="/v2",
- *   schemes={"https"},
  *   produces={"application/json"},
  *   consumes={"application/json"},
  * )

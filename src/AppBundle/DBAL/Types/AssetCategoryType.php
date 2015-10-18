@@ -15,6 +15,7 @@ class AssetCategoryType extends AbstractEnumType
     protected static $choices = [
         self::EXPEDITION => 'Expedition',
         self::FLORA => 'Flora',
+        self::FAUNA => 'Fauna',
         self::MOUNTAIN => 'Mountain',
         self::TIME_CAPSULE => 'Time Capsule',
     ];

@@ -49,7 +49,8 @@ class SwaggerBridge
             $this->rootDir . '/../src',
         ];
         $options = [];
-        $swagger = \Swagger\scan($paths, $options);    
+        $swagger = \Swagger\scan($paths, $options);
+        
         $json = $swagger->__toString();
         $configCache->write($json, [$resource]);
         

@@ -14,3 +14,8 @@ journey:
     type:   rest
     resource: AppBundle\Controller\JourneysController
     prefix: /v2
+    
+event:
+    type:   rest
+    resource: AppBundle\Controller\EventsController
+    prefix: /v2

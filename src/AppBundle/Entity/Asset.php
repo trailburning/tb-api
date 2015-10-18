@@ -8,7 +8,7 @@ use Swagger\Annotations as SWG;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 
 /**
- * Journey.
+ * Asset.
  *
  * @ORM\Table(name="api_asset")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AssetRepository")
@@ -57,14 +57,18 @@ class Asset
     private $category;
     
     /**
+      * @var Media[]
+      *
       * @ORM\OneToMany(targetEntity="Media", mappedBy="asset")
+      * @SWG\Property(@SWG\Xml(name="media",wrapped=true))
+      * @Serializer\Expose
       */
     protected $medias;
     
     /**
-      * @ORM\ManyToOne(targetEntity="Journey", inversedBy="assets")
+      * @ORM\ManyToOne(targetEntity="Event", inversedBy="events")
       */
-    protected $journey;
+    protected $event;
 
     /*
      * ################################################################################################################
@@ -179,21 +183,21 @@ class Asset
     
     
     /**
-     * @param Journey $journey
+     * @param Event $event
      * @return self
      */
-    public function setJourney(Journey $journey)
+    public function setEvent(Event $event)
     {
-        $this->journey = $journey;
+        $this->event = $event;
     
         return $this;
     }
 
     /**
-     * @return Journey
+     * @return Event
      */
-    public function getJourney()
+    public function getEvent()
     {
-        return $this->journey;
+        return $this->event;
     }
 }

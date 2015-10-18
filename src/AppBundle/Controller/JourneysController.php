@@ -14,7 +14,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      *     path="/journeys/{id}",
      *     summary="Find a journey by ID",
      *     description="Returns a single journey.",
-     *     tags={"Journey"},
+     *     tags={"Journeys"},
      *     produces={"application/json"},
      *     @SWG\Parameter(
      *         description="ID of journey to return",
@@ -51,7 +51,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      *     path="/journeys/user/{id}",
      *     summary="Find journeys by user",
      *     description="Returns all journeys by a user.",
-     *     tags={"Journey"},
+     *     tags={"Journeys"},
      *     produces={"application/json"},
      *     @SWG\Parameter(
      *         description="ID of the user",
