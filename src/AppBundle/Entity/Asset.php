@@ -69,6 +69,13 @@ class Asset
       * @ORM\ManyToOne(targetEntity="Event", inversedBy="events")
       */
     protected $event;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $eventId;
 
     /*
      * ################################################################################################################
