@@ -78,4 +78,19 @@ abstract class BaseWebTestCase extends WebTestCase
 
         return $user;
     }
+    
+    protected function getEvent($name)
+    {
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $eventRepository = $em->getRepository('AppBundle:Event');
+        $event = $eventRepository->findOneBy([
+            'name' => $name,
+        ]);
+
+        if (!$event) {
+            $this->fail(sprintf('Missing event with name "%s" in test DB', $name));
+        }
+
+        return $event;
+    }
 }

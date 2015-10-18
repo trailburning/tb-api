@@ -35,6 +35,13 @@ services:
             
     tb.response.builder:
         class: AppBundle\Response\APIResponseBuilder
+    
+    tb.asset:
+        class: AppBundle\Services\AssetService
+        arguments: 
+            - @tb.asset.repository
+            - @tb.event.repository
+            - @tb.response.builder
         
     tb.asset.repository:
         class: AppBundle\Repository\AssetRepository

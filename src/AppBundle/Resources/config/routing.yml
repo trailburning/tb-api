@@ -10,12 +10,17 @@ status:
     resource: AppBundle\Controller\StatusController
     prefix: /v2
     
-journey:
+journeys:
     type:   rest
     resource: AppBundle\Controller\JourneysController
     prefix: /v2
     
-event:
+events:
     type:   rest
     resource: AppBundle\Controller\EventsController
+    prefix: /v2
+    
+assets:
+    type:   rest
+    resource: AppBundle\Controller\AssetsController
     prefix: /v2
