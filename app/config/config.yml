@@ -82,7 +82,6 @@ doctrine:
             # add hstore type from http://github.com/easybiblabs/EasyBib_DoctrineTypes
             hstore:                 EasyBib\Doctrine\Types\Hstore
             MediaType:              AppBundle\DBAL\Types\MediaType
-            AssetCategoryType:      AppBundle\DBAL\Types\AssetCategoryType
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
