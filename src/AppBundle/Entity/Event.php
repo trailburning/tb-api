@@ -67,15 +67,15 @@ class Event
     private $coords;
     
     /**
-      * @var Asset[]
-      *
-      * @ORM\OneToMany(targetEntity="Asset", mappedBy="event")
-      * @SWG\Property(@SWG\Xml(name="asset",wrapped=true))
-      * @Serializer\Expose
-      */
+     * @var Asset[]
+     *
+     * @ORM\OneToMany(targetEntity="Asset", mappedBy="event")
+     * @SWG\Property(@SWG\Xml(name="asset",wrapped=true))
+     * @Serializer\Expose
+     */
     protected $assets;
 
-    /*
+    /**
      * ################################################################################################################
      *
      *                                         User Defined
@@ -84,7 +84,7 @@ class Event
      */
 
 
-    /*
+    /**
      * ################################################################################################################
      *
      *                                         Getters and Setters

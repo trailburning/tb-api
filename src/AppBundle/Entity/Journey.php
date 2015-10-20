@@ -56,22 +56,16 @@ class Journey
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="journeys")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $user;
     
     /**
-     * @var integer
-     *
-     * @ORM\Column(type="integer")
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="journey")
      */
-    private $userId;
-    
-    /**
-      * @ORM\OneToMany(targetEntity="Event", mappedBy="journey")
-      */
     protected $events;
 
-    /*
+    /**
      * ################################################################################################################
      *
      *                                         User Defined
@@ -80,7 +74,7 @@ class Journey
      */
 
 
-    /*
+    /**
      * ################################################################################################################
      *
      *                                         Getters and Setters

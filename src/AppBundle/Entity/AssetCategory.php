@@ -8,14 +8,14 @@ use Swagger\Annotations as SWG;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 
 /**
- * Media.
+ * AssetCategory.
  *
- * @ORM\Table(name="api_media")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\MediaRepository")
- * @SWG\Definition(required={"id", "type", "path"}, @SWG\Xml(name="Media"))
+ * @ORM\Table(name="api_asset_category")
+ * @ORM\Entity()
+ * @SWG\Definition(required={"name", "label"}, @SWG\Xml(name="AssetCategory"))
  * @Serializer\ExclusionPolicy("all")
  */
-class Media
+class AssetCategory
 {
     /**
      * @var int
@@ -24,35 +24,34 @@ class Media
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @SWG\Property(format="int32")
-     * @Serializer\Expose
      */
     private $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
      */
-    private $path;
+    private $name;
     
     /**
      * @var string
      *
-     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\MediaType")
-     * @ORM\Column(type="MediaType")
-     * @SWG\Property(enum={"image"})
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @SWG\Property()
      * @Serializer\Expose
      */
-    private $type;
+    private $label;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Asset", inversedBy="medias")
-     * @ORM\JoinColumn(nullable=false)
+     * @var Asset[]
+     *
+     * @ORM\OneToMany(targetEntity="Asset", mappedBy="category")
      */
-    protected $asset;
-
+    protected $assets;
+    
     /**
      * ################################################################################################################
      *
@@ -79,13 +78,13 @@ class Media
     }
 
     /**
-     * @param string $path
+     * @param string $name
      *
      * @return self
      */
-    public function setPath($path)
+    public function setName($name)
     {
-        $this->path = $path;
+        $this->name = $name;
 
         return $this;
     }
@@ -93,46 +92,55 @@ class Media
     /**
      * @return string
      */
-    public function getPath()
+    public function getName()
     {
-        return $this->path;
+        return $this->name;
     }
     
     /**
-     * @param string $type
+     * @param Asset $assets
+     * @return User
+     */
+    public function addAsset(Asset $asset)
+    {
+        $this->assets[] = $assets;
+
+        return $this;
+    }
+
+    /**
+     * @param Asset $assets
+     */
+    public function removeAsset(Asset $asset)
+    {
+        $this->medias->removeElement($asset);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAssets()
+    {
+        return $this->assets;
+    }
+    
+    /**
+     * @param string $label
+     *
      * @return self
      */
-    public function setType($type)
+    public function setLabel($label)
     {
-        $this->type = $type;
-    
+        $this->label = $label;
+
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getType()
+    public function getLabel()
     {
-        return $this->type;
-    }
-    
-    /**
-     * @param Asset $asset
-     * @return self
-     */
-    public function setAsset(Asset $asset)
-    {
-        $this->asset = $asset;
-    
-        return $this;
-    }
-
-    /**
-     * @return Asset
-     */
-    public function getAsset()
-    {
-        return $this->asset;
+        return $this->label;
     }
 }

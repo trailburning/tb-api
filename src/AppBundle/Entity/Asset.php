@@ -47,37 +47,27 @@ class Asset
     private $about;
     
     /**
-     * @var string
+     * @var Media[]
      *
-     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\AssetCategoryType")
-     * @ORM\Column(type="AssetCategoryType")
-     * @SWG\Property(enum={"Expedition","Flora","Fauna","Mountain","Time Capsule"})
+     * @ORM\OneToMany(targetEntity="Media", mappedBy="asset")
+     * @SWG\Property(@SWG\Xml(name="media",wrapped=true))
      * @Serializer\Expose
      */
-    private $category;
-    
-    /**
-      * @var Media[]
-      *
-      * @ORM\OneToMany(targetEntity="Media", mappedBy="asset")
-      * @SWG\Property(@SWG\Xml(name="media",wrapped=true))
-      * @Serializer\Expose
-      */
     protected $medias;
     
     /**
-      * @ORM\ManyToOne(targetEntity="Event", inversedBy="events")
-      */
+     * @ORM\ManyToOne(targetEntity="Event", inversedBy="assets")
+     * @ORM\JoinColumn(nullable=false)
+     */
     protected $event;
     
     /**
-     * @var integer
-     *
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="AssetCategory", inversedBy="assets")
+     * @Serializer\Expose
      */
-    private $eventId;
+    protected $category;
 
-    /*
+    /**
      * ################################################################################################################
      *
      *                                         User Defined
@@ -86,7 +76,7 @@ class Asset
      */
 
 
-    /*
+    /**
      * ################################################################################################################
      *
      *                                         Getters and Setters
