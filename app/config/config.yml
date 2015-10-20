@@ -81,7 +81,8 @@ doctrine:
             linestring:             CrEOF\Spatial\DBAL\Types\Geometry\LineStringType
             # add hstore type from http://github.com/easybiblabs/EasyBib_DoctrineTypes
             hstore:                 EasyBib\Doctrine\Types\Hstore
-            MediaType:              AppBundle\DBAL\Types\MediaType
+            MediaType:               AppBundle\DBAL\Types\MediaType
+            MIMEType:               AppBundle\DBAL\Types\MIMEType
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"

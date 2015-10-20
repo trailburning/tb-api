@@ -63,6 +63,7 @@ class Asset
     
     /**
      * @ORM\ManyToOne(targetEntity="AssetCategory", inversedBy="assets")
+     * @SWG\Property()
      * @Serializer\Expose
      */
     protected $category;

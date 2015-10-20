@@ -12,7 +12,7 @@ use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
  *
  * @ORM\Table(name="api_media")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MediaRepository")
- * @SWG\Definition(required={"id", "type", "path"}, @SWG\Xml(name="Media"))
+ * @SWG\Definition(required={"id", "mimeType", "path"}, @SWG\Xml(name="Media"))
  * @Serializer\ExclusionPolicy("all")
  */
 class Media
@@ -40,12 +40,12 @@ class Media
     /**
      * @var string
      *
-     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\MediaType")
-     * @ORM\Column(type="MediaType")
-     * @SWG\Property(enum={"image"})
+     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\MIMEType")
+     * @ORM\Column(type="MIMEType", nullable=true)
+     * @SWG\Property()
      * @Serializer\Expose
      */
-    private $type;
+    private $mimeType;
     
     /**
      * @ORM\ManyToOne(targetEntity="Asset", inversedBy="medias")
@@ -99,12 +99,12 @@ class Media
     }
     
     /**
-     * @param string $type
+     * @param string $mimeType
      * @return self
      */
-    public function setType($type)
+    public function setMimeType($mimeType)
     {
-        $this->type = $type;
+        $this->mimeType = $mimeType;
     
         return $this;
     }
@@ -112,9 +112,9 @@ class Media
     /**
      * @return string
      */
-    public function getType()
+    public function getMimeType()
     {
-        return $this->type;
+        return $this->mimeType;
     }
     
     /**
