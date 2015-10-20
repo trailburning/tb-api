@@ -41,7 +41,7 @@ class Media
      * @var string
      *
      * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\MIMEType")
-     * @ORM\Column(type="MIMEType", nullable=true)
+     * @ORM\Column(type="MIMEType")
      * @SWG\Property()
      * @Serializer\Expose
      */

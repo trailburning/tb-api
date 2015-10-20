@@ -7,7 +7,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Entity\AssetCategory;
 
-class EventData extends AbstractFixture implements FixtureInterface
+class AssetCategoryData extends AbstractFixture implements FixtureInterface
 {
     
     public function load(ObjectManager $manager)
