@@ -6,13 +6,13 @@ use Fresh\DoctrineEnumBundle\DBAL\Types\AbstractEnumType;
 
 class MIMEType extends AbstractEnumType
 {
-    const JPEG = 'jpeg';
-    const MP3 = 'mp3';
-    const MP4 = 'mp4';
+    const JPEG = 'image/jpeg';
+    const MP3 = 'audio/mpeg';
+    const MP4 = 'video/mp4';
     
     protected static $choices = [
-        self::JPEG => 'image/jpeg',
-        self::MP3 => 'audio/mpeg',
-        self::MP4 => 'video/mp4',
+        self::JPEG => self::JPEG,
+        self::MP3 => self::MP3,
+        self::MP4 => self::MP4,
     ];
 }
