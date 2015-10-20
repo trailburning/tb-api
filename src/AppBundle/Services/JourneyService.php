@@ -40,13 +40,13 @@ class JourneyService
     }
     
     /**
-     * @param string $id 
+     * @param string $oid
      * @return APIResponse
      */
-    public function buildGetAPIResponse($id) 
+    public function buildGetAPIResponse($oid) 
     {
         $journeys = $this->journeyRepository->findBy([
-            'id' => $id,
+            'oid' => $oid,
             'publish' => true,
         ]);
         

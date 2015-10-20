@@ -23,10 +23,17 @@ class Asset
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @SWG\Property(format="int32")
-     * @Serializer\Expose
      */
     private $id;
+    
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=22, unique=true, nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Serializer\SerializedName("id")
+     */
+    private $oid;
 
     /**
      * @var string
@@ -76,6 +83,10 @@ class Asset
      * ################################################################################################################
      */
 
+    public function __construct()
+    {
+        $this->oid = str_replace('.', '', uniqid(null, true));
+    }
 
     /**
      * ################################################################################################################
@@ -91,6 +102,14 @@ class Asset
     public function getId()
     {
         return $this->id;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getOid()
+    {
+        return $this->oid;
     }
 
     /**

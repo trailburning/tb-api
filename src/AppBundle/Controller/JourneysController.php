@@ -21,8 +21,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      *         in="path",
      *         name="id",
      *         required=true,
-     *         type="integer",
-     *         format="int32"
+     *         type="string",
      *     ),
      *     @SWG\Response(
      *         response=200,
@@ -35,7 +34,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      *     ),
      * )
      *
-     * @param int $id
+     * @param string $id
      *
      * @return APIResponse
      */

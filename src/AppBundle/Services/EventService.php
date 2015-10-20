@@ -40,14 +40,14 @@ class EventService
     }
 
     /**
-     * @param int $journeyId
+     * @param string $journeyOid
      *
      * @return APIResponse
      */
-    public function buildGetByJourneyAPIResponse($journeyId)
+    public function buildGetByJourneyAPIResponse($journeyOid)
     {
         $journey = $this->journeyRepository->findOneBy([
-            'id' => $journeyId,
+            'oid' => $journeyOid,
             'publish' => true,
         ]);
 

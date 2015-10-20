@@ -17,7 +17,7 @@ class AssetsControllerTest extends BaseWebTestCase
         $client = static::createClient();
         $event = $this->getEvent('Test Event 1');
 
-        $client->request('GET', '/v2/events/' . $event->getId() . '/assets');
+        $client->request('GET', '/v2/events/' . $event->getOid() . '/assets');
         $this->assertEquals(Response::HTTP_OK,  $client->getResponse()->getStatusCode());
         $this->assertJsonResponse($client);
     }

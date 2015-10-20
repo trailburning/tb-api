@@ -17,7 +17,7 @@ class EventsControllerTest extends BaseWebTestCase
         $client = static::createClient();
         $journey = $this->getJourney('Test Journey 1');
 
-        $client->request('GET', '/v2/journeys/' . $journey->getId() . '/events');
+        $client->request('GET', '/v2/journeys/' . $journey->getOid() . '/events');
         $this->assertEquals(Response::HTTP_OK,  $client->getResponse()->getStatusCode());
         $this->assertJsonResponse($client);
     }
@@ -44,7 +44,7 @@ class EventsControllerTest extends BaseWebTestCase
         $client = static::createClient();
         $journey = $this->getJourney('Unpublished Journey');
 
-        $client->request('GET', '/v2/journeys/' . $journey->getId() . '/events');
+        $client->request('GET', '/v2/journeys/' . $journey->getOid() . '/events');
         $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
         $this->assertJsonResponse($client);
     }

@@ -40,14 +40,14 @@ class AssetService
     }
 
     /**
-     * @param int $eventId
+     * @param int $eventOid
      *
      * @return APIResponse
      */
-    public function buildGetByEventAPIResponse($eventId)
+    public function buildGetByEventAPIResponse($eventOid)
     {
         $event = $this->eventRepository->findOneBy([
-            'id' => $eventId,
+            'oid' => $eventOid,
         ]);
 
         if ($event === null) {
