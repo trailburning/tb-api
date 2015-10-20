@@ -27,7 +27,7 @@ class Journey
     
     /**
      * @var string
-     * @ORM\Column(type="string", length=22, unique=true, nullable=true)
+     * @ORM\Column(type="string", length=22, unique=true)
      * @SWG\Property()
      * @Serializer\Expose
      * @Serializer\SerializedName("id")
