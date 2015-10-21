@@ -70,6 +70,7 @@ class Event
      * @var Point point
      *
      * @ORM\Column(name="coords", type="point", columnDefinition="GEOMETRY(POINT,4326)")
+     * @SWG\Property(type="Array")
      */
     private $coords;
     
@@ -93,6 +94,23 @@ class Event
     public function __construct()
     {
         $this->oid = str_replace('.', '', uniqid(null, true));
+    }
+    
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("coords")
+     * @return array
+     */
+    public function getCoordsAsArray() 
+    {
+        if ($this->coords === null) {
+            return [];
+        }
+        
+        return [
+            $this->coords->getLongitude(),
+            $this->coords->getLatitude(),
+        ];
     }
 
     /**
