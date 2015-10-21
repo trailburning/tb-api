@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
 
@@ -28,7 +29,7 @@ class Event
     /**
      * @var string
      * @ORM\Column(type="string", length=22, unique=true)
-     * @SWG\Property(@SWG\Xml(name="id"))
+     * @SWG\Property(property="id")
      * @Serializer\Expose
      * @Serializer\SerializedName("id")
      */
@@ -95,6 +96,7 @@ class Event
     public function __construct()
     {
         $this->oid = str_replace('.', '', uniqid(null, true));
+        $this->assets = new ArrayCollection();
     }
     
     /**

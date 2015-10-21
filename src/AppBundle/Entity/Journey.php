@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
 
@@ -28,7 +29,7 @@ class Journey
     /**
      * @var string
      * @ORM\Column(type="string", length=22, unique=true)
-     * @SWG\Property()
+     * @SWG\Property(property="id")
      * @Serializer\Expose
      * @Serializer\SerializedName("id")
      */
@@ -71,6 +72,15 @@ class Journey
      * @ORM\OneToMany(targetEntity="Event", mappedBy="journey")
      */
     protected $events;
+    
+    /**
+     * @var Route[]
+     *
+     * @ORM\OneToMany(targetEntity="Route", mappedBy="journey", cascade={"persist", "remove"})
+     * @SWG\Property()
+     * @Serializer\Expose
+     */
+    private $routes;
 
     /**
      * ################################################################################################################
@@ -83,6 +93,8 @@ class Journey
     public function __construct()
     {
         $this->oid = str_replace('.', '', uniqid(null, true));
+        $this->routes = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     /**
@@ -202,5 +214,41 @@ class Journey
     public function getEvents()
     {
         return $this->events;
+    }
+    
+    /**
+     * @param Route $routes
+     * @return self
+     */
+    public function addRoute(Route $route)
+    {
+        $route->setJourney($this);
+        $this->routes[] = $route;
+
+        return $this;
+    }
+    
+    /**
+     * @param Route $routes
+     */
+    public function removeRoute(Route $route)
+    {
+        $this->routes->removeElement($route);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRoutes()
+    {
+        return $this->routes;
+    }
+    
+    /**
+     * @return void
+     */
+    public function clearRoutes()
+    {
+        $this->routes->clear();
     }
 }

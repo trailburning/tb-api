@@ -70,11 +70,19 @@ class APIResponse
     }
 
     /**
-     * @param string $body
+     * @param mixed $body
      */
     public function setBody($body)
     {
         $this->body = $body;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getBody()
+    {
+        return $this->body;
     }
 
     /**

@@ -23,7 +23,6 @@ class AssetCategory
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @SWG\Property(format="int32")
      */
     private $id;
 

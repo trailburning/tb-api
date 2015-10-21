@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Swagger\Annotations as SWG;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
+use AppBundle\Form\Type\GPXImportType;
 
 class JourneysController extends Controller implements ClassResourceInterface
 {
@@ -80,5 +82,74 @@ class JourneysController extends Controller implements ClassResourceInterface
     {
         $journeyService = $this->get('tb.journey');
         return $journeyService->buildGetByUserAPIResponse($id);
+    }
+    
+    /**
+     * @SWG\Post(
+     *     path="/journeys/{id}/import/gpx",
+     *     summary="Imports a GPX file.",
+     *     description="Import a GPX file and add the routes found in the GPX to a journey. Replaces all previous routes.",
+     *     tags={"Journeys"},
+     *     consumes={"multipart/form-data"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(
+     *         description="ID of the journey",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="The GPX File to import",
+     *         in="formData",
+     *         name="file",
+     *         required=true,
+     *         type="file"
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @SWG\Schema(ref="#/definitions/Journey")
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Journey not found"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid or empty GPX file."
+     *     ),
+     * )
+     *
+     * @Post("/journeys/{id}/import/gpx")
+     *
+     * @param int $id
+     *
+     * @return APIResponse
+     */
+    public function importGPXAction($id)
+    {
+        $journeyRepository = $this->get('tb.journey.repository');
+        $apiResponseBuilder = $this->get('tb.response.builder');
+        
+        $journey = $journeyRepository->findOneBy([
+            'oid' => $id,
+        ]);
+        
+        if ($journey === null) {
+            $apiResponseBuilder->buildNotFoundResponse('Journey not found');
+        }
+            
+        $form = $this->createForm(new GPXImportType());
+        $form->handleRequest($this->getRequest());
+
+        if (!$form->isValid()) {
+            $apiResponseBuilder->buildResponse(400, 'Invalid or empty GPX file.');
+        }
+        
+        $file = $form->get('file')->getData();
+        $journeyService = $this->get('tb.journey');
+        
+        return $journeyService->importGPX($file, $journey);
     }
 }

@@ -13,6 +13,7 @@ services:
             - @tb.journey.repository
             - @tb.user.repository
             - @tb.response.builder
+            - @tb.gpxParser
             
     tb.journey.repository:
         class: AppBundle\Repository\JourneyRepository
@@ -21,7 +22,7 @@ services:
         arguments:
             - AppBundle\Entity\Journey
     
-    tb.listener.api_response:
+    tb.listener.apiResponse:
         class: AppBundle\Listener\APIResponseListener
         tags:
             - { name: "kernel.event_listener", event: "kernel.view", method: "onKernelView", priority: 100 }
@@ -70,3 +71,6 @@ services:
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\Event
+
+    tb.gpxParser:
+        class: AppBundle\Services\GPXParser

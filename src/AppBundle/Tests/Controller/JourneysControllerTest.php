@@ -4,6 +4,7 @@ namespace AppBundle\Tests\Controller;
 
 use AppBundle\Tests\BaseWebTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class JourneysControllerTest extends BaseWebTestCase
 {
@@ -72,6 +73,25 @@ class JourneysControllerTest extends BaseWebTestCase
 
         $client->request('GET', '/v2/journeys/user/99999999');
         $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
+        $this->assertJsonResponse($client);
+    }
+    
+    public function testImportGPX()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\JourneyData',
+        ]);
+        
+        $client = static::createClient();
+        $journey = $this->getJourney('Test Journey 1');
+        
+        $file = new UploadedFile(
+            realpath(__DIR__ . '/../../DataFixtures/GPX/example.gpx'),
+            'example.gpx'
+        );
+        
+        $client->request('POST', '/v2/journeys/' . $journey->getOid() . '/import/gpx', [], ['file' => $file]);
+        $this->assertEquals(Response::HTTP_OK,  $client->getResponse()->getStatusCode());
         $this->assertJsonResponse($client);
     }
 }

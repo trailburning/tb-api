@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
@@ -29,7 +30,7 @@ class Asset
     /**
      * @var string
      * @ORM\Column(type="string", length=22, unique=true)
-     * @SWG\Property()
+     * @SWG\Property(property="id")
      * @Serializer\Expose
      * @Serializer\SerializedName("id")
      */
@@ -57,18 +58,22 @@ class Asset
      * @var Media[]
      *
      * @ORM\OneToMany(targetEntity="Media", mappedBy="asset")
-     * @SWG\Property(@SWG\Xml(name="media",wrapped=true))
+     * @SWG\Property()
      * @Serializer\Expose
      */
     protected $medias;
     
     /**
+     * @var Event
+     *
      * @ORM\ManyToOne(targetEntity="Event", inversedBy="assets")
      * @ORM\JoinColumn(nullable=false)
      */
     protected $event;
     
     /**
+     * @var AssetCategory 
+     *
      * @ORM\ManyToOne(targetEntity="AssetCategory", inversedBy="assets")
      * @SWG\Property()
      * @Serializer\Expose
@@ -82,10 +87,11 @@ class Asset
      *
      * ################################################################################################################
      */
-
+    
     public function __construct()
     {
         $this->oid = str_replace('.', '', uniqid(null, true));
+        $this->medias = new ArrayCollection();
     }
 
     /**

@@ -5,17 +5,16 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
-use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 
 /**
- * Media.
+ * Route.
  *
- * @ORM\Table(name="api_media")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\MediaRepository")
- * @SWG\Definition(required={"id", "mimeType", "path"}, @SWG\Xml(name="Media"))
+ * @ORM\Table(name="api_route")
+ * @ORM\Entity()
+ * @SWG\Definition(required={"coords"}, @SWG\Xml(name="Route"))
  * @Serializer\ExclusionPolicy("all")
  */
-class Media
+class Route
 {
     /**
      * @var int
@@ -27,29 +26,20 @@ class Media
     private $id;
 
     /**
-     * @var string
+     * @var Point point
      *
-     * @ORM\Column(type="string", length=255)
-     * @SWG\Property()
-     * @Serializer\Expose
+     * @ORM\Column(name="coords", type="point", columnDefinition="GEOMETRY(POINT,4326)")
+     * @SWG\Property(type="Array")
      */
-    private $path;
+    private $coords;
     
     /**
-     * @var string
+     * @var Journey
      *
-     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\MIMEType")
-     * @ORM\Column(type="MIMEType")
-     * @SWG\Property()
-     * @Serializer\Expose
-     */
-    private $mimeType;
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="Asset", inversedBy="medias")
+     * @ORM\ManyToOne(targetEntity="Journey", inversedBy="routes")
      * @ORM\JoinColumn(nullable=false)
      */
-    protected $asset;
+    private $journey;
 
     /**
      * ################################################################################################################
@@ -58,7 +48,27 @@ class Media
      *
      * ################################################################################################################
      */
-
+    
+    public function __construct($coords) {
+        $this->setCoords($coords);
+    }   
+    
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("coords")
+     * @return array
+     */
+    public function getCoordsAsArray() 
+    {
+        if ($this->coords === null) {
+            return [];
+        }
+        
+        return [
+            $this->coords->getLongitude(),
+            $this->coords->getLatitude(),
+        ];
+    }
 
     /**
      * ################################################################################################################
@@ -77,60 +87,40 @@ class Media
     }
 
     /**
-     * @param string $path
-     *
+     * @param point $coords
      * @return self
      */
-    public function setPath($path)
+    public function setCoords($coords)
     {
-        $this->path = $path;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-    
-    /**
-     * @param string $mimeType
-     * @return self
-     */
-    public function setMimeType($mimeType)
-    {
-        $this->mimeType = $mimeType;
+        $this->coords = $coords;
     
         return $this;
     }
 
     /**
-     * @return string
+     * @return point 
      */
-    public function getMimeType()
+    public function getCoords()
     {
-        return $this->mimeType;
+        return $this->coords;
     }
     
     /**
-     * @param Asset $asset
+     * @param Journey $journey
      * @return self
      */
-    public function setAsset(Asset $asset)
+    public function setJourney(Journey $journey)
     {
-        $this->asset = $asset;
+        $this->journey = $journey;
     
         return $this;
     }
 
     /**
-     * @return Asset
+     * @return Journey
      */
-    public function getAsset()
+    public function getJourney()
     {
-        return $this->asset;
+        return $this->journey;
     }
 }
