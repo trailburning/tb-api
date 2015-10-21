@@ -110,9 +110,12 @@ class JourneyService
         if (isset($segments[0])) {
             $journey->clearRoutes();
             foreach ($segments[0] as $routePoint) {
-                $journey->addRoute(new Route(new Point($routePoint['long'], $routePoint['lat'])));
+                $journey->addRoute(new Route(new Point($routePoint['long'], $routePoint['lat'], 4326)));
             }
         }    
+        
+        $this->journeyRepository->add($journey);
+        $this->journeyRepository->store();
         
         return $this->apiResponseBuilder->buildSuccessResponse([$journey], 'journeys');
     }
