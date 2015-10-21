@@ -7,7 +7,7 @@ use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
 
 /**
- * Journey.
+ * Event.
  *
  * @ORM\Table(name="api_event")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\EventRepository")
@@ -53,18 +53,12 @@ class Event
     private $about;
     
     /**
-     * @var User
+     * @var Journey
      *
      * @ORM\ManyToOne(targetEntity="Journey", inversedBy="events")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $journey;
-    
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $journeyId;
     
     /**
      * @var Point point
@@ -81,7 +75,14 @@ class Event
      * @SWG\Property()
      * @Serializer\Expose
      */
-    protected $assets;
+    private $assets;
+    
+    /**
+     * @var EventCustom[]
+     *
+     * @ORM\OneToMany(targetEntity="EventCustom", mappedBy="event", cascade={"persist", "remove"})
+     */
+    private $customFields;
 
     /**
      * ################################################################################################################
@@ -111,6 +112,21 @@ class Event
             $this->coords->getLongitude(),
             $this->coords->getLatitude(),
         ];
+    }
+
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("custom")
+     * @return array
+     */
+    public function getCustomFieldsArray() 
+    {
+        $fields = [];
+        foreach ($this->getCustomFields() as $customField) {
+            $fields[$customField->getKey()] = $customField->getValue();
+        }
+        
+        return $fields;
     }
 
     /**
@@ -217,6 +233,17 @@ class Event
     
     /**
      * @param Asset $assets
+     * @return self
+     */
+    public function addAsset(Asset $asset)
+    {
+        $this->assets[] = $assets;
+
+        return $this;
+    }
+    
+    /**
+     * @param Asset $assets
      */
     public function removeAsset(Asset $asset)
     {
@@ -229,5 +256,33 @@ class Event
     public function getAssets()
     {
         return $this->assets;
+    }
+    
+    /**
+     * @param EventCustom $eventCustom
+     * @return self
+     */
+    public function addCustomField(EventCustom $eventCustom)
+    {
+        $eventCustom->setEvent($this);
+        $this->customFields[] = $eventCustom;
+
+        return $this;
+    }
+    
+    /**
+     * @param EventCustom $eventCustom
+     */
+    public function removeCustomField(EventCustom $eventCustom)
+    {
+        $this->customFields->removeElement($eventCustom);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCustomFields()
+    {
+        return $this->customFields;
     }
 }
