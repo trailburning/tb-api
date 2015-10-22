@@ -92,6 +92,11 @@ class JourneyService
             'user' => $user,
             'publish' => true,
         ]);
+        
+        // FIXME: removes routes from list response via response groups
+        foreach ($journeys as $journey) {
+            $journey->setNullRoutes();
+        }
 
         return $this->apiResponseBuilder->buildSuccessResponse($journeys, 'journeys');
     }
@@ -117,6 +122,28 @@ class JourneyService
         $this->journeyRepository->add($journey);
         $this->journeyRepository->store();
         
+        return $this->apiResponseBuilder->buildSuccessResponse([$journey], 'journeys');
+    }
+    
+    /**
+     * @param Journey      $journey
+     *
+     * @return APIResponse
+     */
+    public function deleteJourneyRoutes($oid)
+    {
+        $journey = $this->journeyRepository->findOneBy([
+            'oid' => $oid,
+        ]);
+
+        if ($journey === null) {
+            return $this->apiResponseBuilder->buildNotFoundResponse('Journey not found.');
+        }
+        
+        $journey->clearRoutes();
+        $this->journeyRepository->add($journey);
+        $this->journeyRepository->store();
+
         return $this->apiResponseBuilder->buildSuccessResponse([$journey], 'journeys');
     }
 }

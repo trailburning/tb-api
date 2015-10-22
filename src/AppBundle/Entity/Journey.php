@@ -251,4 +251,12 @@ class Journey
     {
         $this->routes->clear();
     }
+    
+    /**
+     * @return void
+     */
+    public function setNullRoutes()
+    {
+        $this->routes = null;
+    }
 }

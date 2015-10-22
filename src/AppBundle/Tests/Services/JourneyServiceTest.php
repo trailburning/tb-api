@@ -25,4 +25,21 @@ class JourneyServiceTest extends BaseWebTestCase
         $this->assertInstanceOf('AppBundle\Response\APIResponse', $result);
         $this->assertEquals(2, count($result->getBody()['journeys'][0]->getRoutes()));
     }
+    
+    public function testDeleteJourneyRoutes()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\JourneyData',
+        ]); 
+        
+        $journeyService = $this->getContainer()->get('tb.journey');
+        $journey = $this->getJourney('Test Journey 1');
+                
+        $this->assertEquals(3, count($journey->getRoutes()));
+        $result = $journeyService->deleteJourneyRoutes($journey->getOid());
+        
+        $this->refreshEntity($journey);
+        $this->assertEquals(0, count($result->getBody()['journeys'][0]->getRoutes()));
+        // $this->assertEquals(0, count($journey->getRoutes()));
+    }
 }
