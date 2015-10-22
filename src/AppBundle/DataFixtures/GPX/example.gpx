@@ -23,4 +23,9 @@
             </trkpt>
         </trkseg>
     </trk>
+    <rte>
+       <name>Chimorazo, Ecuador</name>
+       <rtept lat="-1.65898976133205" lon="-78.6821937561035" />
+       <rtept lat="-1.65487161089616" lon="-78.6979866027832" />
+    </rte>
 </gpx>

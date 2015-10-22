@@ -51,15 +51,15 @@ class GPXParser
 
     protected function parseGPXFeatures()
     {
-        $segments = [];
-        $segments = array_merge($segments, $this->parseTracks());
-        $routes = array_merge($segments, $this->parseRoutes());
+        $routes = [];
+        $routes = array_merge($routes, $this->parseTracks());
+        $routes = array_merge($routes, $this->parseRoutes());
 
-        if (empty($segments)) {
+        if (empty($routes)) {
             throw new \Exception('Invalid / Empty GPX');
         }
 
-        return $segments;
+        return $routes;
     }
 
     protected function childElements($xml, $nodename = '')
@@ -104,45 +104,44 @@ class GPXParser
 
     protected function parseTracks()
     {
-        $segments = [];
+        $routes = [];
         $trk_elements = $this->xmlobj->getElementsByTagName('trk');
         
         foreach ($trk_elements as $trk) {
-            $routes = [];
             foreach ($this->childElements($trk, 'trkseg') as $trkseg) {
+                $points = [];
                 foreach ($this->childElements($trkseg, 'trkpt') as $trkpt) {
                     $data = [
                         'long' => $trkpt->attributes->getNamedItem('lon')->nodeValue,
                         'lat' => $trkpt->attributes->getNamedItem('lat')->nodeValue,
                     ];
                     $data = array_merge($data, $this->parsePointTags($trkpt));
-                    $routes[] = $data;
+                    $points[] = $data;
                 }
             }
-            $segments[] = $routes;
+            $routes[] = $points;
         }
 
-        return $segments;
+        return $routes;
     }
 
     protected function parseRoutes()
     {
-        $segments = [];
+        $routes = [];
         $rte_elements = $this->xmlobj->getElementsByTagName('rte');
         foreach ($rte_elements as $rte) {
-            $routes = [];
-
+            $points = [];
             foreach ($this->childElements($rte, 'rtept') as $rtept) {
                 $data = [
                     'long' => $rtept->attributes->getNamedItem('lon')->nodeValue,
                     'lat' => $rtept->attributes->getNamedItem('lat')->nodeValue,
                 ];
-                $data = array_merge($data, $this->parsePointTags($trkpt));
-                $routes[] = $data;
+                $data = array_merge($data, $this->parsePointTags($rtept));
+                $points[] = $data;
             }
-            $segments[] = $route;
+            $routes[] = $points;
         }
 
-        return $segments;
+        return $routes;
     }
 }
