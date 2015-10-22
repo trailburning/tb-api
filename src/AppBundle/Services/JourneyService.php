@@ -4,6 +4,7 @@ namespace AppBundle\Services;
 
 use AppBundle\Response\APIResponse;
 use AppBundle\Repository\JourneyRepository;
+use AppBundle\Repository\RouteRepository;
 use AppBundle\Entity\Journey;
 use AppBundle\Entity\Route;
 use AppBundle\Repository\UserRepository;
@@ -35,23 +36,31 @@ class JourneyService
      * @var GPXParser
      */
     protected $gpxParser;
+    
+    /**
+     * @var RouteRepository
+     */
+    protected $routeRepository;
 
     /**
      * @param JourneyRepository  $journeyRepository
      * @param UserRepository     $userRepository
      * @param APIResponseBuilder $apiResponseBuilder
      * @param GPXParser          $gpxParser
+     * @param RouteRepository    $routeRepository
      */
     public function __construct(
         JourneyRepository $journeyRepository,
         UserRepository $userRepository,
         APIResponseBuilder $apiResponseBuilder,
-        GPXParser $gpxParser)
+        GPXParser $gpxParser,
+        RouteRepository $routeRepository)
     {
         $this->journeyRepository = $journeyRepository;
         $this->userRepository = $userRepository;
         $this->apiResponseBuilder = $apiResponseBuilder;
         $this->gpxParser = $gpxParser;
+        $this->routeRepository = $routeRepository;
     }
 
     /**
@@ -140,9 +149,8 @@ class JourneyService
             return $this->apiResponseBuilder->buildNotFoundResponse('Journey not found.');
         }
         
+        $this->routeRepository->deleteByJourney($journey);
         $journey->clearRoutes();
-        $this->journeyRepository->add($journey);
-        $this->journeyRepository->store();
 
         return $this->apiResponseBuilder->buildSuccessResponse([$journey], 'journeys');
     }

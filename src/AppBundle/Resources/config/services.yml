@@ -14,6 +14,7 @@ services:
             - @tb.user.repository
             - @tb.response.builder
             - @tb.gpxParser
+            - @tb.route.repository
             
     tb.journey.repository:
         class: AppBundle\Repository\JourneyRepository
@@ -74,3 +75,10 @@ services:
 
     tb.gpxParser:
         class: AppBundle\Services\GPXParser
+        
+    tb.route.repository:
+        class: AppBundle\Repository\RouteRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\Route

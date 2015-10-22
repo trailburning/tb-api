@@ -10,7 +10,7 @@ use Swagger\Annotations as SWG;
  * Route.
  *
  * @ORM\Table(name="api_route")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\RouteRepository")
  * @SWG\Definition(required={"coords"}, @SWG\Xml(name="Route"))
  * @Serializer\ExclusionPolicy("all")
  */

@@ -7,6 +7,7 @@ use Swagger\Annotations as SWG;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Delete;
 use AppBundle\Form\Type\GPXImportType;
 
 class JourneysController extends Controller implements ClassResourceInterface
@@ -87,8 +88,8 @@ class JourneysController extends Controller implements ClassResourceInterface
     /**
      * @SWG\Post(
      *     path="/journeys/{id}/import/gpx",
-     *     summary="Imports a GPX file.",
-     *     description="Import a GPX file and add the routes found in the GPX to a journey. Replaces all previous routes.",
+     *     summary="Import a GPX file",
+     *     description="Imports a GPX file and adds the routes found in the GPX to a journey. Replaces all previous routes.",
      *     tags={"Journeys"},
      *     consumes={"multipart/form-data"},
      *     produces={"application/json"},
@@ -151,5 +152,43 @@ class JourneysController extends Controller implements ClassResourceInterface
         $journeyService = $this->get('tb.journey');
         
         return $journeyService->importGPX($file, $journey);
+    }
+    
+    /**
+     * @SWG\Delete(
+     *     path="/journeys/{id}/routes",
+     *     summary="Delete all routes",
+     *     description="Deletes all routes of a journey.",
+     *     tags={"Journeys"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(
+     *         description="ID of the journey",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @SWG\Schema(ref="#/definitions/Journey")
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Journey not found"
+     *     ),
+     * )
+     *
+     * @Delete("/journeys/{id}/routes")
+     *
+     * @param int $id
+     *
+     * @return APIResponse
+     */
+    public function deleteRoutesAction($id)
+    {
+        $journeyService = $this->get('tb.journey');
+
+        return $journeyService->deleteJourneyRoutes($id);
     }
 }
