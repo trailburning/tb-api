@@ -55,9 +55,9 @@ class EventService
             return $this->apiResponseBuilder->buildNotFoundResponse('Journey not found.');
         }
 
-        $events = $this->eventRepository->findBy([
-            'journey' => $journey,
-        ]);
+        $qb = $this->eventRepository->findByJourneyQB($journey);
+        $qb = $this->eventRepository->addOrderByPositionQB($qb);
+        $events = $qb->getQuery()->getResult();
 
         return $this->apiResponseBuilder->buildSuccessResponse($events, 'events');
     }

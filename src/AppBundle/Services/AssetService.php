@@ -54,9 +54,9 @@ class AssetService
             return $this->apiResponseBuilder->buildNotFoundResponse('Event not found.');
         }
 
-        $assets = $this->assetRepository->findBy([
-            'event' => $event,
-        ]);
+        $qb = $this->assetRepository->findByEventQB($event);
+        $qb = $this->assetRepository->addOrderByPositionQB($qb);
+        $assets = $qb->getQuery()->getResult();
 
         return $this->apiResponseBuilder->buildSuccessResponse($assets, 'assets');
     }

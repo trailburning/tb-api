@@ -82,6 +82,7 @@ class JourneysController extends Controller implements ClassResourceInterface
     public function getByUserAction($id)
     {
         $journeyService = $this->get('tb.journey');
+        
         return $journeyService->buildGetByUserAPIResponse($id);
     }
     

@@ -97,10 +97,9 @@ class JourneyService
             return $this->apiResponseBuilder->buildNotFoundResponse('User not found.');
         }
 
-        $journeys = $this->journeyRepository->findBy([
-            'user' => $user,
-            'publish' => true,
-        ]);
+        $qb = $this->journeyRepository->findPublishedByUserQB($user);
+        $qb = $this->journeyRepository->addOrderByPositionQB($qb);
+        $journeys = $qb->getQuery()->getResult();
         
         // FIXME: removes routes from list response via response groups
         foreach ($journeys as $journey) {
