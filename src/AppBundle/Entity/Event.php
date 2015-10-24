@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Event.
@@ -84,6 +85,12 @@ class Event
      * @ORM\OneToMany(targetEntity="EventCustom", mappedBy="event", cascade={"persist", "remove"})
      */
     private $customFields;
+    
+    /**
+     * @Gedmo\SortablePosition
+     * @ORM\Column(name="position", type="integer", nullable=true)
+     */
+    private $position;
 
     /**
      * ################################################################################################################
@@ -286,5 +293,25 @@ class Event
     public function getCustomFields()
     {
         return $this->customFields;
+    }
+    
+    /**
+     * @param int $position
+     *
+     * @return self
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+        
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 }

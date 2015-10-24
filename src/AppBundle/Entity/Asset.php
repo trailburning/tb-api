@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Asset.
@@ -61,7 +62,7 @@ class Asset
      * @SWG\Property()
      * @Serializer\Expose
      */
-    protected $medias;
+    private $medias;
     
     /**
      * @var Event
@@ -69,7 +70,7 @@ class Asset
      * @ORM\ManyToOne(targetEntity="Event", inversedBy="assets")
      * @ORM\JoinColumn(nullable=false)
      */
-    protected $event;
+    private $event;
     
     /**
      * @var AssetCategory 
@@ -78,7 +79,13 @@ class Asset
      * @SWG\Property()
      * @Serializer\Expose
      */
-    protected $category;
+    private $category;
+    
+    /**
+     * @Gedmo\SortablePosition
+     * @ORM\Column(name="position", type="integer", nullable=true)
+     */
+    private $position;
 
     /**
      * ################################################################################################################
@@ -222,5 +229,25 @@ class Asset
     public function getEvent()
     {
         return $this->event;
+    }
+    
+    /**
+     * @param int $position
+     *
+     * @return self
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+        
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 }

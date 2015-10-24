@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Journey.
@@ -25,7 +26,7 @@ class Journey
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
+
     /**
      * @var string
      * @ORM\Column(type="string", length=22, unique=true)
@@ -52,9 +53,9 @@ class Journey
      * @Serializer\Expose
      */
     private $about;
-    
+
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(type="boolean", options={"default" = false})
      */
@@ -67,12 +68,12 @@ class Journey
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Event", mappedBy="journey")
      */
     protected $events;
-    
+
     /**
      * @var Route[]
      *
@@ -83,13 +84,18 @@ class Journey
     private $routes;
 
     /**
-     * ################################################################################################################
+     * @Gedmo\SortablePosition
+     * @ORM\Column(name="position", type="integer", nullable=true)
+     */
+    private $position;
+
+    /**
+     * ################################################################################################################.
      *
      *                                         User Defined
      *
      * ################################################################################################################
      */
-    
     public function __construct()
     {
         $this->oid = str_replace('.', '', uniqid(null, true));
@@ -98,7 +104,7 @@ class Journey
     }
 
     /**
-     * ################################################################################################################
+     * ################################################################################################################.
      *
      *                                         Getters and Setters
      *
@@ -112,7 +118,7 @@ class Journey
     {
         return $this->id;
     }
-    
+
     /**
      * @return string
      */
@@ -180,26 +186,27 @@ class Journey
     {
         return $this->publish;
     }
-    
+
     /**
      * @param User $user
+     *
      * @return self
      */
     public function setUser(User $user)
     {
         $this->user = $user;
-    
+
         return $this;
     }
 
     /**
-     * @return User 
+     * @return User
      */
     public function getUser()
     {
         return $this->user;
     }
-        
+
     /**
      * @param Event $events
      */
@@ -209,15 +216,16 @@ class Journey
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getEvents()
     {
         return $this->events;
     }
-    
+
     /**
      * @param Route $routes
+     *
      * @return self
      */
     public function addRoute(Route $route)
@@ -227,7 +235,7 @@ class Journey
 
         return $this;
     }
-    
+
     /**
      * @param Route $routes
      */
@@ -237,26 +245,44 @@ class Journey
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getRoutes()
     {
         return $this->routes;
     }
-    
+
     /**
-     * @return void
      */
     public function clearRoutes()
     {
         $this->routes->clear();
     }
-    
+
     /**
-     * @return void
      */
     public function setNullRoutes()
     {
         $this->routes = null;
+    }
+
+    /**
+     * @param int $position
+     *
+     * @return self
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+        
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 }

@@ -2,9 +2,9 @@
 
 namespace AppBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use Gedmo\Sortable\Entity\Repository\SortableRepository;
 
-class BaseRepository extends EntityRepository
+class BaseRepository extends SortableRepository
 {    
     public function add($entity) 
     {
