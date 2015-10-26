@@ -59,8 +59,9 @@ class Asset
      * @var Media[]
      *
      * @ORM\OneToMany(targetEntity="Media", mappedBy="asset", cascade={"persist", "remove"})
-     * @SWG\Property()
+     * @SWG\Property(property="media")
      * @Serializer\Expose
+     * @Serializer\SerializedName("media")
      */
     private $medias;
     

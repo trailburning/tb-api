@@ -14,7 +14,7 @@ class MediaController extends Controller implements ClassResourceInterface
 
     /**
      * @SWG\Post(
-     *     path="/asset/{id}/media",
+     *     path="/assets/{id}/media",
      *     summary="Add a medias to an asset",
      *     description="Adds one or more media file to an asset.",
      *     tags={"Assets"},
@@ -49,7 +49,7 @@ class MediaController extends Controller implements ClassResourceInterface
      *     ),
      * )
      *
-     * @Post("/asset/{id}/media")
+     * @Post("/assets/{id}/media")
      *
      * @param int $id
      *

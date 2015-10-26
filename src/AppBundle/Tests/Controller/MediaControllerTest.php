@@ -23,7 +23,7 @@ class MediaControllerTest extends BaseWebTestCase
             'test.jpg'
         );
         
-        $client->request('POST', '/v2/asset/' . $asset->getOid() . '/media', [], ['media' => $file]);
+        $client->request('POST', '/v2/assets/' . $asset->getOid() . '/media', [], ['media' => $file]);
         $this->assertEquals(Response::HTTP_CREATED,  $client->getResponse()->getStatusCode());
         $this->assertJsonResponse($client);
     }
@@ -39,7 +39,7 @@ class MediaControllerTest extends BaseWebTestCase
             'test.jpg'
         );
         
-        $client->request('POST', '/v2/asset/000000/media', [], ['media' => $file]);
+        $client->request('POST', '/v2/assets/000000/media', [], ['media' => $file]);
         $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
         $this->assertJsonResponse($client);
     }
@@ -58,7 +58,7 @@ class MediaControllerTest extends BaseWebTestCase
             'test.txt'
         );
         
-        $client->request('POST', '/v2/asset/' . $asset->getOid() . '/media', [], ['media' => $file]);
+        $client->request('POST', '/v2/assets/' . $asset->getOid() . '/media', [], ['media' => $file]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST,  $client->getResponse()->getStatusCode());
         $this->assertJsonResponse($client);
     }
