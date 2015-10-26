@@ -86,7 +86,7 @@ class MediaController extends Controller implements ClassResourceInterface
     }
     
     /**
-     * @SWG\Put(
+     * @SWG\Post(
      *     path="/assets/{id}/media/{mediaId}",
      *     summary="Updates the media of an asset",
      *     description="Updates the media of an asset.",
