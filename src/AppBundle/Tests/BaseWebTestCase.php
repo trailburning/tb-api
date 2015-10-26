@@ -93,4 +93,19 @@ abstract class BaseWebTestCase extends WebTestCase
 
         return $event;
     }
+    
+    protected function getAsset($name)
+    {
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $assetRepository = $em->getRepository('AppBundle:Asset');
+        $asset = $assetRepository->findOneBy([
+            'name' => $name,
+        ]);
+
+        if (!$asset) {
+            $this->fail(sprintf('Missing asset with name "%s" in test DB', $name));
+        }
+
+        return $asset;
+    }
 }

@@ -24,3 +24,8 @@ assets:
     type:   rest
     resource: AppBundle\Controller\AssetsController
     prefix: /v2
+    
+medias:
+    type:   rest
+    resource: AppBundle\Controller\MediaController
+    prefix: /v2

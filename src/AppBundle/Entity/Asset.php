@@ -58,7 +58,7 @@ class Asset
     /**
      * @var Media[]
      *
-     * @ORM\OneToMany(targetEntity="Media", mappedBy="asset")
+     * @ORM\OneToMany(targetEntity="Media", mappedBy="asset", cascade={"persist", "remove"})
      * @SWG\Property()
      * @Serializer\Expose
      */
@@ -190,6 +190,7 @@ class Asset
      */
     public function addMedia(Media $media)
     {
+        $media->setAsset($this);
         $this->medias[] = $media;
 
         return $this;

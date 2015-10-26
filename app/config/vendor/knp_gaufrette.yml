@@ -1,0 +1,19 @@
+knp_gaufrette:
+    adapters:
+        media:
+            aws_s3:
+                service_id: tb.s3Client
+                bucket_name:  trailburning-media
+                options:
+                    create: true
+        debug:
+            local:
+                directory: %kernel.root_dir%/cache/debug_filesystem
+                
+    filesystems:
+        media:
+            adapter:    media
+            alias:      media_filesystem
+        debug:
+            adapter:    debug
+            alias:      debug_filesystem

@@ -13,9 +13,9 @@ class APIResponseBuilder
      *
      * @return APIResponse
      */
-    public function buildSuccessResponse($body, $name)
+    public function buildSuccessResponse($body, $name, $statusCode = 200)
     {
-        $response = new APIResponse();
+        $response = new APIResponse($statusCode);
         $response->addToBody($body, $name);
 
         return $response;
@@ -30,6 +30,20 @@ class APIResponseBuilder
     public function buildNotFoundResponse($message)
     {
         $response = new APIResponse(404, 'error');
+        $response->addMessage($message);
+
+        return $response;
+    }
+    
+    /**
+     * @param mixed  $body
+     * @param string $name
+     *
+     * @return APIResponse
+     */
+    public function buildBadRequestResponse($message)
+    {
+        $response = new APIResponse(400, 'error');
         $response->addMessage($message);
 
         return $response;

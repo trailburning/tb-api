@@ -22,7 +22,7 @@ class EventData extends AbstractFixture implements FixtureInterface, DependentFi
         $event->addCustomField(new EventCustom('custom1', 'custom text'));
         $event->addCustomField(new EventCustom('custom2', 'custom text'));
         $event->setCoords(new Point(13.221316, 52.489695, 4326));
-        
+        $this->addReference('Event-1', $event);
         $manager->persist($event);
         
         $event = new Event();
@@ -32,7 +32,7 @@ class EventData extends AbstractFixture implements FixtureInterface, DependentFi
         $event->addCustomField(new EventCustom('custom1', 'custom text'));
         $event->addCustomField(new EventCustom('custom2', 'custom text'));
         $event->setCoords(new Point(13.221316, 52.489695, 4326));
-        
+        $this->addReference('Event-2', $event);
         $manager->persist($event);
         
         $event = new Event();
@@ -42,8 +42,9 @@ class EventData extends AbstractFixture implements FixtureInterface, DependentFi
         $event->addCustomField(new EventCustom('custom1', 'custom text'));
         $event->addCustomField(new EventCustom('custom2', 'custom text'));
         $event->setCoords(new Point(13.221316, 52.489695, 4326));
-        
+        $this->addReference('Event-3', $event);
         $manager->persist($event);
+        
         $manager->flush();
     }
     
