@@ -42,7 +42,7 @@ class MediaServiceTest extends BaseWebTestCase
         
         $filepath = $mediaService->uploadFile($file);
         $this->assertTrue($filesystem->has($filepath), 'The file exists on the provided filesystem');
-        $this->assertRegExp('/\/images\/[\d\w]+\.jpg/', $filepath, 'The files path was retuned by the uploadFile() method');
+        $this->assertRegExp('/\/test25zero\/[\d\w]+\.jpg/', $filepath, 'The files path was retuned by the uploadFile() method');
     }
     
     public function testGetMIMEType($value='') 
@@ -66,6 +66,6 @@ class MediaServiceTest extends BaseWebTestCase
         );
         
         $result = $this->callProtectedMethod($mediaService, 'generateRelativeFilepath', [$file]);
-        $this->assertRegExp('/\/images\/[\d\w]+\.jpg/', $result);
+        $this->assertRegExp('/\/test25zero\/[\d\w]+\.jpg/', $result);
     }
 }

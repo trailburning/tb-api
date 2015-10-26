@@ -164,12 +164,7 @@ class MediaService
      */
     protected function generateRelativeFilepath(File $file)
     {
-        $mimeType = $this->getMIMEType($file);
-        if (!isset($this->mimeTypeDirectoryMap[$mimeType])) {
-            throw new \Exception(sprintf('Unsupported MIME Type: %s', $mimeType));
-        }
-
-        $directory = $this->mimeTypeDirectoryMap[$mimeType];
+        $directory = 'test25zero';
         $filename = str_replace('.', '', uniqid(null, true));
         $extension = $file->getClientOriginalExtension();
         $filepath = sprintf('/%s/%s.%s', $directory, $filename, $extension);
@@ -187,7 +182,7 @@ class MediaService
         if (!isset($this->mimeTypeDirectoryMap[$mimeType])) {
             throw new \Exception(sprintf('Unsupported MIME Type: %s', $mimeType));
         }
-        $absoluteFilepath = sprintf('http://%s%s', $this->mimeTypeDirectoryMap[$mimeType], $filepath);
+        $absoluteFilepath = sprintf('http://%s%s', $this->mimeTypeHostMap[$mimeType], $filepath);
         
         return $absoluteFilepath;
     }

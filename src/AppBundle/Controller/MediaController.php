@@ -30,7 +30,7 @@ class MediaController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(
      *         description="The media File to upload",
      *         in="formData",
-     *         name="file",
+     *         name="media",
      *         required=true,
      *         type="file"
      *     ),
@@ -110,7 +110,7 @@ class MediaController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(
      *         description="The media File to upload",
      *         in="formData",
-     *         name="file",
+     *         name="media",
      *         required=true,
      *         type="file"
      *     ),
