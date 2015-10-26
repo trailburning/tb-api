@@ -71,7 +71,7 @@ class MediaService
      *
      * @return APIResponse
      */
-    public function uploadMedia(array $files, Asset $asset)
+    public function createMedia(array $files, Asset $asset)
     {
         $medias = [];
         foreach ($files as $file) {
@@ -86,9 +86,30 @@ class MediaService
             $this->mediaRepository->add($media);
             $medias[] = $media;
         }
-        $this->mediaRepository->store($media);
+        $this->mediaRepository->store();
         
         return $this->apiResponseBuilder->buildSuccessResponse($medias, 'media', 201);
+    }
+    
+    /**
+     * @param array $files
+     * @param Asset $Asset
+     *
+     * @return APIResponse
+     */
+    public function updateMedia(File $file, Media $media)
+    {
+        $medias = [];
+        $mimeType = $this->getMIMEType($file);
+        $filepath = $this->uploadFile($file);
+        $path = $this->getAbsoluteFilepath($filepath, $mimeType);
+        $media->setMimeType($mimeType);
+        $media->setPath($path);
+            
+        $this->mediaRepository->add($media);
+        $this->mediaRepository->store();
+        
+        return $this->apiResponseBuilder->buildSuccessResponse([$media], 'media', 200);
     }
     
     public function deleteMedia($mediaId, $assetId) 

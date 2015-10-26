@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaServiceTest extends BaseWebTestCase
 {
-    public function testUploadMedia()
+    public function testCreateMedia()
     {
         $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\AssetData',
@@ -23,7 +23,7 @@ class MediaServiceTest extends BaseWebTestCase
             'test.jpg'
         );
         
-        $result = $mediaService->uploadMedia([$file], $asset);
+        $result = $mediaService->createMedia([$file], $asset);
         $this->refreshEntity($asset);
         
         $this->assertEquals(3, count($asset->getMedias()));

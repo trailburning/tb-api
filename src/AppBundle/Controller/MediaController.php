@@ -16,7 +16,7 @@ class MediaController extends Controller implements ClassResourceInterface
      * @SWG\Post(
      *     path="/assets/{id}/media",
      *     summary="Add a medias to an asset",
-     *     description="Adds one or more media file to an asset.",
+     *     description="Adds a more media file to an asset.",
      *     tags={"Assets"},
      *     consumes={"multipart/form-data"},
      *     produces={"application/json"},
@@ -82,7 +82,91 @@ class MediaController extends Controller implements ClassResourceInterface
             $mediaFiles = [$mediaFiles];
         }
         
-        return $mediaService->uploadMedia($mediaFiles, $asset);
+        return $mediaService->createMedia($mediaFiles, $asset);
+    }
+    
+    /**
+     * @SWG\Put(
+     *     path="/assets/{id}/media/{mediaId}",
+     *     summary="Updates the media of an asset",
+     *     description="Updates the media of an asset.",
+     *     tags={"Assets"},
+     *     consumes={"multipart/form-data"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(
+     *         description="ID of the asset",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="ID of the media",
+     *         in="path",
+     *         name="mediaId",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="The media File to upload",
+     *         in="formData",
+     *         name="file",
+     *         required=true,
+     *         type="file"
+     *     ),
+     *     @SWG\Response(
+     *         response=201,
+     *         description="Successful operation",
+     *         @SWG\Schema(ref="#/definitions/Media")
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Asset not found. Media not found."
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid MIME type. File size too large."
+     *     ),
+     * )
+     *
+     * @Post("/assets/{id}/media/{mediaId}")
+     *
+     * @param int $id
+     * @param int $mediaId
+     *
+     * @return APIResponse
+     */
+    public function putAction($id, $mediaId)
+    {
+        $mediaService = $this->get('tb.media');
+        $assetRepository = $this->get('tb.asset.repository');
+        $mediaRepository = $this->get('tb.media.repository');
+        $apiResponseBuilder = $this->get('tb.response.builder');
+        
+        $asset = $assetRepository->findOneBy([
+            'oid' => $id,
+        ]);
+        if ($asset === null) {
+            return $apiResponseBuilder->buildNotFoundResponse('Asset not found');
+        }
+        
+        $media = $mediaRepository->findOneBy([
+            'oid' => $mediaId,
+        ]);
+        if ($media === null) {
+            return $apiResponseBuilder->buildNotFoundResponse('Media not found');
+        }
+            
+        $form = $this->createForm(new MediaUploadType());
+        $form->handleRequest($this->getRequest());
+
+        if (!$form->isValid()) {
+            return $apiResponseBuilder->buildBadRequestResponse((string)$form->getErrors(true, true));
+        }
+        
+        $file = $form->get('media')->getData();
+        
+        return $mediaService->updateMedia($file, $media);
     }
     
     /**

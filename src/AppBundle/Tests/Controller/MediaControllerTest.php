@@ -132,4 +132,59 @@ class MediaControllerTest extends BaseWebTestCase
         $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
         $this->assertJsonResponse($client);
     }
+    
+    public function testPutAction()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\AssetData',
+        ]);
+        
+        $client = static::createClient();
+        $asset = $this->getAsset('Test Asset 1');
+        $media = $asset->getMedias()[0];
+        
+        $file = new UploadedFile(
+            realpath(__DIR__ . '/../../DataFixtures/Media/test.jpg'),
+            'test.jpg'
+        );
+        
+        $client->request('POST', '/v2/assets/' . $asset->getOid() . '/media/' . $media->getOid(), [], ['media' => $file]);
+        $this->assertEquals(Response::HTTP_OK,  $client->getResponse()->getStatusCode());
+        $this->assertJsonResponse($client);
+    }
+    
+    public function testPutActionAssetNotFound()
+    {
+        $this->loadFixtures([]);
+        
+        $client = static::createClient();
+        
+        $file = new UploadedFile(
+            realpath(__DIR__ . '/../../DataFixtures/Media/test.jpg'),
+            'test.jpg'
+        );
+        
+        $client->request('POST', '/v2/assets/0000/media/0000', [], ['media' => $file]);
+        $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
+        $this->assertJsonResponse($client);
+    }
+    
+    public function testPutActionMediaNotFound()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\AssetData',
+        ]);
+        
+        $client = static::createClient();
+        $asset = $this->getAsset('Test Asset 1');
+        
+        $file = new UploadedFile(
+            realpath(__DIR__ . '/../../DataFixtures/Media/test.jpg'),
+            'test.jpg'
+        );
+        
+        $client->request('POST', '/v2/assets/' . $asset->getOid() . '/media/0000', [], ['media' => $file]);
+        $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
+        $this->assertJsonResponse($client);
+    }
 }
