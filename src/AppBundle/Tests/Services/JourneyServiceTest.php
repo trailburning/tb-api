@@ -24,6 +24,13 @@ class JourneyServiceTest extends BaseWebTestCase
         $result = $journeyService->importGPX($file, $journey);
         $this->assertInstanceOf('AppBundle\Response\APIResponse', $result);
         $this->assertEquals(2, count($result->getBody()['journeys'][0]->getRoutes()));
+        $this->refreshEntity($journey);
+        $this->assertEquals(2, count($journey->getRoutes()));
+        
+        $result = $journeyService->importGPX($file, $journey);
+        $this->assertInstanceOf('AppBundle\Response\APIResponse', $result);
+        $this->assertEquals(2, count($result->getBody()['journeys'][0]->getRoutes()));
+        $this->assertEquals(2, count($journey->getRoutes()));
     }
     
     public function testDeleteJourneyRoutes()
@@ -40,6 +47,6 @@ class JourneyServiceTest extends BaseWebTestCase
         
         $this->refreshEntity($journey);
         $this->assertEquals(0, count($result->getBody()['journeys'][0]->getRoutes()));
-        // $this->assertEquals(0, count($journey->getRoutes()));
+        $this->assertEquals(0, count($journey->getRoutes()));
     }
 }

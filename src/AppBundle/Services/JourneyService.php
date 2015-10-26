@@ -121,6 +121,7 @@ class JourneyService
         $segments = $this->gpxParser->parse($gpx);
         
         if (isset($segments[0])) {
+            $this->routeRepository->deleteByJourney($journey);
             $journey->clearRoutes();
             foreach ($segments[0] as $routePoint) {
                 $journey->addRoute(new Route(new Point($routePoint['long'], $routePoint['lat'], 4326)));
