@@ -13,6 +13,11 @@ class BaseRepository extends EntityRepository
         $this->getEntityManager()->persist($entity);
     }
     
+    public function remove($entity) 
+    {
+        $this->getEntityManager()->remove($entity);
+    }
+    
     public function store() 
     {
         $this->getEntityManager()->flush();

@@ -5,7 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Swagger\Annotations as SWG;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Post;
 use AppBundle\Form\Type\MediaUploadType;
 
@@ -83,5 +83,50 @@ class MediaController extends Controller implements ClassResourceInterface
         }
         
         return $mediaService->uploadMedia($mediaFiles, $asset);
+    }
+    
+    /**
+     * @SWG\Delete(
+     *     path="/assets/{id}/media/{mediaId}",
+     *     summary="Delete a media",
+     *     description="Deletes the media.",
+     *     tags={"Assets"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(
+     *         description="ID of the asset",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="ID of the media",
+     *         in="path",
+     *         name="mediaId",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Asset not found. Media not found"
+     *     ),
+     * )
+     *
+     * @Delete("/assets/{id}/media/{mediaId}")
+     *
+     * @param int $id
+     * @param int $mediaId
+     *
+     * @return APIResponse
+     */
+    public function deleteAction($id, $mediaId)
+    {
+        $mediaService = $this->get('tb.media');
+        
+        return $mediaService->deleteMedia($mediaId, $id);
     }
 }

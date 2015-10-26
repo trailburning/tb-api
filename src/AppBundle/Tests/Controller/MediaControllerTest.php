@@ -92,4 +92,44 @@ class MediaControllerTest extends BaseWebTestCase
     //     $this->refreshEntity();
     //     $this->assertEquals(4, count($asset->getMedias()));
     // }
+    
+    public function testDeleteAction()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\AssetData',
+        ]);
+        
+        $client = static::createClient();
+        $asset = $this->getAsset('Test Asset 1');
+        $media = $asset->getMedias()[0];
+        
+        $client->request('DELETE', '/v2/assets/' . $asset->getOid() . '/media/' . $media->getOid());
+        $this->assertEquals(Response::HTTP_OK,  $client->getResponse()->getStatusCode());
+        $this->assertJsonResponse($client);
+    }
+    
+    public function testDeleteActionAssetNotFound()
+    {
+        $this->loadFixtures([]);
+        
+        $client = static::createClient();
+        
+        $client->request('DELETE', '/v2/assets/00000/media/00000');
+        $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
+        $this->assertJsonResponse($client);
+    }
+    
+    public function testDeleteActionMediaNotFound()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\AssetData',
+        ]);
+        
+        $client = static::createClient();
+        $asset = $this->getAsset('Test Asset 1');
+        
+        $client->request('DELETE', '/v2/assets/' . $asset->getOid() . '/media/00000');
+        $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
+        $this->assertJsonResponse($client);
+    }
 }

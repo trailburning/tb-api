@@ -89,6 +89,7 @@ services:
             - @media_filesystem
             - @tb.media.repository
             - @tb.response.builder
+            - @tb.asset.repository
             
     tb.s3Client:
         class: Aws\S3\S3Client

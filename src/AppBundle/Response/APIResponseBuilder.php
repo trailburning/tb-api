@@ -10,6 +10,7 @@ class APIResponseBuilder
     /**
      * @param mixed  $body
      * @param string $name
+     * @param int    $statusCode
      *
      * @return APIResponse
      */
@@ -17,6 +18,18 @@ class APIResponseBuilder
     {
         $response = new APIResponse($statusCode);
         $response->addToBody($body, $name);
+
+        return $response;
+    }
+
+    /**
+     * @param int $statusCode
+     *
+     * @return APIResponse
+     */
+    public function buildEmptySuccessResponse($statusCode = 200)
+    {
+        $response = new APIResponse($statusCode);
 
         return $response;
     }
@@ -34,7 +47,7 @@ class APIResponseBuilder
 
         return $response;
     }
-    
+
     /**
      * @param mixed  $body
      * @param string $name

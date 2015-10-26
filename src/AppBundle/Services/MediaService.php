@@ -8,6 +8,7 @@ use AppBundle\DBAL\Types\MIMEType;
 use AppBundle\Entity\Media;
 use AppBundle\Entity\Asset;
 use AppBundle\Repository\MediaRepository;
+use AppBundle\Repository\AssetRepository;
 use AppBundle\Response\APIResponseBuilder;
 
 /**
@@ -29,6 +30,11 @@ class MediaService
      * @var APIResponseBuilder
      */
     protected $apiResponseBuilder;
+    
+    /**
+     * @var AssetRepository
+     */
+    protected $assetRepository;
 
     private $mimeTypeDirectoryMap = [
         MIMEType::JPEG => 'images',
@@ -47,11 +53,16 @@ class MediaService
      * @param MediaRepository $mediaRepository
      * @param APIResponseBuilder $apiResponseBuilder
      */
-    public function __construct(Filesystem $filesystem, MediaRepository $mediaRepository, APIResponseBuilder $apiResponseBuilder)
+    public function __construct(
+        Filesystem $filesystem, 
+        MediaRepository $mediaRepository, 
+        APIResponseBuilder $apiResponseBuilder, 
+        AssetRepository $assetRepository)
     {
         $this->filesystem = $filesystem;
         $this->mediaRepository = $mediaRepository;
         $this->apiResponseBuilder = $apiResponseBuilder;
+        $this->assetRepository = $assetRepository;
     }
 
     /**
@@ -78,6 +89,28 @@ class MediaService
         $this->mediaRepository->store($media);
         
         return $this->apiResponseBuilder->buildSuccessResponse($medias, 'media', 201);
+    }
+    
+    public function deleteMedia($mediaId, $assetId) 
+    {        
+        $asset = $this->assetRepository->findOneBy([
+            'oid' => $assetId,
+        ]);
+        if ($asset === null) {
+            return $this->apiResponseBuilder->buildNotFoundResponse('Asset not found');
+        }
+        
+        $media = $this->mediaRepository->findOneBy([
+            'oid' => $mediaId,
+        ]);
+        if ($media === null) {
+            return $this->apiResponseBuilder->buildNotFoundResponse('Media not found');
+        }
+        
+        $this->mediaRepository->remove($media);
+        $this->mediaRepository->store();
+        
+        return $this->apiResponseBuilder->buildEmptySuccessResponse();
     }
 
     /**
