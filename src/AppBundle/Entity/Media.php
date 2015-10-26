@@ -26,6 +26,15 @@ class Media
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+    
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=22, unique=true, nullable=true)
+     * @SWG\Property(property="id")
+     * @Serializer\Expose
+     * @Serializer\SerializedName("id")
+     */
+    private $oid;
 
     /**
      * @var string
@@ -60,6 +69,10 @@ class Media
      * ################################################################################################################
      */
 
+    public function __construct()
+    {
+        $this->oid = str_replace('.', '', uniqid(null, true));
+    }
 
     /**
      * ################################################################################################################
@@ -75,6 +88,14 @@ class Media
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOid()
+    {
+        return $this->oid;
     }
 
     /**
