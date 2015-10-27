@@ -185,7 +185,7 @@ class MediaService
      */
     protected function generateRelativeFilepath(File $file)
     {
-        $directory = 'test';
+        $directory = '25zero';
         $filename = str_replace('.', '', uniqid(null, true));
         $extension = $file->getClientOriginalExtension();
         $filepath = sprintf('%s/%s.%s', $directory, $filename, $extension);

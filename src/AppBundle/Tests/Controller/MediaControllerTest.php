@@ -93,6 +93,44 @@ class MediaControllerTest extends BaseWebTestCase
     //     $this->assertEquals(4, count($asset->getMedias()));
     // }
     
+    public function testPostActionMP4()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\AssetData',
+        ]);
+        
+        $client = $this->makeClient();
+        $asset = $this->getAsset('Test Asset 1');
+        
+        $file = new UploadedFile(
+            realpath(__DIR__ . '/../../DataFixtures/Media/test.m4v'),
+            'test.m4v'
+        );
+        
+        $client->request('POST', '/v2/assets/' . $asset->getOid() . '/media', [], ['media' => $file]);
+        $this->assertEquals(Response::HTTP_CREATED,  $client->getResponse()->getStatusCode());
+        $this->assertJsonResponse($client);
+    }
+    
+    public function testPostActionMPEG()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\AssetData',
+        ]);
+        
+        $client = $this->makeClient();
+        $asset = $this->getAsset('Test Asset 1');
+        
+        $file = new UploadedFile(
+            realpath(__DIR__ . '/../../DataFixtures/Media/test.mp3'),
+            'test.mp3'
+        );
+        
+        $client->request('POST', '/v2/assets/' . $asset->getOid() . '/media', [], ['media' => $file]);
+        $this->assertEquals(Response::HTTP_CREATED,  $client->getResponse()->getStatusCode());
+        $this->assertJsonResponse($client);
+    }
+    
     public function testDeleteAction()
     {
         $this->loadFixtures([
@@ -185,6 +223,46 @@ class MediaControllerTest extends BaseWebTestCase
         
         $client->request('POST', '/v2/assets/' . $asset->getOid() . '/media/0000', [], ['media' => $file]);
         $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
+        $this->assertJsonResponse($client);
+    }
+    
+    public function testPutActionMP4()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\AssetData',
+        ]);
+        
+        $client = $this->makeClient();
+        $asset = $this->getAsset('Test Asset 1');
+        $media = $asset->getMedias()[0];
+        
+        $file = new UploadedFile(
+            realpath(__DIR__ . '/../../DataFixtures/Media/test.m4v'),
+            'test.m4v'
+        );
+        
+        $client->request('POST', '/v2/assets/' . $asset->getOid() . '/media/' . $media->getOid(), [], ['media' => $file]);
+        $this->assertEquals(Response::HTTP_OK,  $client->getResponse()->getStatusCode());
+        $this->assertJsonResponse($client);
+    }
+    
+    public function testPutActionMPEG()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\AssetData',
+        ]);
+        
+        $client = $this->makeClient();
+        $asset = $this->getAsset('Test Asset 1');
+        $media = $asset->getMedias()[0];
+        
+        $file = new UploadedFile(
+            realpath(__DIR__ . '/../../DataFixtures/Media/test.mp3'),
+            'test.mp3'
+        );
+        
+        $client->request('POST', '/v2/assets/' . $asset->getOid() . '/media/' . $media->getOid(), [], ['media' => $file]);
+        $this->assertEquals(Response::HTTP_OK,  $client->getResponse()->getStatusCode());
         $this->assertJsonResponse($client);
     }
 }

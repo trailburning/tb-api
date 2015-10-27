@@ -109,17 +109,17 @@ services:
         arguments:
             -
                 'image/jpeg': @tb.media.metadata.jpeg
-                'video/mpeg': @tb.media.metadata.mpeg
-                'audio/mp3': @tb.media.metadata.mp3
+                'audio/mpeg': @tb.media.metadata.mp3
+                'video/mp4': @tb.media.metadata.mpeg
                 
     tb.media.metadata.jpeg:
         class: AppBundle\Services\MetadataReader\JPEGMetadataReader
     
-    tb.media.metadata.mpeg:
+    tb.media.metadata.mp3:
         class: AppBundle\Services\MetadataReader\MPEGMetadataReader
         
-    tb.media.metadata.mp3:
-        class: AppBundle\Services\MetadataReader\MP3MetadataReader
+    tb.media.metadata.mpeg:
+        class: AppBundle\Services\MetadataReader\MP4MetadataReader
         
     tb.mediaAttribute.repository:
         class: AppBundle\Repository\MediaAttributeRepository

@@ -4,7 +4,7 @@ namespace AppBundle\Services\MetadataReader;
 
 use Symfony\Component\HttpFoundation\File\File;
 
-class MP3MetadataReader implements MetadataReader
+class MP4MetadataReader implements MetadataReader
 {
     /**
      * @param File $file 
