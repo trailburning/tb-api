@@ -14,6 +14,14 @@ abstract class BaseWebTestCase extends WebTestCase
         parent::__construct($name, $data, $dataName);
     }
     
+    protected function makeClient($authentication = false, array $params = array()) 
+    {
+        $client = parent::makeClient($authentication, $params);
+        $client->getContainer()->set('media_filesystem', $client->getContainer()->get('debug_filesystem'));
+        
+        return $client;
+    }
+    
     protected function loadFixtures(array $classNames, $omName = null, $registryName = 'doctrine', $purgeMode = null)
     {
         return parent::loadFixtures($classNames, $omName, $registryName, ORMPurger::PURGE_MODE_TRUNCATE);

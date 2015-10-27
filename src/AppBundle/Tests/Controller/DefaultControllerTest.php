@@ -9,7 +9,7 @@ class DefaultControllerTest extends BaseWebTestCase
 {
     public function testIndexAction()
     {
-        $client = static::createClient();
+        $client = $this->makeClient();
 
         $client->request('GET', '/');
         $this->assertEquals(Response::HTTP_OK,  $client->getResponse()->getStatusCode());
@@ -17,7 +17,7 @@ class DefaultControllerTest extends BaseWebTestCase
     
     public function testStatusAction()
     {
-        $client = static::createClient();
+        $client = $this->makeClient();
 
         $client->request('GET', '/v2');
         $this->assertEquals(Response::HTTP_MOVED_PERMANENTLY,  $client->getResponse()->getStatusCode());

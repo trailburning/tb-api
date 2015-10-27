@@ -48,12 +48,6 @@ class MediaService
      */
     protected $mediaAttributeRepository;
 
-    private $mimeTypeDirectoryMap = [
-        MIMEType::JPEG => 'images',
-        MIMEType::MP3 => 'audio',
-        MIMEType::MP4 => 'video',
-    ];
-
     private $mimeTypeHostMap = [
         MIMEType::JPEG => 'tbmedia2.imgix.net',
         MIMEType::MP3 => 'media.trailburning.com',
@@ -95,6 +89,9 @@ class MediaService
         foreach ($files as $file) {
             $mimeType = $this->mediaAnalyzer->getMIMEType($file);
             $filepath = $this->uploadFile($file);
+            if ($filepath === false) {
+                return $this->apiResponseBuilder->buildServerErrorResponse();
+            }
             $path = $this->getAbsoluteFilepath($filepath, $mimeType);
             $media = new Media();
             $media->setMimeType($mimeType);
@@ -161,7 +158,7 @@ class MediaService
      *
      * @param File $file The file to upload
      *
-     * @return string the name of the uploaded file
+     * @return mixed the name of the uploaded file, or fals if upload fails
      */
     public function uploadFile(File $file)
     {
@@ -173,7 +170,10 @@ class MediaService
             $adapter->setMetadata($filepath, array('ContentType' => 'image/jpeg', 'ACL' => 'public-read'));
         }
 
-        $adapter->write($filepath, file_get_contents($file->getPathname()));
+        $result = $adapter->write($filepath, file_get_contents($file->getPathname()));
+        if ($result === false) {
+            return false;
+        }
 
         return $filepath;
     }
@@ -185,10 +185,10 @@ class MediaService
      */
     protected function generateRelativeFilepath(File $file)
     {
-        $directory = 'test25zero';
+        $directory = 'test';
         $filename = str_replace('.', '', uniqid(null, true));
         $extension = $file->getClientOriginalExtension();
-        $filepath = sprintf('/%s/%s.%s', $directory, $filename, $extension);
+        $filepath = sprintf('%s/%s.%s', $directory, $filename, $extension);
 
         return $filepath;
     }
@@ -200,10 +200,10 @@ class MediaService
      */
     protected function getAbsoluteFilepath($filepath, $mimeType)
     {
-        if (!isset($this->mimeTypeDirectoryMap[$mimeType])) {
+        if (!isset($this->mimeTypeHostMap[$mimeType])) {
             throw new \Exception(sprintf('Unsupported MIME Type: %s', $mimeType));
         }
-        $absoluteFilepath = sprintf('http://%s%s', $this->mimeTypeHostMap[$mimeType], $filepath);
+        $absoluteFilepath = sprintf('http://%s/%s', $this->mimeTypeHostMap[$mimeType], $filepath);
 
         return $absoluteFilepath;
     }

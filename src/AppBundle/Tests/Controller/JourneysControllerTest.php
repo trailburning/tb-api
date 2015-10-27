@@ -14,7 +14,7 @@ class JourneysControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\JourneyData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         $journey = $this->getJourney('Test Journey 1');
 
         $client->request('GET', '/v2/journeys/' . $journey->getOid());
@@ -28,7 +28,7 @@ class JourneysControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\JourneyData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
 
         $client->request('GET', '/v2/journeys/99999999');
         $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
@@ -41,7 +41,7 @@ class JourneysControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\JourneyData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         $journey = $this->getJourney('Unpublished Journey');
 
         $client->request('GET', '/v2/journeys/' . $journey->getOid());
@@ -55,7 +55,7 @@ class JourneysControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\JourneyData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         $user = $this->getUser('mattallbeury');
 
         $client->request('GET', '/v2/journeys/user/' . $user->getId());
@@ -69,7 +69,7 @@ class JourneysControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\JourneyData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
 
         $client->request('GET', '/v2/journeys/user/99999999');
         $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
@@ -82,7 +82,7 @@ class JourneysControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\JourneyData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         $journey = $this->getJourney('Test Journey 1');
         
         $file = new UploadedFile(

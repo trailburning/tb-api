@@ -14,7 +14,7 @@ class AssetsControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\EventData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         $event = $this->getEvent('Test Event 1');
 
         $client->request('GET', '/v2/events/' . $event->getOid() . '/assets');
@@ -28,7 +28,7 @@ class AssetsControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\EventData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
 
         $client->request('GET', '/v2/events/99999999/assets');
         $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());

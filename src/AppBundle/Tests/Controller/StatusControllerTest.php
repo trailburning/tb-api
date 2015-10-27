@@ -9,7 +9,7 @@ class StatusControllerTest extends BaseWebTestCase
 {
     public function testGetAction()
     {
-        $client = static::createClient();
+        $client = $this->makeClient();
 
         $client->request('GET', '/v2/');
         $this->assertEquals(Response::HTTP_OK,  $client->getResponse()->getStatusCode());

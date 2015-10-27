@@ -9,7 +9,7 @@ class SwaggerControllerTest extends BaseWebTestCase
 {
     public function testIndexAction()
     {
-        $client = static::createClient();
+        $client = $this->makeClient();
         
         $client->request('GET', '/v2/swagger.json');
         $this->assertEquals(Response::HTTP_OK,  $client->getResponse()->getStatusCode());

@@ -14,7 +14,7 @@ class EventsControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\EventData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         $journey = $this->getJourney('Test Journey 1');
 
         $client->request('GET', '/v2/journeys/' . $journey->getOid() . '/events');
@@ -28,7 +28,7 @@ class EventsControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\EventData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
 
         $client->request('GET', '/v2/journeys/99999999/events');
         $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
@@ -41,7 +41,7 @@ class EventsControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\EventData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         $journey = $this->getJourney('Unpublished Journey');
 
         $client->request('GET', '/v2/journeys/' . $journey->getOid() . '/events');

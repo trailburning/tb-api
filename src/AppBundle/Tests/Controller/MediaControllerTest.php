@@ -15,7 +15,7 @@ class MediaControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\AssetData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         $asset = $this->getAsset('Test Asset 1');
         
         $file = new UploadedFile(
@@ -32,7 +32,7 @@ class MediaControllerTest extends BaseWebTestCase
     {
         $this->loadFixtures([]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         
         $file = new UploadedFile(
             realpath(__DIR__ . '/../../DataFixtures/Media/test.jpg'),
@@ -50,7 +50,7 @@ class MediaControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\AssetData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         $asset = $this->getAsset('Test Asset 1');
         
         $file = new UploadedFile(
@@ -70,7 +70,7 @@ class MediaControllerTest extends BaseWebTestCase
     //         'AppBundle\DataFixtures\ORM\AssetData',
     //     ]);
     //
-    //     $client = static::createClient();
+    //     $client = $this->makeClient();
     //     $asset = $this->getAsset('Test Asset 1');
     //
     //     $file1 = new UploadedFile(
@@ -99,7 +99,7 @@ class MediaControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\AssetData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         $asset = $this->getAsset('Test Asset 1');
         $media = $asset->getMedias()[0];
         
@@ -112,7 +112,7 @@ class MediaControllerTest extends BaseWebTestCase
     {
         $this->loadFixtures([]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         
         $client->request('DELETE', '/v2/assets/00000/media/00000');
         $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
@@ -125,7 +125,7 @@ class MediaControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\AssetData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         $asset = $this->getAsset('Test Asset 1');
         
         $client->request('DELETE', '/v2/assets/' . $asset->getOid() . '/media/00000');
@@ -139,7 +139,7 @@ class MediaControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\AssetData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         $asset = $this->getAsset('Test Asset 1');
         $media = $asset->getMedias()[0];
         
@@ -157,7 +157,7 @@ class MediaControllerTest extends BaseWebTestCase
     {
         $this->loadFixtures([]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         
         $file = new UploadedFile(
             realpath(__DIR__ . '/../../DataFixtures/Media/test.jpg'),
@@ -175,7 +175,7 @@ class MediaControllerTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\AssetData',
         ]);
         
-        $client = static::createClient();
+        $client = $this->makeClient();
         $asset = $this->getAsset('Test Asset 1');
         
         $file = new UploadedFile(

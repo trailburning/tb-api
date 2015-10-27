@@ -74,4 +74,20 @@ class APIResponseBuilder
 
         return $response;
     }
+    
+    /**
+     * @param mixed  $body
+     * @param string $name
+     *
+     * @return APIResponse
+     */
+    public function buildServerErrorResponse($message = null)
+    {
+        $response = new APIResponse(500, 'error');
+        if ($message !== null) {
+            $response->addMessage($message);
+        }
+
+        return $response;
+    }
 }
