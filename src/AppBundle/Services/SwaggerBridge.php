@@ -50,6 +50,9 @@ class SwaggerBridge
         ];
         $options = [];
         $swagger = @\Swagger\scan($paths, $options);
+        if ($this->env === 'dev') {
+            $swagger->basePath = '/app_dev.php' . $swagger->basePath;
+        }
         
         $json = $swagger->__toString();
         $configCache->write($json, [$resource]);
