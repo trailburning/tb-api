@@ -7,14 +7,14 @@ use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
 
 /**
- * Route.
+ * RoutePoint.
  *
- * @ORM\Table(name="api_route")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\RouteRepository")
- * @SWG\Definition(required={"coords"}, @SWG\Xml(name="Route"))
+ * @ORM\Table(name="api_route_point")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\RoutePointRepository")
+ * @SWG\Definition(required={"coords"}, @SWG\Xml(name="RoutePoint"))
  * @Serializer\ExclusionPolicy("all")
  */
-class Route
+class RoutePoint
 {
     /**
      * @var int
@@ -36,7 +36,7 @@ class Route
     /**
      * @var Journey
      *
-     * @ORM\ManyToOne(targetEntity="Journey", inversedBy="routes")
+     * @ORM\ManyToOne(targetEntity="Journey", inversedBy="routePoints")
      * @ORM\JoinColumn(nullable=false)
      */
     private $journey;

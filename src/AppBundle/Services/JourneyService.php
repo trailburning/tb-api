@@ -4,9 +4,9 @@ namespace AppBundle\Services;
 
 use AppBundle\Response\APIResponse;
 use AppBundle\Repository\JourneyRepository;
-use AppBundle\Repository\RouteRepository;
+use AppBundle\Repository\RoutePointRepository;
 use AppBundle\Entity\Journey;
-use AppBundle\Entity\Route;
+use AppBundle\Entity\RoutePoint;
 use AppBundle\Repository\UserRepository;
 use AppBundle\Response\APIResponseBuilder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -36,31 +36,31 @@ class JourneyService
      * @var GPXParser
      */
     protected $gpxParser;
-    
-    /**
-     * @var RouteRepository
-     */
-    protected $routeRepository;
 
     /**
-     * @param JourneyRepository  $journeyRepository
-     * @param UserRepository     $userRepository
-     * @param APIResponseBuilder $apiResponseBuilder
-     * @param GPXParser          $gpxParser
-     * @param RouteRepository    $routeRepository
+     * @var RoutePointRepository
+     */
+    protected $routePointRepository;
+
+    /**
+     * @param JourneyRepository    $journeyRepository
+     * @param UserRepository       $userRepository
+     * @param APIResponseBuilder   $apiResponseBuilder
+     * @param GPXParser            $gpxParser
+     * @param RoutePointRepository $routePointRepository
      */
     public function __construct(
         JourneyRepository $journeyRepository,
         UserRepository $userRepository,
         APIResponseBuilder $apiResponseBuilder,
         GPXParser $gpxParser,
-        RouteRepository $routeRepository)
+        RoutePointRepository $routePointRepository)
     {
         $this->journeyRepository = $journeyRepository;
         $this->userRepository = $userRepository;
         $this->apiResponseBuilder = $apiResponseBuilder;
         $this->gpxParser = $gpxParser;
-        $this->routeRepository = $routeRepository;
+        $this->routePointRepository = $routePointRepository;
     }
 
     /**
@@ -100,10 +100,10 @@ class JourneyService
         $qb = $this->journeyRepository->findPublishedByUserQB($user);
         $qb = $this->journeyRepository->addOrderByPositionQB($qb);
         $journeys = $qb->getQuery()->getResult();
-        
+
         // FIXME: removes routes from list response via response groups
         foreach ($journeys as $journey) {
-            $journey->setNullRoutes();
+            $journey->setNullRoutePoints();
         }
 
         return $this->apiResponseBuilder->buildSuccessResponse($journeys, 'journeys');
@@ -119,27 +119,27 @@ class JourneyService
     {
         $gpx = file_get_contents($file->getPathname());
         $segments = $this->gpxParser->parse($gpx);
-        
+
         if (isset($segments[0])) {
-            $this->routeRepository->deleteByJourney($journey);
-            $journey->clearRoutes();
+            $this->routePointRepository->deleteByJourney($journey);
+            $journey->clearRoutePoints();
             foreach ($segments[0] as $routePoint) {
-                $journey->addRoute(new Route(new Point($routePoint['long'], $routePoint['lat'], 4326)));
+                $journey->addRoutePoint(new RoutePoint(new Point($routePoint['long'], $routePoint['lat'], 4326)));
             }
-        }    
-        
+        }
+
         $this->journeyRepository->add($journey);
         $this->journeyRepository->store();
-        
+
         return $this->apiResponseBuilder->buildSuccessResponse([$journey], 'journeys');
     }
-    
+
     /**
-     * @param Journey      $journey
+     * @param Journey $journey
      *
      * @return APIResponse
      */
-    public function deleteJourneyRoutes($oid)
+    public function deleteJourneyRoutePoints($oid)
     {
         $journey = $this->journeyRepository->findOneBy([
             'oid' => $oid,
@@ -148,9 +148,9 @@ class JourneyService
         if ($journey === null) {
             return $this->apiResponseBuilder->buildNotFoundResponse('Journey not found.');
         }
-        
-        $this->routeRepository->deleteByJourney($journey);
-        $journey->clearRoutes();
+
+        $this->routePointRepository->deleteByJourney($journey);
+        $journey->clearRoutePoints();
 
         return $this->apiResponseBuilder->buildSuccessResponse([$journey], 'journeys');
     }

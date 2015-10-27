@@ -75,13 +75,13 @@ class Journey
     protected $events;
 
     /**
-     * @var Route[]
+     * @var RoutePoint[]
      *
-     * @ORM\OneToMany(targetEntity="Route", mappedBy="journey", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="RoutePoint", mappedBy="journey", cascade={"persist", "remove"})
      * @SWG\Property()
      * @Serializer\Expose
      */
-    private $routes;
+    private $routePoints;
 
     /**
      * @Gedmo\SortablePosition
@@ -99,7 +99,7 @@ class Journey
     public function __construct()
     {
         $this->oid = str_replace('.', '', uniqid(null, true));
-        $this->routes = new ArrayCollection();
+        $this->routePoints = new ArrayCollection();
         $this->events = new ArrayCollection();
     }
 
@@ -224,46 +224,46 @@ class Journey
     }
 
     /**
-     * @param Route $routes
+     * @param RoutePoint $routePoints
      *
      * @return self
      */
-    public function addRoute(Route $route)
+    public function addRoutePoint(RoutePoint $routePoint)
     {
-        $route->setJourney($this);
-        $this->routes[] = $route;
+        $routePoint->setJourney($this);
+        $this->routePoints[] = $routePoint;
 
         return $this;
     }
 
     /**
-     * @param Route $routes
+     * @param RoutePoint $routePoints
      */
-    public function removeRoute(Route $route)
+    public function removeRoutePoint(RoutePoint $routePoint)
     {
-        $this->routes->removeElement($route);
+        $this->routePoints->removeElement($routePoint);
     }
 
     /**
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getRoutes()
+    public function getRoutePoints()
     {
-        return $this->routes;
+        return $this->routePoints;
     }
 
     /**
      */
-    public function clearRoutes()
+    public function clearRoutePoints()
     {
-        $this->routes->clear();
+        $this->routePoints->clear();
     }
 
     /**
      */
-    public function setNullRoutes()
+    public function setNullRoutePoints()
     {
-        $this->routes = null;
+        $this->routePoints = null;
     }
 
     /**

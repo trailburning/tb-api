@@ -157,9 +157,9 @@ class JourneysController extends Controller implements ClassResourceInterface
     
     /**
      * @SWG\Delete(
-     *     path="/journeys/{id}/routes",
-     *     summary="Delete all routes",
-     *     description="Deletes all routes of a journey.",
+     *     path="/journeys/{id}/route_points",
+     *     summary="Delete all route points",
+     *     description="Deletes all route points of a journey.",
      *     tags={"Journeys"},
      *     produces={"application/json"},
      *     @SWG\Parameter(
@@ -180,16 +180,16 @@ class JourneysController extends Controller implements ClassResourceInterface
      *     ),
      * )
      *
-     * @Delete("/journeys/{id}/routes")
+     * @Delete("/journeys/{id}/route_points")
      *
      * @param int $id
      *
      * @return APIResponse
      */
-    public function deleteRoutesAction($id)
+    public function deleteRoutePointsAction($id)
     {
         $journeyService = $this->get('tb.journey');
 
-        return $journeyService->deleteJourneyRoutes($id);
+        return $journeyService->deleteJourneyRoutePoints($id);
     }
 }
