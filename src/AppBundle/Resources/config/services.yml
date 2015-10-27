@@ -90,6 +90,8 @@ services:
             - @tb.media.repository
             - @tb.response.builder
             - @tb.asset.repository
+            - @tb.media.analyzer
+            - @tb.mediaAttribute.repository
             
     tb.s3Client:
         class: Aws\S3\S3Client
@@ -101,3 +103,27 @@ services:
                 secret: %aws_secretkey%
                 region: %aws_region%
                 version: 'latest'
+
+    tb.media.analyzer:
+        class: AppBundle\Services\MediaAnalyzer
+        arguments:
+            -
+                'image/jpeg': @tb.media.metadata.jpeg
+                'video/mpeg': @tb.media.metadata.mpeg
+                'audio/mp3': @tb.media.metadata.mp3
+                
+    tb.media.metadata.jpeg:
+        class: AppBundle\Services\MetadataReader\JPEGMetadataReader
+    
+    tb.media.metadata.mpeg:
+        class: AppBundle\Services\MetadataReader\MPEGMetadataReader
+        
+    tb.media.metadata.mp3:
+        class: AppBundle\Services\MetadataReader\MP3MetadataReader
+        
+    tb.mediaAttribute.repository:
+        class: AppBundle\Repository\MediaAttributeRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\MediaAttribute

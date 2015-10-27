@@ -60,6 +60,13 @@ class Media
      * @ORM\JoinColumn(nullable=false)
      */
     protected $asset;
+    
+    /**
+     * @var MediaAttribute[]
+     *
+     * @ORM\OneToMany(targetEntity="MediaAttribute", mappedBy="media", cascade={"persist", "remove"})
+     */
+    private $attributes;
 
     /**
      * ################################################################################################################
@@ -72,6 +79,26 @@ class Media
     public function __construct()
     {
         $this->oid = str_replace('.', '', uniqid(null, true));
+    }
+    
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("metadata")
+     * @SWG\Property(property="metadata")
+     * @return array
+     */
+    public function getMetadata() 
+    {
+        if (count($this->getAttributes()) === 0) {
+            return null;
+        }
+        
+        $fields = [];
+        foreach ($this->getAttributes() as $attribute) {
+            $fields[$attribute->getKey()] = $attribute->getValue();
+        }
+        
+        return $fields;
     }
 
     /**
@@ -154,5 +181,46 @@ class Media
     public function getAsset()
     {
         return $this->asset;
+    }
+    
+    /**
+     * @param MediaAttribute $attribute
+     * @return self
+     */
+    public function addAttribute(MediaAttribute $attribute)
+    {
+        $attribute->setMedia($this);
+        $this->attributes[] = $attribute;
+
+        return $this;
+    }
+
+    /**
+     * @param MediaAttribute $attribute
+     */
+    public function removeAttribute(MediaAttribute $attribute)
+    {
+        $this->medias->removeElement($attribute);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+    
+    /**
+     * @param MediaAttribute $attribute
+     * @return self
+     */
+    public function setAttributes(array $attributes)
+    {
+        foreach ($attributes as $attribute) {
+            $this->addAttribute($attribute);
+        }
+
+        return $this;
     }
 }

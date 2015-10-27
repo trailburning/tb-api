@@ -27,6 +27,9 @@ class MediaServiceTest extends BaseWebTestCase
         $this->refreshEntity($asset);
         
         $this->assertEquals(3, count($asset->getMedias()));
+        
+        $media = $asset->getMedias()[0];
+        $this->assertEquals(3, count($media->getAttributes()));
     }
     
     public function testUploadFile()
@@ -44,19 +47,7 @@ class MediaServiceTest extends BaseWebTestCase
         $this->assertTrue($filesystem->has($filepath), 'The file exists on the provided filesystem');
         $this->assertRegExp('/\/test25zero\/[\d\w]+\.jpg/', $filepath, 'The files path was retuned by the uploadFile() method');
     }
-    
-    public function testGetMIMEType($value='') 
-    {
-        $mediaService = $this->getContainer()->get('tb.media');
-        $file = new UploadedFile(
-            realpath(__DIR__ . '/../../DataFixtures/Media/test.jpg'),
-            'test.jpg'
-        );
         
-        $result = $this->callProtectedMethod($mediaService, 'getMIMEType', [$file]);
-        $this->assertEquals('image/jpeg', $result);
-    }
-    
     public function testGenerateRelativeFilepath($value='')
     {
         $mediaService = $this->getContainer()->get('tb.media');

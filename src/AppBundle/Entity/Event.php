@@ -126,10 +126,15 @@ class Event
     /**
      * @Serializer\VirtualProperty()
      * @Serializer\SerializedName("custom")
+     * @SWG\Property(property="custom")
      * @return array
      */
     public function getCustomFieldsArray() 
     {
+        if (count($this->getCustomFields()) === 0) {
+            return null;
+        }
+        
         $fields = [];
         foreach ($this->getCustomFields() as $customField) {
             $fields[$customField->getKey()] = $customField->getValue();

@@ -213,7 +213,6 @@ class Asset
         return $this->medias;
     }
     
-    
     /**
      * @param Event $event
      * @return self
