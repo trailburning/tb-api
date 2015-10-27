@@ -78,7 +78,7 @@ class Journey
      * @var RoutePoint[]
      *
      * @ORM\OneToMany(targetEntity="RoutePoint", mappedBy="journey", cascade={"persist", "remove"})
-     * @SWG\Property()
+     * @SWG\Property(property="route_points")
      * @Serializer\Expose
      */
     private $routePoints;

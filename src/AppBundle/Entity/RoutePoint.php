@@ -29,7 +29,7 @@ class RoutePoint
      * @var Point point
      *
      * @ORM\Column(name="coords", type="point", columnDefinition="GEOMETRY(POINT,4326)")
-     * @SWG\Property(type="Array")
+     * @SWG\Property()
      */
     private $coords;
     
