@@ -81,22 +81,15 @@ class GPXParser
             foreach ($node->childNodes as $child) {
                 switch ($child->nodeName) {
                     case 'ele':
-                        $tags['altitude'] = $child->nodeValue;
+                        $tags['elevation'] = $child->nodeValue;
                         break;
-
                     case 'time':
                         $tags['datetime'] = strtotime($child->nodeValue);
                         break;
-
                     default:
                         break;
                 }
             }
-        }
-
-        // set altitude to null if it is empty, or doesn't exist at all
-        if (!isset($tags['altitude']) || (isset($tags['altitude']) && $tags['altitude'] === '')) {
-            $tags['altitude'] = null;
         }
 
         return $tags;

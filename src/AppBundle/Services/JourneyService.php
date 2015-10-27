@@ -124,7 +124,8 @@ class JourneyService
             $this->routePointRepository->deleteByJourney($journey);
             $journey->clearRoutePoints();
             foreach ($segments[0] as $routePoint) {
-                $journey->addRoutePoint(new RoutePoint(new Point($routePoint['long'], $routePoint['lat'], 4326)));
+                $elevation = isset($routePoint['elevation']) ? $routePoint['elevation'] : null;
+                $journey->addRoutePoint(new RoutePoint(new Point($routePoint['long'], $routePoint['lat'], 4326), $elevation));
             }
         }
 

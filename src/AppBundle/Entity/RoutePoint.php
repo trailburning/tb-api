@@ -40,6 +40,13 @@ class RoutePoint
      * @ORM\JoinColumn(nullable=false)
      */
     private $journey;
+    
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $elevation;
 
     /**
      * ################################################################################################################
@@ -49,8 +56,9 @@ class RoutePoint
      * ################################################################################################################
      */
     
-    public function __construct($coords) {
+    public function __construct($coords, $elevation = null) {
         $this->setCoords($coords);
+        $this->setElevation($elevation);
     }   
     
     /**
@@ -58,16 +66,22 @@ class RoutePoint
      * @Serializer\SerializedName("coords")
      * @return array
      */
-    public function getCoordsAsArray() 
+    public function getDataAsArray() 
     {
         if ($this->coords === null) {
             return [];
         }
         
-        return [
+        $data = [
             $this->coords->getLongitude(),
             $this->coords->getLatitude(),
         ];
+        
+        if ($this->getElevation() !== null) {
+            $data[] = $this->getElevation();
+        }
+        
+        return $data;
     }
 
     /**
@@ -122,5 +136,24 @@ class RoutePoint
     public function getJourney()
     {
         return $this->journey;
+    }
+    
+    /**
+     * @param float
+     * @return self
+     */
+    public function setElevation($elevation)
+    {
+        $this->elevation = $elevation;
+    
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getElevation()
+    {
+        return (float)$this->elevation;
     }
 }
