@@ -29,8 +29,8 @@
         "stof/doctrine-extensions-bundle": "^1.2@dev",
         "friendsofsymfony/user-bundle": "2.0.*@dev",
         "fresh/doctrine-enum-bundle": "dev-master",
-        "knplabs/knp-gaufrette-bundle": "^0.2.0@dev",
-        "aws/aws-sdk-php": "^3.0@dev",
+        "knplabs/knp-gaufrette-bundle": "*@dev",
+        "aws/aws-sdk-php": "3.*",
         "nelmio/cors-bundle": "^1.4@dev"
     },
     "require-dev": {
