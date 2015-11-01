@@ -152,7 +152,7 @@ class JourneyService
         $this->journeyRepository->add($journey);
         $this->journeyRepository->store();
 
-        return $this->apiResponseBuilder->buildEmptyResponse(204);
+        return $this->apiResponseBuilder->buildEmptyResponse(201);
     }
 
     /**
