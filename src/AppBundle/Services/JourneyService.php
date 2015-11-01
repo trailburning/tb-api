@@ -172,4 +172,24 @@ class JourneyService
 
         return $this->apiResponseBuilder->buildResponse($statusCode, 'success');
     }
+
+    /**
+     * @param string $id
+     *
+     * @return APIResponse
+     */
+    public function deleteJourney($id)
+    {
+        $journey = $this->journeyRepository->findOneBy([
+            'oid' => $id,
+        ]);
+        if ($journey === null) {
+            return $this->apiResponseBuilder->buildNotFoundResponse('Journey not found');
+        }
+
+        $this->journeyRepository->remove($journey);
+        $this->journeyRepository->store();
+
+        return $this->apiResponseBuilder->buildEmptySuccessResponse(204);
+    }
 }

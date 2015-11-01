@@ -163,10 +163,36 @@ class JourneysControllerTest extends BaseWebTestCase
         ];
 
         $client->request('PUT', '/v2/journeys/' . $journey->getOid(), $data);
-        $this->assertEquals(204, $client->getResponse()->getStatusCode(), $client->getResponse()->getStatusCode());
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
 
         $this->refreshEntity($journey);
         $this->assertEquals('Test 123', $journey->getName());
         $this->assertEquals('about', $journey->getAbout());
+    }
+    
+    public function testDeleteAction()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\JourneyData',
+        ]);
+
+        $client = $this->makeClient();
+        $journey = $this->getJourney('Test Journey 1');
+
+        $client->request('DELETE', '/v2/journeys/' . $journey->getOid());
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+    }
+    
+    public function testDeleteActionNotFound()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\JourneyData',
+        ]);
+
+        $client = $this->makeClient();
+        $journey = $this->getJourney('Test Journey 1');
+
+        $client->request('DELETE', '/v2/journeys/0000');
+        $this->assertJsonResponse($client->getResponse(), 404);
     }
 }

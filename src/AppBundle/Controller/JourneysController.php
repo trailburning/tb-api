@@ -276,4 +276,28 @@ class JourneysController extends Controller implements ClassResourceInterface
 
         return $journeyService->createFromAPI($form->getData());
     }
+    
+    /**
+     * @SWG\Delete(
+     *     path="/journeys/{id}",
+     *     summary="Delete a journey",
+     *     description="Deletes the journey.",
+     *     tags={"Journeys"},
+     *     @SWG\Parameter(name="id", type="string", in="path", description="ID of the Journey", required=true),
+     *     @SWG\Response(response=204, description="Successful operation"),
+     *     @SWG\Response(response="404", description="Journey not found"), 
+     * )
+     *
+     * @Delete("/journeys/{id}")
+     *
+     * @param int $id
+     *
+     * @return APIResponse
+     */
+    public function deleteAction($id)
+    {
+        $journeyService = $this->get('tb.journey');
+        
+        return $journeyService->deleteJourney($id);
+    }
 }
