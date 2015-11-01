@@ -75,7 +75,7 @@ class Journey
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="journey")
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="journey", cascade={"persist", "remove"})
      */
     protected $events;
 

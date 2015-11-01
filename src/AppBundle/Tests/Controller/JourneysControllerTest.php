@@ -174,6 +174,8 @@ class JourneysControllerTest extends BaseWebTestCase
     {
         $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\JourneyData',
+            'AppBundle\DataFixtures\ORM\EventData',
+            'AppBundle\DataFixtures\ORM\AssetData',
         ]);
 
         $client = $this->makeClient();

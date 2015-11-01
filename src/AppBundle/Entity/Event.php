@@ -73,7 +73,7 @@ class Event
     /**
      * @var Asset[]
      *
-     * @ORM\OneToMany(targetEntity="Asset", mappedBy="event")
+     * @ORM\OneToMany(targetEntity="Asset", mappedBy="event", cascade={"persist", "remove"})
      * @SWG\Property()
      * @Serializer\Expose
      */
