@@ -7,7 +7,7 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Info(
- *   version="1.0",
+ *   version="2.0",
  *   title="Trailburning Journey API",
  *   @SWG\Contact(
  *     name="Matt Allbuery",
