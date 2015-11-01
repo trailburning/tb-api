@@ -11,6 +11,7 @@ class SwaggerController extends Controller
     {
         $swaggerBridge = $this->get('tb.swaggerBridge');
         $jsonDoc = $swaggerBridge->generateJson();
+        $jsonDoc = 'test';
         $response = new Response($jsonDoc);
         $response->headers->set('Content-Type', 'application/json');
         
