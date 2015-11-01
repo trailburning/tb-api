@@ -104,7 +104,7 @@ class MediaService
         }
         $this->mediaRepository->store();
 
-        return $this->apiResponseBuilder->buildSuccessResponse($medias, 'media', 201);
+        return $this->apiResponseBuilder->buildEmptySuccessResponse(201);
     }
 
     /**
@@ -127,7 +127,7 @@ class MediaService
         $this->mediaRepository->add($media);
         $this->mediaRepository->store();
 
-        return $this->apiResponseBuilder->buildSuccessResponse([$media], 'media', 200);
+        return $this->apiResponseBuilder->buildEmptySuccessResponse(204);
     }
 
     public function deleteMedia($mediaId, $assetId)
@@ -149,7 +149,7 @@ class MediaService
         $this->mediaRepository->remove($media);
         $this->mediaRepository->store();
 
-        return $this->apiResponseBuilder->buildEmptySuccessResponse();
+        return $this->apiResponseBuilder->buildEmptySuccessResponse(204);
     }
 
     /**

@@ -136,7 +136,7 @@ class MediaControllerTest extends BaseWebTestCase
         $media = $asset->getMedias()[0];
 
         $client->request('DELETE', '/v2/assets/'.$asset->getOid().'/media/'.$media->getOid());
-        $this->assertJsonResponse($client->getResponse(), 200);
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
     }
 
     public function testDeleteActionAssetNotFound()
@@ -178,7 +178,7 @@ class MediaControllerTest extends BaseWebTestCase
         );
 
         $client->request('POST', '/v2/assets/'.$asset->getOid().'/media/'.$media->getOid(), [], ['media' => $file]);
-        $this->assertJsonResponse($client->getResponse(), 200);
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
     }
 
     public function testPutActionAssetNotFound()
@@ -230,7 +230,7 @@ class MediaControllerTest extends BaseWebTestCase
         );
 
         $client->request('POST', '/v2/assets/'.$asset->getOid().'/media/'.$media->getOid(), [], ['media' => $file]);
-        $this->assertJsonResponse($client->getResponse(), 200);
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
     }
 
     public function testPutActionMPEG()
@@ -249,6 +249,6 @@ class MediaControllerTest extends BaseWebTestCase
         );
 
         $client->request('POST', '/v2/assets/'.$asset->getOid().'/media/'.$media->getOid(), [], ['media' => $file]);
-        $this->assertJsonResponse($client->getResponse(), 200);
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
     }
 }

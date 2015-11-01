@@ -36,8 +36,7 @@ class MediaController extends Controller implements ClassResourceInterface
      *     ),
      *     @SWG\Response(
      *         response=201,
-     *         description="Successful operation",
-     *         @SWG\Schema(ref="#/definitions/Media")
+     *         description="Successful operation"
      *     ),
      *     @SWG\Response(
      *         response="404",
@@ -115,9 +114,8 @@ class MediaController extends Controller implements ClassResourceInterface
      *         type="file"
      *     ),
      *     @SWG\Response(
-     *         response=201,
-     *         description="Successful operation",
-     *         @SWG\Schema(ref="#/definitions/Media")
+     *         response=204,
+     *         description="Successful operation"
      *     ),
      *     @SWG\Response(
      *         response="404",
@@ -191,7 +189,7 @@ class MediaController extends Controller implements ClassResourceInterface
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response=200,
+     *         response=204,
      *         description="Successful operation",
      *     ),
      *     @SWG\Response(
