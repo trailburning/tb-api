@@ -9,9 +9,9 @@ class SwaggerController extends Controller
 {
     public function indexAction()
     {
+        ini_set('memory_limit', '512M');
         $swaggerBridge = $this->get('tb.swaggerBridge');
-        // $jsonDoc = $swaggerBridge->generateJson();
-        $jsonDoc = 'test';
+        $jsonDoc = $swaggerBridge->generateJson();
         $response = new Response($jsonDoc);
         $response->headers->set('Content-Type', 'application/json');
         
