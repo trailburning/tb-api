@@ -109,9 +109,8 @@ class JourneysController extends Controller implements ClassResourceInterface
      *         type="file"
      *     ),
      *     @SWG\Response(
-     *         response=200,
+     *         response=201,
      *         description="Successful operation",
-     *         @SWG\Schema(ref="#/definitions/Journey")
      *     ),
      *     @SWG\Response(
      *         response="404",

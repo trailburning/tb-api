@@ -43,7 +43,7 @@ class APIResponseBuilder
      *
      * @return APIResponse
      */
-    public function buildEmptySuccessResponse($statusCode = 200)
+    public function buildEmptyResponse($statusCode = 200)
     {
         $response = new APIResponse($statusCode);
 

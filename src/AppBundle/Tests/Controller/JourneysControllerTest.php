@@ -85,7 +85,7 @@ class JourneysControllerTest extends BaseWebTestCase
         );
 
         $client->request('POST', '/v2/journeys/'.$journey->getOid().'/import/gpx', [], ['file' => $file]);
-        $this->assertJsonResponse($client->getResponse(), 200);
+        $this->assertJsonResponse($client->getResponse(), 201);
     }
 
     public function testPostAction()

@@ -152,7 +152,7 @@ class JourneyService
         $this->journeyRepository->add($journey);
         $this->journeyRepository->store();
 
-        return $this->apiResponseBuilder->buildSuccessResponse([$journey], 'journeys');
+        return $this->apiResponseBuilder->buildEmptyResponse(204);
     }
 
     /**
@@ -202,7 +202,7 @@ class JourneyService
         $this->journeyRepository->add($journey);
         $this->journeyRepository->store();
 
-        $response = $this->apiResponseBuilder->buildEmptySuccessResponse(204);
+        $response = $this->apiResponseBuilder->buildEmptyResponse(204);
         if ($method === 'POST') {
             $response->setStatusCode(201);
             $location = $this->router->generate('get_journeys', ['id' => $journey->getOid()]);
@@ -229,6 +229,6 @@ class JourneyService
         $this->journeyRepository->remove($journey);
         $this->journeyRepository->store();
 
-        return $this->apiResponseBuilder->buildEmptySuccessResponse(204);
+        return $this->apiResponseBuilder->buildEmptyResponse(204);
     }
 }
