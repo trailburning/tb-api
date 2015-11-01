@@ -155,4 +155,21 @@ class JourneyService
 
         return $this->apiResponseBuilder->buildSuccessResponse([$journey], 'journeys');
     }
+
+    /**
+     * @param Journey $journey
+     *
+     * @return APIResponse
+     */
+    public function createFromAPI(Journey $journey)
+    {
+        $statusCode = 201;
+        if ($journey->getId() !== null) {
+            $statusCode = 200;
+        }
+        $this->journeyRepository->add($journey);
+        $this->journeyRepository->store();
+
+        return $this->apiResponseBuilder->buildSuccessResponse([$journey], 'journeys', $statusCode);
+    }
 }

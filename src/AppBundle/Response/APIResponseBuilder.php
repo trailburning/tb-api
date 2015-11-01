@@ -2,11 +2,27 @@
 
 namespace AppBundle\Response;
 
+use Symfony\Component\Form\Form;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 /**
  * Class APIResponseBuilder.
  */
 class APIResponseBuilder
 {
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
+     * @param ValidatorInterface $validator
+     */
+    public function __construct(ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+    }
+
     /**
      * @param mixed  $body
      * @param string $name
@@ -74,7 +90,7 @@ class APIResponseBuilder
 
         return $response;
     }
-    
+
     /**
      * @param mixed  $body
      * @param string $name
@@ -89,5 +105,47 @@ class APIResponseBuilder
         }
 
         return $response;
+    }
+
+    /**
+     * @param mixed  $body
+     * @param string $name
+     *
+     * @return APIResponse
+     */
+    public function buildFormErrorResponse(Form $form)
+    {
+        $message = (string) $form->getErrors(true, true);
+        $response = new APIResponse(400, 'error');
+        foreach ($this->getFormFieldErrors($form) as $field => $error) {
+            $error = str_replace('This form', 'The data', $error);
+            if ($field === '') {
+                $response->addMessage($error);
+                continue;
+            }
+            $response->addMessage(sprintf('%s: %s', $field, $error));
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param Form $form
+     *
+     * @return array
+     */
+    protected function getFormFieldErrors(Form $form)
+    {
+        $errorsReturn = array();
+        $constraintViolationList = $this->validator->validate($form);
+        foreach ($constraintViolationList as $error) {
+            $property = str_replace('children[', '', $error->getPropertyPath());
+            $property = str_replace(']', '', $property);
+            $property = str_replace('.data', '', $property);
+            $property = str_replace('data.', '', $property);
+            $errorsReturn[$property] = $error->getMessage();
+        }
+
+        return $errorsReturn;
     }
 }

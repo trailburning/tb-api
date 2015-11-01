@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Journey.
@@ -42,6 +43,8 @@ class Journey
      * @ORM\Column(type="string", length=255)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Assert\NotBlank()
+     * @Assert\Length(max = "255")
      */
     private $name;
 
@@ -51,6 +54,7 @@ class Journey
      * @ORM\Column(type="text")
      * @SWG\Property()
      * @Serializer\Expose
+     * @Assert\NotBlank()
      */
     private $about;
 
@@ -58,6 +62,7 @@ class Journey
      * @var bool
      *
      * @ORM\Column(type="boolean", options={"default" = false})
+     * @Assert\Type(type="boolean")
      */
     private $publish = false;
 
@@ -66,6 +71,7 @@ class Journey
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="journeys")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank()
      */
     private $user;
 
@@ -86,6 +92,7 @@ class Journey
     /**
      * @Gedmo\SortablePosition
      * @ORM\Column(name="position", type="integer", nullable=true)
+     * @Assert\Type(type="boolean")
      */
     private $position;
 

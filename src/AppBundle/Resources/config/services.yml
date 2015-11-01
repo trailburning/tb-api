@@ -37,6 +37,8 @@ services:
             
     tb.response.builder:
         class: AppBundle\Response\APIResponseBuilder
+        arguments:
+            - @validator
     
     tb.asset:
         class: AppBundle\Services\AssetService

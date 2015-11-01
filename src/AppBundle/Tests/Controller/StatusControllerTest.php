@@ -3,7 +3,6 @@
 namespace AppBundle\Tests\Controller;
 
 use AppBundle\Tests\BaseWebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class StatusControllerTest extends BaseWebTestCase
 {
@@ -12,7 +11,6 @@ class StatusControllerTest extends BaseWebTestCase
         $client = $this->makeClient();
 
         $client->request('GET', '/v2/');
-        $this->assertEquals(Response::HTTP_OK,  $client->getResponse()->getStatusCode());
-        $this->assertJsonResponse($client);
+        $this->assertJsonResponse($client->getResponse(), 200);
     }
 }

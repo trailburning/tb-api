@@ -19,7 +19,7 @@ use Swagger\Annotations as SWG;
  * @SWG\Swagger(
  *   basePath="/v2",
  *   produces={"application/json"},
- *   consumes={"application/json"},
+ *   consumes={"application/json","multipart/form-data","application/x-www-form-urlencoded"},
  * )
  */
 class AppBundle extends Bundle

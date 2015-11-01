@@ -29,7 +29,7 @@ class APIResponse
      * @var array
      */
     private $meta;
-    
+
     /**
      * @var array
      */
@@ -76,7 +76,7 @@ class APIResponse
     {
         $this->body = $body;
     }
-    
+
     /**
      * @return mixed
      */
@@ -104,14 +104,12 @@ class APIResponse
     {
         $this->meta = $meta;
     }
-    
+
     /**
      * @param string $message
      */
     public function addMessage($message)
     {
-        if ($this->messages === null) {
-            $this->messages[] = $message;
-        }
+        $this->messages[] = $message;
     }
 }

@@ -13,7 +13,7 @@ class GPXParser
      * @var bool
      */
     private $namespace = false;
-    
+
     /**
      * @var string
      */
@@ -99,7 +99,7 @@ class GPXParser
     {
         $routes = [];
         $trk_elements = $this->xmlobj->getElementsByTagName('trk');
-        
+
         foreach ($trk_elements as $trk) {
             foreach ($this->childElements($trk, 'trkseg') as $trkseg) {
                 $points = [];

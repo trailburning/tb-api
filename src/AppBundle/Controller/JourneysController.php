@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use AppBundle\Form\Type\GPXImportType;
+use AppBundle\Form\Type\JourneyType;
 
 class JourneysController extends Controller implements ClassResourceInterface
 {
@@ -82,10 +83,10 @@ class JourneysController extends Controller implements ClassResourceInterface
     public function getByUserAction($id)
     {
         $journeyService = $this->get('tb.journey');
-        
+
         return $journeyService->buildGetByUserAPIResponse($id);
     }
-    
+
     /**
      * @SWG\Post(
      *     path="/journeys/{id}/import/gpx",
@@ -133,28 +134,28 @@ class JourneysController extends Controller implements ClassResourceInterface
     {
         $journeyRepository = $this->get('tb.journey.repository');
         $apiResponseBuilder = $this->get('tb.response.builder');
-        
+
         $journey = $journeyRepository->findOneBy([
             'oid' => $id,
         ]);
-        
+
         if ($journey === null) {
             $apiResponseBuilder->buildNotFoundResponse('Journey not found');
         }
-            
+
         $form = $this->createForm(new GPXImportType());
         $form->handleRequest($this->getRequest());
 
         if (!$form->isValid()) {
             $apiResponseBuilder->buildResponse(400, 'Invalid or empty GPX file.');
         }
-        
+
         $file = $form->get('file')->getData();
         $journeyService = $this->get('tb.journey');
-        
+
         return $journeyService->importGPX($file, $journey);
     }
-    
+
     /**
      * @SWG\Delete(
      *     path="/journeys/{id}/route_points",
@@ -191,5 +192,41 @@ class JourneysController extends Controller implements ClassResourceInterface
         $journeyService = $this->get('tb.journey');
 
         return $journeyService->deleteJourneyRoutePoints($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/journeys",
+     *     summary="Add a journey",
+     *     description="Adds a journey.",
+     *     tags={"Journeys"},
+     *     consumes={"application/json","application/x-www-form-urlencoded"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(name="name", type="string", in="formData", description="The name of the journey"),
+     *     @SWG\Parameter(name="about", type="string", in="formData", description="About the journey"),
+     *     @SWG\Parameter(name="user", type="string", in="formData", description="The ID of the user the journey belongs to"),
+     *     @SWG\Parameter(name="position", type="integer", in="formData", description="The sort position"),
+     *     @SWG\Parameter(name="publish", type="boolean", in="formData", description="Publish this jpurney"),
+     *     @SWG\Response(response=201, description="Successful operation",
+     *         @SWG\Schema(ref="#/definitions/Journey")
+     *     ),
+     *     @SWG\Response(response="400", description="Invalid data."),
+     * )
+     *
+     * @return APIResponse
+     */
+    public function postAction()
+    {
+        $journeyService = $this->get('tb.journey');
+        $apiResponseBuilder = $this->get('tb.response.builder');
+
+        $form = $this->createForm(new JourneyType());
+        $form->handleRequest($this->getRequest());
+
+        if (!$form->isValid()) {
+            return $apiResponseBuilder->buildFormErrorResponse($form);
+        }
+
+        return $journeyService->createFromAPI($form->getData());
     }
 }

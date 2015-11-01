@@ -16,7 +16,7 @@ class AssetService
      * @var AssetRepository
      */
     protected $assetRepository;
-    
+
     /**
      * @var EventRepository
      */

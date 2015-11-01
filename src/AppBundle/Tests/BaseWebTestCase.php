@@ -49,12 +49,11 @@ abstract class BaseWebTestCase extends WebTestCase
         die;
     }
     
-    protected function assertJsonResponse($client)
+    protected function assertJsonResponse($response, $statusCode)
     {
-        $this->assertEquals('application/json',  $client->getResponse()->headers->get('Content-Type'), 
-            'Content-Type Header is "application/json"');  
-        $this->assertJson($client->getResponse()->getContent(), 
-            'Response is Valid JSON');
+        $this->assertEquals($statusCode, $response->getStatusCode(), $response->getContent());
+        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), $response->headers);
+        $this->assertJson($response->getContent(), $response->getContent());
     }
     
     protected function getJourney($name)

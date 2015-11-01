@@ -37,9 +37,9 @@ class MediaAnalyzer
         if (!isset($this->metadataReaders[$mimeType])) {
             throw new \Exception('No metadata reader found for file of type: ' . $mimeType);
         }
-        
+
         $metadata = $this->metadataReaders[$mimeType]->read($file);
-        
+
         return $metadata;
     }
 

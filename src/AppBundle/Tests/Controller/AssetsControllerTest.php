@@ -3,35 +3,31 @@
 namespace AppBundle\Tests\Controller;
 
 use AppBundle\Tests\BaseWebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class AssetsControllerTest extends BaseWebTestCase
 {
-        
     public function testGetByEventAction()
     {
         $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\EventData',
         ]);
-        
+
         $client = $this->makeClient();
         $event = $this->getEvent('Test Event 1');
 
-        $client->request('GET', '/v2/events/' . $event->getOid() . '/assets');
-        $this->assertEquals(Response::HTTP_OK,  $client->getResponse()->getStatusCode());
-        $this->assertJsonResponse($client);
+        $client->request('GET', '/v2/events/'.$event->getOid().'/assets');
+        $this->assertJsonResponse($client->getResponse(), 200);
     }
-    
+
     public function testGetByEventActionEventNotFound()
     {
         $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\EventData',
         ]);
-        
+
         $client = $this->makeClient();
 
         $client->request('GET', '/v2/events/99999999/assets');
-        $this->assertEquals(Response::HTTP_NOT_FOUND,  $client->getResponse()->getStatusCode());
-        $this->assertJsonResponse($client);
+        $this->assertJsonResponse($client->getResponse(), 404);
     }
 }
