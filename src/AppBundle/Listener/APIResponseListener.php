@@ -22,6 +22,9 @@ class APIResponseListener
         }
 
         $view = new View($apiResponse, $apiResponse->getStatusCode());
+        foreach ($apiResponse->getHeaders() as $name => $value) {
+            $view->setHeader($name, $value);
+        }
         $event->setControllerResult($view);
     }
 }

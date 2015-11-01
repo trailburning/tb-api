@@ -51,22 +51,4 @@ class JourneyServiceTest extends BaseWebTestCase
         $this->assertEquals(0, count($result->getBody()['journeys'][0]->getRoutePoints()));
         $this->assertEquals(0, count($journey->getRoutePoints()));
     }
-    
-    public function testCreateFromAPI()
-    {
-        $this->loadFixtures([
-            'AppBundle\DataFixtures\ORM\JourneyData',
-        ]); 
-        
-        $journeyService = $this->getContainer()->get('tb.journey');
-        $user = $this->getUser('mattallbeury');
-        $journey = new Journey();
-        $journey->setName('name');
-        $journey->setAbout('about');
-        $journey->setUser($user);
-                
-        $result = $journeyService->createFromAPI($journey);
-        
-        $this->assertInstanceOf('AppBundle\Response\APIResponse', $result);
-    }
 }

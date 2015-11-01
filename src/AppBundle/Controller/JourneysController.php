@@ -9,8 +9,6 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use AppBundle\Form\Type\GPXImportType;
-use AppBundle\Form\Type\JourneyType;
-use AppBundle\Entity\Journey;
 
 class JourneysController extends Controller implements ClassResourceInterface
 {
@@ -206,11 +204,9 @@ class JourneysController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(name="name", type="string", in="formData", description="The name of the journey"),
      *     @SWG\Parameter(name="about", type="string", in="formData", description="About the journey"),
      *     @SWG\Parameter(name="user", type="string", in="formData", description="The ID of the user the journey belongs to"),
-     *     @SWG\Parameter(name="position", type="integer", in="formData", description="The sort position"),
-     *     @SWG\Parameter(name="publish", type="boolean", in="formData", description="Publish this journey"),
-     *     @SWG\Response(response=201, description="Successful operation",
-     *         @SWG\Schema(ref="#/definitions/Journey")
-     *     ),
+     *     @SWG\Parameter(name="position", type="integer", in="formData", description="The sort position, will be set automatically"),
+     *     @SWG\Parameter(name="publish", type="boolean", in="formData", description="Publish this journey, default value is 'false'"),
+     *     @SWG\Response(response=201, description="Successful operation. The Location header contains a link to the new journey."),
      *     @SWG\Response(response="400", description="Invalid data."),
      * )
      *
@@ -218,7 +214,9 @@ class JourneysController extends Controller implements ClassResourceInterface
      */
     public function postAction()
     {
-        return $this->processForm(new Journey(), $this->getRequest()->request->all(), $this->getRequest()->getMethod());
+        $journeyService = $this->get('tb.journey');
+
+        return $journeyService->createOrUpdateFromAPI($this->getRequest()->request->all());
     }
 
     /**
@@ -245,6 +243,7 @@ class JourneysController extends Controller implements ClassResourceInterface
     public function putAction($id)
     {
         $journeyRepository = $this->get('tb.journey.repository');
+        $journeyService = $this->get('tb.journey');
 
         $journey = $journeyRepository->findOneBy([
             'oid' => $id,
@@ -254,29 +253,13 @@ class JourneysController extends Controller implements ClassResourceInterface
             $apiResponseBuilder->buildNotFoundResponse('Journey not found');
         }
 
-        return $this->processForm($journey, $this->getRequest()->request->all(), $this->getRequest()->getMethod());
+        return $journeyService->createOrUpdateFromAPI(
+            $this->getRequest()->request->all(),
+            $journey,
+            $this->getRequest()->getMethod()
+        );
     }
 
-    /**
-     * @param Journey $journey
-     * @param array   $parameters
-     * @param string  $method
-     *
-     * @return APIResponse
-     */
-    private function processForm(Journey $journey, array $parameters, $method = 'PUT')
-    {
-        $apiResponseBuilder = $this->get('tb.response.builder');
-        $form = $this->createForm(new JourneyType(), $journey, ['method' => $method]);
-        $form->submit($parameters, 'PUT' !== $method);
-        if (!$form->isValid()) {
-            return $apiResponseBuilder->buildFormErrorResponse($form);
-        }
-        $journeyService = $this->get('tb.journey');
-
-        return $journeyService->createFromAPI($form->getData());
-    }
-    
     /**
      * @SWG\Delete(
      *     path="/journeys/{id}",
@@ -297,7 +280,7 @@ class JourneysController extends Controller implements ClassResourceInterface
     public function deleteAction($id)
     {
         $journeyService = $this->get('tb.journey');
-        
-        return $journeyService->deleteJourney($id);
+
+        return $journeyService->deleteFromAPI($id);
     }
 }

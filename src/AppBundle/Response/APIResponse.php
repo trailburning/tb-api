@@ -2,21 +2,16 @@
 
 namespace AppBundle\Response;
 
+use JMS\Serializer\Annotation as Serializer;
+
 /**
  */
 class APIResponse
 {
-    const STATUS_SUCCESS = 'success';
-
-    const STATUS_ERROR = 'error';
-
+    
     /**
      * @var string
-     */
-    private $status;
-
-    /**
-     * @var string
+     * @Serializer\Exclude
      */
     private $statusCode;
 
@@ -35,22 +30,16 @@ class APIResponse
      */
     private $messages;
 
-    public function __construct($statusCode = 200, $status = self::STATUS_SUCCESS)
+    /**
+     * @var array
+     * @Serializer\Exclude
+     */
+    private $headers;
+
+    public function __construct($statusCode = 200)
     {
         $this->setStatusCode($statusCode);
-        $this->setStatus($status);
-    }
-
-    /**
-     * @param string $status
-     */
-    public function setStatus($status)
-    {
-        if (in_array($status, [self::STATUS_SUCCESS, self::STATUS_ERROR]) === false) {
-            throw new \Exception(sprintf('Invalid status: %s', $status));
-        }
-
-        $this->status = $status;
+        $this->headers = [];
     }
 
     /**
@@ -111,5 +100,18 @@ class APIResponse
     public function addMessage($message)
     {
         $this->messages[] = $message;
+    }
+
+    /**
+     * @param string $message
+     */
+    public function addheader($name, $value)
+    {
+        $this->headers[$name] = $value;
+    }
+
+    public function getHeaders()
+    {
+        return $this->headers;
     }
 }

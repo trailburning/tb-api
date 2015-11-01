@@ -114,6 +114,7 @@ class JourneysControllerTest extends BaseWebTestCase
         $this->assertEquals($user->getId(), $journey->getUser()->getId());
         $this->assertEquals(1, $journey->getPosition());
         $this->assertEquals(true, $journey->isPublish());
+        $this->assertTrue($client->getResponse()->headers->has('Location'), $client->getResponse()->headers);
     }
     
     public function testPostActionJSON()

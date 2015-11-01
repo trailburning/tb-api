@@ -58,7 +58,7 @@ class APIResponseBuilder
      */
     public function buildNotFoundResponse($message)
     {
-        $response = new APIResponse(404, 'error');
+        $response = new APIResponse(404);
         $response->addMessage($message);
 
         return $response;
@@ -72,7 +72,7 @@ class APIResponseBuilder
      */
     public function buildBadRequestResponse($message)
     {
-        $response = new APIResponse(400, 'error');
+        $response = new APIResponse(400);
         $response->addMessage($message);
 
         return $response;
@@ -99,7 +99,7 @@ class APIResponseBuilder
      */
     public function buildServerErrorResponse($message = null)
     {
-        $response = new APIResponse(500, 'error');
+        $response = new APIResponse(500);
         if ($message !== null) {
             $response->addMessage($message);
         }
@@ -116,7 +116,7 @@ class APIResponseBuilder
     public function buildFormErrorResponse(Form $form)
     {
         $message = (string) $form->getErrors(true, true);
-        $response = new APIResponse(400, 'error');
+        $response = new APIResponse(400);
         foreach ($this->getFormFieldErrors($form) as $field => $error) {
             $error = str_replace('This form', 'The data', $error);
             if ($field === '') {

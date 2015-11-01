@@ -11,6 +11,9 @@ use AppBundle\Repository\UserRepository;
 use AppBundle\Response\APIResponseBuilder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use Symfony\Component\Form\FormFactoryInterface;
+use AppBundle\Form\Type\JourneyType;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /**
  * Class JourneyService.
@@ -20,27 +23,37 @@ class JourneyService
     /**
      * @var JourneyRepository
      */
-    protected $journeyRepository;
+    private $journeyRepository;
 
     /**
      * @var UserRepository
      */
-    protected $userRepository;
+    private $userRepository;
 
     /**
      * @var APIResponseBuilder
      */
-    protected $apiResponseBuilder;
+    private $apiResponseBuilder;
 
     /**
      * @var GPXParser
      */
-    protected $gpxParser;
+    private $gpxParser;
 
     /**
      * @var RoutePointRepository
      */
-    protected $routePointRepository;
+    private $routePointRepository;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
+     * @var Router
+     */
+    private $router;
 
     /**
      * @param JourneyRepository    $journeyRepository
@@ -48,19 +61,25 @@ class JourneyService
      * @param APIResponseBuilder   $apiResponseBuilder
      * @param GPXParser            $gpxParser
      * @param RoutePointRepository $routePointRepository
+     * @param FormFactoryInterface $formFactory
+     * @param Router               $router
      */
     public function __construct(
         JourneyRepository $journeyRepository,
         UserRepository $userRepository,
         APIResponseBuilder $apiResponseBuilder,
         GPXParser $gpxParser,
-        RoutePointRepository $routePointRepository)
-    {
+        RoutePointRepository $routePointRepository,
+        FormFactoryInterface $formFactory,
+        Router $router
+    ) {
         $this->journeyRepository = $journeyRepository;
         $this->userRepository = $userRepository;
         $this->apiResponseBuilder = $apiResponseBuilder;
         $this->gpxParser = $gpxParser;
         $this->routePointRepository = $routePointRepository;
+        $this->formFactory = $formFactory;
+        $this->router = $router;
     }
 
     /**
@@ -125,7 +144,8 @@ class JourneyService
             $journey->clearRoutePoints();
             foreach ($segments[0] as $routePoint) {
                 $elevation = isset($routePoint['elevation']) ? $routePoint['elevation'] : null;
-                $journey->addRoutePoint(new RoutePoint(new Point($routePoint['long'], $routePoint['lat'], 4326), $elevation));
+                $point = new Point($routePoint['long'], $routePoint['lat'], 4326);
+                $journey->addRoutePoint(new RoutePoint($point, $elevation));
             }
         }
 
@@ -158,19 +178,38 @@ class JourneyService
 
     /**
      * @param Journey $journey
+     * @param array   $parameters
+     * @param string  $method
      *
      * @return APIResponse
      */
-    public function createFromAPI(Journey $journey)
+    public function createOrUpdateFromAPI(array $parameters, Journey $journey = null, $method = 'POST')
     {
-        $statusCode = 201;
-        if ($journey->getId() !== null) {
-            $statusCode = 204;
+        if ($journey === null) {
+            $journey = new Journey();
         }
+
+        $form = $this->formFactory->create(new JourneyType(), $journey, ['method' => $method]);
+        $clearMissing = ($method !== 'PUT') ? true : false;
+        $form->submit($parameters, $clearMissing);
+
+        if (!$form->isValid()) {
+            return $this->apiResponseBuilder->buildFormErrorResponse($form);
+        }
+
+        $journey = $form->getData();
+
         $this->journeyRepository->add($journey);
         $this->journeyRepository->store();
 
-        return $this->apiResponseBuilder->buildResponse($statusCode, 'success');
+        $response = $this->apiResponseBuilder->buildEmptySuccessResponse(204);
+        if ($method === 'POST') {
+            $response->setStatusCode(201);
+            $location = $this->router->generate('get_journeys', ['id' => $journey->getOid()]);
+            $response->addHeader('Location', $location);
+        }
+
+        return $response;
     }
 
     /**
@@ -178,7 +217,7 @@ class JourneyService
      *
      * @return APIResponse
      */
-    public function deleteJourney($id)
+    public function deleteFromAPI($id)
     {
         $journey = $this->journeyRepository->findOneBy([
             'oid' => $id,
