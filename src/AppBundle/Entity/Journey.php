@@ -62,7 +62,6 @@ class Journey
      * @var bool
      *
      * @ORM\Column(type="boolean", options={"default" = false})
-     * @Assert\Type(type="boolean")
      */
     private $publish = false;
 
@@ -92,7 +91,7 @@ class Journey
     /**
      * @Gedmo\SortablePosition
      * @ORM\Column(name="position", type="integer", nullable=true)
-     * @Assert\Type(type="boolean")
+     * @Assert\Type(type="integer")
      */
     private $position;
 
@@ -181,6 +180,10 @@ class Journey
      */
     public function setPublish($publish)
     {
+        if ($publish === null) {
+            return $this;
+        }
+        
         $this->publish = $publish;
 
         return $this;

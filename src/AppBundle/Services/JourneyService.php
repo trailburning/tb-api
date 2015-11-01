@@ -165,11 +165,11 @@ class JourneyService
     {
         $statusCode = 201;
         if ($journey->getId() !== null) {
-            $statusCode = 200;
+            $statusCode = 204;
         }
         $this->journeyRepository->add($journey);
         $this->journeyRepository->store();
 
-        return $this->apiResponseBuilder->buildSuccessResponse([$journey], 'journeys', $statusCode);
+        return $this->apiResponseBuilder->buildResponse($statusCode, 'success');
     }
 }

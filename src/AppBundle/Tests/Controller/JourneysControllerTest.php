@@ -100,6 +100,8 @@ class JourneysControllerTest extends BaseWebTestCase
             'name' => 'Test 123',
             'about' => 'about',
             'user' => $user->getId(),
+            'position' => 1,
+            'publish' => 'true',
         ];
 
         $client->request('POST', '/v2/journeys', $data);
@@ -107,6 +109,11 @@ class JourneysControllerTest extends BaseWebTestCase
 
         $journey = $this->getJourney('Test 123');
         $this->assertInstanceOf('AppBundle\Entity\Journey', $journey);
+        $this->assertEquals('Test 123', $journey->getName());
+        $this->assertEquals('about', $journey->getAbout());
+        $this->assertEquals($user->getId(), $journey->getUser()->getId());
+        $this->assertEquals(1, $journey->getPosition());
+        $this->assertEquals(true, $journey->isPublish());
     }
     
     public function testPostActionJSON()
@@ -140,5 +147,26 @@ class JourneysControllerTest extends BaseWebTestCase
 
         $client->request('POST', '/v2/journeys', $data);
         $this->assertJsonResponse($client->getResponse(), 400);
+    }
+    
+    public function testPutAction()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\JourneyData',
+        ]);
+
+        $client = $this->makeClient();
+        $journey = $this->getJourney('Test Journey 1');
+        $data = [
+            'name' => 'Test 123',
+            'about' => 'about',
+        ];
+
+        $client->request('PUT', '/v2/journeys/' . $journey->getOid(), $data);
+        $this->assertEquals(204, $client->getResponse()->getStatusCode(), $client->getResponse()->getStatusCode());
+
+        $this->refreshEntity($journey);
+        $this->assertEquals('Test 123', $journey->getName());
+        $this->assertEquals('about', $journey->getAbout());
     }
 }

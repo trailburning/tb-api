@@ -5,6 +5,7 @@ namespace AppBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use AppBundle\Form\DataTransformer\BooleanTransformer;
 
 class JourneyType extends AbstractType
 {
@@ -17,7 +18,9 @@ class JourneyType extends AbstractType
                 'class' => 'AppBundle:User',
             ])
             ->add('position')
-            ->add('publish', 'checkbox');
+            ->add('publish', 'choice', array(
+                'choices' => array('true' => true, 'false' => false),
+            ));
     }
 
     public function configureOptions(OptionsResolver $resolver)

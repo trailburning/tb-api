@@ -10,6 +10,7 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use AppBundle\Form\Type\GPXImportType;
 use AppBundle\Form\Type\JourneyType;
+use AppBundle\Entity\Journey;
 
 class JourneysController extends Controller implements ClassResourceInterface
 {
@@ -206,7 +207,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(name="about", type="string", in="formData", description="About the journey"),
      *     @SWG\Parameter(name="user", type="string", in="formData", description="The ID of the user the journey belongs to"),
      *     @SWG\Parameter(name="position", type="integer", in="formData", description="The sort position"),
-     *     @SWG\Parameter(name="publish", type="boolean", in="formData", description="Publish this jpurney"),
+     *     @SWG\Parameter(name="publish", type="boolean", in="formData", description="Publish this journey"),
      *     @SWG\Response(response=201, description="Successful operation",
      *         @SWG\Schema(ref="#/definitions/Journey")
      *     ),
@@ -217,15 +218,61 @@ class JourneysController extends Controller implements ClassResourceInterface
      */
     public function postAction()
     {
-        $journeyService = $this->get('tb.journey');
+        return $this->processForm(new Journey(), $this->getRequest()->request->all(), $this->getRequest()->getMethod());
+    }
+
+    /**
+     * @SWG\Put(
+     *     path="/journeys/{id}",
+     *     summary="Update a journey",
+     *     description="Updates a journey.",
+     *     tags={"Journeys"},
+     *     consumes={"application/json","application/x-www-form-urlencoded"},
+     *     @SWG\Parameter(name="id", type="string", in="path", description="ID of journey to update", required=true),
+     *     @SWG\Parameter(name="name", type="string", in="formData", description="The name of the journey"),
+     *     @SWG\Parameter(name="about", type="string", in="formData", description="About the journey"),
+     *     @SWG\Parameter(name="user", type="string", in="formData", description="The ID of the user the journey belongs to"),
+     *     @SWG\Parameter(name="position", type="integer", in="formData", description="The sort position"),
+     *     @SWG\Parameter(name="publish", type="boolean", in="formData", description="Publish this journey"),
+     *     @SWG\Response(response=204, description="Successful operation"),
+     *     @SWG\Response(response="400", description="Invalid data."),
+     * )
+     *
+     * @param string $id
+     *
+     * @return APIResponse
+     */
+    public function putAction($id)
+    {
+        $journeyRepository = $this->get('tb.journey.repository');
+
+        $journey = $journeyRepository->findOneBy([
+            'oid' => $id,
+        ]);
+
+        if ($journey === null) {
+            $apiResponseBuilder->buildNotFoundResponse('Journey not found');
+        }
+
+        return $this->processForm($journey, $this->getRequest()->request->all(), $this->getRequest()->getMethod());
+    }
+
+    /**
+     * @param Journey $journey
+     * @param array   $parameters
+     * @param string  $method
+     *
+     * @return APIResponse
+     */
+    private function processForm(Journey $journey, array $parameters, $method = 'PUT')
+    {
         $apiResponseBuilder = $this->get('tb.response.builder');
-
-        $form = $this->createForm(new JourneyType());
-        $form->handleRequest($this->getRequest());
-
+        $form = $this->createForm(new JourneyType(), $journey, ['method' => $method]);
+        $form->submit($parameters, 'PUT' !== $method);
         if (!$form->isValid()) {
             return $apiResponseBuilder->buildFormErrorResponse($form);
         }
+        $journeyService = $this->get('tb.journey');
 
         return $journeyService->createFromAPI($form->getData());
     }
