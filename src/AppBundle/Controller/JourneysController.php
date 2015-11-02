@@ -20,7 +20,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      *     tags={"Journeys"},
      *     produces={"application/json"},
      *     @SWG\Parameter(
-     *         description="ID of journey to return",
+     *         description="ID of the journey to return",
      *         in="path",
      *         name="id",
      *         required=true,
@@ -138,14 +138,14 @@ class JourneysController extends Controller implements ClassResourceInterface
         ]);
 
         if ($journey === null) {
-            $apiResponseBuilder->buildNotFoundResponse('Journey not found');
+            return $apiResponseBuilder->buildNotFoundResponse('Journey not found');
         }
 
         $form = $this->createForm(new GPXImportType());
         $form->handleRequest($this->getRequest());
 
         if (!$form->isValid()) {
-            $apiResponseBuilder->buildResponse(400, 'Invalid or empty GPX file.');
+            return $apiResponseBuilder->buildResponse(400, 'Invalid or empty GPX file.');
         }
 
         $file = $form->get('file')->getData();
@@ -225,7 +225,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      *     description="Updates a journey.",
      *     tags={"Journeys"},
      *     consumes={"application/json","application/x-www-form-urlencoded"},
-     *     @SWG\Parameter(name="id", type="string", in="path", description="ID of journey to update", required=true),
+     *     @SWG\Parameter(name="id", type="string", in="path", description="ID of the journey to update", required=true),
      *     @SWG\Parameter(name="name", type="string", in="formData", description="The name of the journey"),
      *     @SWG\Parameter(name="about", type="string", in="formData", description="About the journey"),
      *     @SWG\Parameter(name="user", type="string", in="formData", description="The ID of the user the journey belongs to"),
@@ -249,7 +249,7 @@ class JourneysController extends Controller implements ClassResourceInterface
         ]);
 
         if ($journey === null) {
-            $apiResponseBuilder->buildNotFoundResponse('Journey not found');
+            return $apiResponseBuilder->buildNotFoundResponse('Journey not found');
         }
 
         return $journeyService->createOrUpdateFromAPI(

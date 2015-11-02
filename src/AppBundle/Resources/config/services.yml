@@ -69,6 +69,8 @@ services:
             - @tb.event.repository
             - @tb.journey.repository
             - @tb.response.builder
+            - @form.factory
+            - @router
             
     tb.event.repository:
         class: AppBundle\Repository\EventRepository

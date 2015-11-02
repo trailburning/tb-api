@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Event.
@@ -42,6 +43,8 @@ class Event
      * @ORM\Column(type="string", length=255)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Assert\NotBlank()
+     * @Assert\Length(max = "255")
      */
     private $name;
 
@@ -51,6 +54,7 @@ class Event
      * @ORM\Column(type="text")
      * @SWG\Property()
      * @Serializer\Expose
+     * @Assert\NotBlank()
      */
     private $about;
     
@@ -59,6 +63,7 @@ class Event
      *
      * @ORM\ManyToOne(targetEntity="Journey", inversedBy="events")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank()
      */
     private $journey;
     
@@ -67,6 +72,7 @@ class Event
      *
      * @ORM\Column(name="coords", type="point", columnDefinition="GEOMETRY(POINT,4326)")
      * @SWG\Property(type="Array")
+     * @Assert\NotBlank()
      */
     private $coords;
     

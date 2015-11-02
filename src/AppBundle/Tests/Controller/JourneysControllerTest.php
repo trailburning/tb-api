@@ -188,12 +188,9 @@ class JourneysControllerTest extends BaseWebTestCase
     
     public function testDeleteActionNotFound()
     {
-        $this->loadFixtures([
-            'AppBundle\DataFixtures\ORM\JourneyData',
-        ]);
+        $this->loadFixtures([]);
 
         $client = $this->makeClient();
-        $journey = $this->getJourney('Test Journey 1');
 
         $client->request('DELETE', '/v2/journeys/0000');
         $this->assertJsonResponse($client->getResponse(), 404);

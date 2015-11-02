@@ -5,27 +5,29 @@ namespace AppBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use AppBundle\Form\DataTransformer\GeometryPointTransformer;
 
-class JourneyType extends AbstractType
+class EventType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name')
             ->add('about', 'textarea')
-            ->add('user', 'entity', [
-                'class' => 'AppBundle:User',
+            ->add('journey', 'entity', [
+                'class' => 'AppBundle:Journey',
             ])
+            ->add($builder
+                ->create('coords')
+                ->addModelTransformer(new GeometryPointTransformer()))
             ->add('position')
-            ->add('publish', 'choice', array(
-                'choices' => array('true' => true, 'false' => false),
-            ));
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'AppBundle\Entity\Journey',
+            'data_class' => 'AppBundle\Entity\Event',
             'csrf_protection' => false,
         ]);
     }
