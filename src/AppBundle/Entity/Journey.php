@@ -90,7 +90,7 @@ class Journey
 
     /**
      * @Gedmo\SortablePosition
-     * @ORM\Column(name="position", type="integer", nullable=true)
+     * @ORM\Column(name="position", type="integer")
      * @Assert\Type(type="integer")
      */
     private $position;

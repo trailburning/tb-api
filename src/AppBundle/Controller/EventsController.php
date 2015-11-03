@@ -62,7 +62,8 @@ class EventsController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(name="about", type="string", in="formData", description="About the event"),
      *     @SWG\Parameter(name="coords", type="string", in="formData", description="The GPS coordinates of the event in the format '(LNG, LAT)'"),
      *     @SWG\Parameter(name="position", type="integer", in="formData", description="The sort position, will be set automatically"),
-     *     @SWG\Response(response=201, description="Successful operation. The Location header contains a link to the new event."),
+     *     @SWG\Response(response=201, description="Successful operation. The Location header contains a link to the new event.",
+     *        @SWG\Header(header="location", type="string", description="Link to the new event.")),
      *     @SWG\Response(response="400", description="Invalid data."),
      * )
      *
@@ -111,6 +112,7 @@ class EventsController extends Controller implements ClassResourceInterface
      */
     public function putAction($id)
     {
+        $apiResponseBuilder = $this->get('tb.response.builder');
         $eventRepository = $this->get('tb.event.repository');
         $eventService = $this->get('tb.event');
 

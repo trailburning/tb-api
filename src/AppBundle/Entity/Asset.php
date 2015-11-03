@@ -84,7 +84,7 @@ class Asset
     
     /**
      * @Gedmo\SortablePosition
-     * @ORM\Column(name="position", type="integer", nullable=true)
+     * @ORM\Column(name="position", type="integer")
      */
     private $position;
 

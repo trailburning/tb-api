@@ -205,7 +205,8 @@ class JourneysController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(name="user", type="string", in="formData", description="The ID of the user the journey belongs to"),
      *     @SWG\Parameter(name="position", type="integer", in="formData", description="The sort position, will be set automatically"),
      *     @SWG\Parameter(name="publish", type="boolean", in="formData", description="Publish this journey, default value is 'false'"),
-     *     @SWG\Response(response=201, description="Successful operation. The Location header contains a link to the new journey."),
+     *     @SWG\Response(response=201, description="Successful operation. The Location header contains a link to the new journey.",
+     *        @SWG\Header(header="location", type="string", description="Link to the new event.")),
      *     @SWG\Response(response="400", description="Invalid data."),
      * )
      *
@@ -241,9 +242,10 @@ class JourneysController extends Controller implements ClassResourceInterface
      */
     public function putAction($id)
     {
+        $apiResponseBuilder = $this->get('tb.response.builder');
         $journeyRepository = $this->get('tb.journey.repository');
         $journeyService = $this->get('tb.journey');
-
+        
         $journey = $journeyRepository->findOneBy([
             'oid' => $id,
         ]);
