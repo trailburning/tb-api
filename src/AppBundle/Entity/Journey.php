@@ -76,6 +76,7 @@ class Journey
 
     /**
      * @ORM\OneToMany(targetEntity="Event", mappedBy="journey", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"position" = "ASC"})
      */
     protected $events;
 

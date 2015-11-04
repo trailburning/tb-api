@@ -83,6 +83,7 @@ class Event
      * @ORM\OneToMany(targetEntity="Asset", mappedBy="event", cascade={"persist", "remove"})
      * @SWG\Property()
      * @Serializer\Expose
+     * @ORM\OrderBy({"position" = "ASC"})
      */
     private $assets;
 
