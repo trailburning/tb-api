@@ -156,7 +156,7 @@ class EventService
      */
     private function clearCustomFields(array $parameters, Event $event)
     {
-        if (isset($parameters['custom']) && count($parameters['custom']) > 0 && count($event->getCustom()) > 0) {
+        if (array_key_exists('custom', $parameters) && count($event->getCustom()) > 0) {
             $this->eventCustomRepository->deleteByEvent($event);
         }
     }

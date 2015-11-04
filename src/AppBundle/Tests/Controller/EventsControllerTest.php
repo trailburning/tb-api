@@ -158,7 +158,7 @@ class EventsControllerTest extends BaseWebTestCase
         $this->assertEquals(2, count($event->getCustom()));
     }
     
-    public function testPutActionCustomReplace()
+    public function testPutActionCustomFieldsReplace()
     {
         $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\EventData',
@@ -183,6 +183,30 @@ class EventsControllerTest extends BaseWebTestCase
         $this->assertEquals('Test 123', $event->getName());
         $this->assertEquals('about', $event->getAbout());
         $this->assertEquals(2, count($event->getCustom()));
+    }
+    
+    public function testPutActionCustomFieldsDelete()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\EventData',
+        ]);
+
+        $client = $this->makeClient();
+        $event = $this->getEvent('Test Event 1');
+        $this->assertEquals(2, count($event->getCustom()));
+        $data = [
+            'name' => 'Test 123',
+            'about' => 'about',
+            'custom' => null,
+        ];
+
+        $client->request('PUT', '/v2/events/' . $event->getOid(), $data);
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+
+        $this->refreshEntity($event);
+        $this->assertEquals('Test 123', $event->getName());
+        $this->assertEquals('about', $event->getAbout());
+        $this->assertEquals(0, count($event->getCustom()));
     }
     
     public function testDeleteAction()
