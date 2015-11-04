@@ -45,7 +45,7 @@ class GeometryPointTransformer implements DataTransformerInterface
         }
 
         // check the location Sting format
-        if (!preg_match('/^\(([-\d]+\.[-\d]+), ([-\d]+\.[-\d]+)\)$/', $point, $match)) {
+        if (!preg_match('/^\(([-\d]+\.[-\d]+),\s?([-\d]+\.[-\d]+)\)$/', $point, $match)) {
             throw new TransformationFailedException(sprintf('Invalid point string format: %s', $point));
         }
         $point = new Point($match[1], $match[2], 4326);

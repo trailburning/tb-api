@@ -8,6 +8,7 @@ use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use Burgov\Bundle\KeyValueFormBundle\KeyValueContainer;
 
 /**
  * Event.
@@ -27,7 +28,7 @@ class Event
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
+
     /**
      * @var string
      * @ORM\Column(type="string", length=22, unique=true)
@@ -57,7 +58,7 @@ class Event
      * @Assert\NotBlank()
      */
     private $about;
-    
+
     /**
      * @var Journey
      *
@@ -66,7 +67,7 @@ class Event
      * @Assert\NotBlank()
      */
     private $journey;
-    
+
     /**
      * @var Point point
      *
@@ -75,7 +76,7 @@ class Event
      * @Assert\NotBlank()
      */
     private $coords;
-    
+
     /**
      * @var Asset[]
      *
@@ -84,14 +85,14 @@ class Event
      * @Serializer\Expose
      */
     private $assets;
-    
+
     /**
      * @var EventCustom[]
      *
      * @ORM\OneToMany(targetEntity="EventCustom", mappedBy="event", cascade={"persist", "remove"})
      */
-    private $customFields;
-    
+    private $custom;
+
     /**
      * @Gedmo\SortablePosition
      * @ORM\Column(name="position", type="integer")
@@ -99,30 +100,31 @@ class Event
     private $position;
 
     /**
-     * ################################################################################################################
+     * ################################################################################################################.
      *
      *                                         User Defined
      *
      * ################################################################################################################
      */
-
     public function __construct()
     {
         $this->oid = str_replace('.', '', uniqid(null, true));
         $this->assets = new ArrayCollection();
+        $this->custom = new ArrayCollection();
     }
-    
+
     /**
      * @Serializer\VirtualProperty()
      * @Serializer\SerializedName("coords")
+     *
      * @return array
      */
-    public function getCoordsAsArray() 
+    public function getCoordsAsArray()
     {
         if ($this->coords === null) {
             return [];
         }
-        
+
         return [
             $this->coords->getLongitude(),
             $this->coords->getLatitude(),
@@ -133,24 +135,60 @@ class Event
      * @Serializer\VirtualProperty()
      * @Serializer\SerializedName("custom")
      * @SWG\Property(property="custom")
+     *
      * @return array
      */
-    public function getCustomFieldsArray() 
+    public function getCustomAPIResponse()
     {
-        if (count($this->getCustomFields()) === 0) {
-            return null;
+        if (count($this->getCustom()) === 0) {
+            return;
         }
-        
-        $fields = [];
-        foreach ($this->getCustomFields() as $customField) {
-            $fields[$customField->getKey()] = $customField->getValue();
-        }
-        
-        return $fields;
+
+        return $this->getCustom();
     }
 
     /**
-     * ################################################################################################################
+     * Set the custom fields.
+     *
+     * @param array|KeyValueContainer|\Traversable $data Something that can be converted to an array.
+     */
+    public function setCustom($customFields)
+    {
+        $this->custom = new ArrayCollection();
+        $customFields = $this->convertToArray($customFields);
+        foreach ($customFields as $key => $value) {
+            $this->addCustom(new EventCustom($key, $value));
+        }
+    }
+
+    /**
+     * Extract an array out of $data or throw an exception if not possible.
+     *
+     * @param array|KeyValueContainer|\Traversable $data Something that can be converted to an array.
+     *
+     * @return array Native array representation of $data
+     *
+     * @throws InvalidArgumentException If $data can not be converted to an array.
+     */
+    private function convertToArray($data)
+    {
+        if (is_array($data)) {
+            return $data;
+        }
+
+        if ($data instanceof KeyValueContainer) {
+            return $data->toArray();
+        }
+
+        if ($data instanceof \Traversable) {
+            return iterator_to_array($data);
+        }
+
+        throw new \Exception(sprintf('Expected array, Traversable or KeyValueContainer, got "%s"', is_object($data) ? getclass($data) : get_type($data)));
+    }
+
+    /**
+     * ################################################################################################################.
      *
      *                                         Getters and Setters
      *
@@ -212,47 +250,50 @@ class Event
     {
         return $this->about;
     }
-    
+
     /**
      * @param Journey $journey
+     *
      * @return self
      */
     public function setJourney(Journey $journey)
     {
         $this->journey = $journey;
-    
+
         return $this;
     }
 
     /**
-     * @return Journey 
+     * @return Journey
      */
     public function getJourney()
     {
         return $this->journey;
     }
-    
+
     /**
      * @param point $coords
+     *
      * @return self
      */
     public function setCoords($coords)
     {
         $this->coords = $coords;
-    
+
         return $this;
     }
 
     /**
-     * @return point 
+     * @return point
      */
     public function getCoords()
     {
         return $this->coords;
     }
-    
+
     /**
      * @param Asset $assets
+     *
      * @return self
      */
     public function addAsset(Asset $asset)
@@ -261,7 +302,7 @@ class Event
 
         return $this;
     }
-    
+
     /**
      * @param Asset $assets
      */
@@ -271,41 +312,47 @@ class Event
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAssets()
     {
         return $this->assets;
     }
-    
+
     /**
      * @param EventCustom $eventCustom
+     *
      * @return self
      */
-    public function addCustomField(EventCustom $eventCustom)
+    public function addCustom(EventCustom $eventCustom)
     {
         $eventCustom->setEvent($this);
-        $this->customFields[] = $eventCustom;
+        $this->custom[] = $eventCustom;
 
         return $this;
     }
-    
+
     /**
      * @param EventCustom $eventCustom
      */
-    public function removeCustomField(EventCustom $eventCustom)
+    public function removeCustom(EventCustom $eventCustom)
     {
-        $this->customFields->removeElement($eventCustom);
+        $this->custom->removeElement($eventCustom);
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
-    public function getCustomFields()
+    public function getCustom()
     {
-        return $this->customFields;
+        $map = [];
+        foreach ($this->custom as $customField) {
+            $map[$customField->getKey()] = $customField->getValue();
+        }
+
+        return $map;
     }
-    
+
     /**
      * @param int $position
      *
@@ -314,7 +361,7 @@ class Event
     public function setPosition($position)
     {
         $this->position = $position;
-        
+
         return $this;
     }
 

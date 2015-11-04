@@ -5,6 +5,7 @@ namespace AppBundle\Services;
 use AppBundle\Response\APIResponse;
 use AppBundle\Repository\JourneyRepository;
 use AppBundle\Repository\EventRepository;
+use AppBundle\Repository\EventCustomRepository;
 use AppBundle\Response\APIResponseBuilder;
 use AppBundle\Entity\Event;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -30,7 +31,7 @@ class EventService
      * @var APIResponseBuilder
      */
     protected $apiResponseBuilder;
-    
+
     /**
      * @var FormFactoryInterface
      */
@@ -42,24 +43,32 @@ class EventService
     private $router;
 
     /**
-     * @param EventRepository    $eventRepository
-     * @param JourneyRepository  $journeyRepository
-     * @param APIResponseBuilder $apiResponseBuilder
-     * @param FormFactoryInterface $formFactory
-     * @param Router               $router
+     * @var EventCustomRepository
+     */
+    protected $eventCustomRepository;
+
+    /**
+     * @param EventRepository       $eventRepository
+     * @param JourneyRepository     $journeyRepository
+     * @param APIResponseBuilder    $apiResponseBuilder
+     * @param FormFactoryInterface  $formFactory
+     * @param Router                $router
+     * @param EventCustomRepository $eventCustomRepository
      */
     public function __construct(
-        EventRepository $eventRepository, 
-        JourneyRepository $journeyRepository, 
-        APIResponseBuilder $apiResponseBuilder, 
+        EventRepository $eventRepository,
+        JourneyRepository $journeyRepository,
+        APIResponseBuilder $apiResponseBuilder,
         FormFactoryInterface $formFactory,
-        Router $router
+        Router $router,
+        EventCustomRepository $eventCustomRepository
     ) {
         $this->eventRepository = $eventRepository;
         $this->journeyRepository = $journeyRepository;
         $this->apiResponseBuilder = $apiResponseBuilder;
         $this->formFactory = $formFactory;
         $this->router = $router;
+        $this->eventCustomRepository = $eventCustomRepository;
     }
 
     /**
@@ -84,7 +93,7 @@ class EventService
 
         return $this->apiResponseBuilder->buildSuccessResponse($events, 'events');
     }
-    
+
     /**
      * @param string $oid
      *
@@ -102,11 +111,11 @@ class EventService
 
         return $this->apiResponseBuilder->buildSuccessResponse($events, 'events');
     }
-    
+
     /**
-     * @param Event $event
-     * @param array   $parameters
-     * @param string  $method
+     * @param Event  $event
+     * @param array  $parameters
+     * @param string $method
      *
      * @return APIResponse
      */
@@ -115,6 +124,8 @@ class EventService
         if ($event === null) {
             $event = new Event();
         }
+
+        $this->clearCustomFields($parameters, $event);
 
         $form = $this->formFactory->create(new EventType(), $event, ['method' => $method]);
         $clearMissing = ($method !== 'PUT') ? true : false;
@@ -137,6 +148,17 @@ class EventService
         }
 
         return $response;
+    }
+
+    /**
+     * @param array $parameters
+     * @param Event $event
+     */
+    private function clearCustomFields(array $parameters, Event $event)
+    {
+        if (isset($parameters['custom']) && count($parameters['custom']) > 0 && count($event->getCustom()) > 0) {
+            $this->eventCustomRepository->deleteByEvent($event);
+        }
     }
 
     /**

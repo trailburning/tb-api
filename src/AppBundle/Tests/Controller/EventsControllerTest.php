@@ -82,6 +82,10 @@ class EventsControllerTest extends BaseWebTestCase
             'about' => 'about',
             'position' => 1,
             'coords' => '(13.221316, 52.489695)',
+            'custom' => [
+                ['key' => 'key1', 'value' => 'value1'],
+                ['key' => 'key2', 'value' => 'value2'],
+            ],
         ];
 
         $client->request('POST', '/v2/journeys/'.$journey->getOid().'/events', $data);
@@ -94,6 +98,7 @@ class EventsControllerTest extends BaseWebTestCase
         $this->assertEquals($journey->getId(), $event->getJourney()->getId());
         $this->assertEquals(1, $event->getPosition());
         $this->assertTrue($client->getResponse()->headers->has('Location'), $client->getResponse()->headers);
+        $this->assertEquals(2, count($event->getCustom()));
     }
     
     public function testPostActionJSON()
@@ -104,15 +109,16 @@ class EventsControllerTest extends BaseWebTestCase
 
         $client = $this->makeClient();
         $journey = $this->getJourney('Test Journey 1');
-        $data = '{"name":"Test 123","about":"about","coords":"(13.221316, 52.489695)"}';
-        
+        $data = '{"name":"Test 123","about":"about","coords":"(13.221316, 52.489695)","custom":[{"key": "key1", "value": "value1"},{"key": "key2", "value": "value2"}]}';
+
         $client->request('POST',  '/v2/journeys/'.$journey->getOid().'/events', [], [], ['CONTENT_TYPE' => 'application/json'], $data);
         $this->assertJsonResponse($client->getResponse(), 201);
 
         $event = $this->getEvent('Test 123');
         $this->assertInstanceOf('AppBundle\Entity\Event', $event);
+        $this->assertEquals(2, count($event->getCustom()));
     }
-    
+
     public function testPostActionBadRequest()
     {
         $this->loadFixtures([
@@ -137,6 +143,7 @@ class EventsControllerTest extends BaseWebTestCase
 
         $client = $this->makeClient();
         $event = $this->getEvent('Test Event 1');
+        $this->assertEquals(2, count($event->getCustom()));
         $data = [
             'name' => 'Test 123',
             'about' => 'about',
@@ -148,6 +155,34 @@ class EventsControllerTest extends BaseWebTestCase
         $this->refreshEntity($event);
         $this->assertEquals('Test 123', $event->getName());
         $this->assertEquals('about', $event->getAbout());
+        $this->assertEquals(2, count($event->getCustom()));
+    }
+    
+    public function testPutActionCustomReplace()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\EventData',
+        ]);
+
+        $client = $this->makeClient();
+        $event = $this->getEvent('Test Event 1');
+        $this->assertEquals(2, count($event->getCustom()));
+        $data = [
+            'name' => 'Test 123',
+            'about' => 'about',
+            'custom' => [
+                ['key' => 'key1', 'value' => 'value1'],
+                ['key' => 'key2', 'value' => 'value2'],
+            ],
+        ];
+
+        $client->request('PUT', '/v2/events/' . $event->getOid(), $data);
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+
+        $this->refreshEntity($event);
+        $this->assertEquals('Test 123', $event->getName());
+        $this->assertEquals('about', $event->getAbout());
+        $this->assertEquals(2, count($event->getCustom()));
     }
     
     public function testDeleteAction()

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d6a1813f159e0d029efcaaf8926a4e1b",
-    "content-hash": "84e5024399f8de12e1c95ac81e26d70e",
+    "hash": "8eb08e5c1a82fc5a7f1dc23b5716022e",
+    "content-hash": "7e049343829700cda5236a89aa5b0b82",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -123,6 +123,42 @@
                 "transliterator"
             ],
             "time": "2015-09-28 16:26:35"
+        },
+        {
+            "name": "burgov/key-value-form-bundle",
+            "version": "1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Burgov/KeyValueFormBundle.git",
+                "reference": "71c901ed17ff4fe58de913559cea716d0a00d328"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Burgov/KeyValueFormBundle/zipball/71c901ed17ff4fe58de913559cea716d0a00d328",
+                "reference": "71c901ed17ff4fe58de913559cea716d0a00d328",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/form": "~2.3|3.*"
+            },
+            "type": "bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Burgov\\Bundle\\KeyValueFormBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A form type for managing key-value pairs",
+            "time": "2015-10-28 08:36:26"
         },
         {
             "name": "creof/doctrine2-spatial",
@@ -4413,7 +4449,8 @@
         "friendsofsymfony/user-bundle": 20,
         "fresh/doctrine-enum-bundle": 20,
         "knplabs/knp-gaufrette-bundle": 20,
-        "nelmio/cors-bundle": 20
+        "nelmio/cors-bundle": 20,
+        "burgov/key-value-form-bundle": 0
     },
     "prefer-stable": true,
     "prefer-lowest": false,

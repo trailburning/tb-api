@@ -25,6 +25,7 @@ class AppKernel extends Kernel
             new Fresh\DoctrineEnumBundle\FreshDoctrineEnumBundle(),
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
+            new Burgov\Bundle\KeyValueFormBundle\BurgovKeyValueFormBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

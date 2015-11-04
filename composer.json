@@ -31,7 +31,8 @@
         "fresh/doctrine-enum-bundle": "dev-master",
         "knplabs/knp-gaufrette-bundle": "*@dev",
         "aws/aws-sdk-php": "3.*",
-        "nelmio/cors-bundle": "^1.4@dev"
+        "nelmio/cors-bundle": "^1.4@dev",
+        "burgov/key-value-form-bundle": "@stable"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.0",

@@ -21,6 +21,10 @@ class EventType extends AbstractType
                 ->create('coords')
                 ->addModelTransformer(new GeometryPointTransformer()))
             ->add('position')
+            ->add('custom', 'burgov_key_value', [
+                'value_type' => 'text',
+                'use_container_object' => true,
+            ]);
         ;
     }
 

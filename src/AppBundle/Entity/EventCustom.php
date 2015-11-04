@@ -9,7 +9,7 @@ use Swagger\Annotations as SWG;
  * EventCustom.
  *
  * @ORM\Table(name="api_event_custom")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\EventCustomRepository")
  */
 class EventCustom
 {
@@ -39,7 +39,7 @@ class EventCustom
     /**
      * @var Event
      *
-     * @ORM\ManyToOne(targetEntity="Event", inversedBy="customFields")
+     * @ORM\ManyToOne(targetEntity="Event", inversedBy="custom")
      * @ORM\JoinColumn(nullable=false)
      */
     private $event;

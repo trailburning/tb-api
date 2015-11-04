@@ -71,6 +71,7 @@ services:
             - @tb.response.builder
             - @form.factory
             - @router
+            - @tb.eventCustom.repository
             
     tb.event.repository:
         class: AppBundle\Repository\EventRepository
@@ -134,3 +135,10 @@ services:
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\MediaAttribute
+            
+    tb.eventCustom.repository:
+        class: AppBundle\Repository\EventCustomRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\EventCustom
