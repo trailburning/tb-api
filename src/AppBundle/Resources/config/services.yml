@@ -48,6 +48,9 @@ services:
             - @tb.asset.repository
             - @tb.event.repository
             - @tb.response.builder
+            - @tb.assetCategory.repository
+            - @form.factory
+            - @router
         
     tb.asset.repository:
         class: AppBundle\Repository\AssetRepository
@@ -55,6 +58,13 @@ services:
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\Asset
+            
+    tb.assetCategory.repository:
+        class: AppBundle\Repository\AssetCategoryRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\AssetCategory
             
     tb.media.repository:
         class: AppBundle\Repository\MediaRepository

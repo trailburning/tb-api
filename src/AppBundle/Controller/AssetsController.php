@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Swagger\Annotations as SWG;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Delete;
 
 class AssetsController extends Controller implements ClassResourceInterface
 {
@@ -43,7 +45,148 @@ class AssetsController extends Controller implements ClassResourceInterface
     public function getByEventAction($id)
     {
         $assetService = $this->get('tb.asset');
-        
+
         return $assetService->buildGetByEventAPIResponse($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/events/{id}/assets",
+     *     summary="Add an asset",
+     *     description="Adds an asset fo an event.",
+     *     tags={"Assets"},
+     *     consumes={"application/json","application/x-www-form-urlencoded"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(name="id", type="string", in="path", description="ID of the event the asset belongs to", required=true),
+     *     @SWG\Parameter(name="name", type="string", in="formData", description="The name of the asset"),
+     *     @SWG\Parameter(name="about", type="string", in="formData", description="About the asset"),
+     *     @SWG\Parameter(name="category", type="string", in="formData", description="The asset category ID"),
+     *     @SWG\Parameter(name="position", type="integer", in="formData", description="The sort position, is handled automatically if not specified"),
+     *     @SWG\Response(response=201, description="Successful operation. The Location header contains a link to the new event.",
+     *        @SWG\Header(header="location", type="string", description="Link to the new event.")),
+     *     @SWG\Response(response="400", description="Invalid data."),
+     * )
+     *
+     * @Post("/events/{id}/assets")
+     *
+     * @return APIResponse
+     */
+    public function postAction($id)
+    {
+        $apiResponseBuilder = $this->get('tb.response.builder');
+        $eventRepository = $this->get('tb.event.repository');
+
+        $event = $eventRepository->findOneBy([
+            'oid' => $id,
+        ]);
+        if ($event === null) {
+            return $apiResponseBuilder->buildNotFoundResponse('Event not found');
+        }
+
+        $assetService = $this->get('tb.asset');
+        $this->getRequest()->request->set('event', $event->getId());
+
+        return $assetService->createOrUpdateFromAPI($this->getRequest()->request->all());
+    }
+
+    /**
+     * @SWG\Put(
+     *     path="/assets/{id}",
+     *     summary="Update an asset",
+     *     description="Updates an asset.",
+     *     tags={"Assets"},
+     *     consumes={"application/json","application/x-www-form-urlencoded"},
+     *     @SWG\Parameter(name="id", type="string", in="path", description="ID of the asset to update", required=true),
+     *     @SWG\Parameter(name="name", type="string", in="formData", description="The name of the asset"),
+     *     @SWG\Parameter(name="about", type="string", in="formData", description="About the asset"),
+     *     @SWG\Parameter(name="category", type="string", in="formData", description="The label of the asset category"),
+     *     @SWG\Parameter(name="position", type="integer", in="formData", description="The sort position, is handled automatically if not specified"),
+     *     @SWG\Response(response=204, description="Successful operation"),
+     *     @SWG\Response(response="400", description="Invalid data."),
+     * )
+     *
+     * @param string $id
+     *
+     * @return APIResponse
+     */
+    public function putAction($id)
+    {
+        $apiResponseBuilder = $this->get('tb.response.builder');
+        $assetRepository = $this->get('tb.asset.repository');
+        $assetService = $this->get('tb.asset');
+
+        $asset = $assetRepository->findOneBy([
+            'oid' => $id,
+        ]);
+
+        if ($asset === null) {
+            return $apiResponseBuilder->buildNotFoundResponse('Asset not found');
+        }
+
+        return $assetService->createOrUpdateFromAPI(
+            $this->getRequest()->request->all(),
+            $asset,
+            $this->getRequest()->getMethod()
+        );
+    }
+
+    /**
+     * @SWG\Delete(
+     *     path="/assets/{id}",
+     *     summary="Delete an asset",
+     *     description="Deletes the asset.",
+     *     tags={"Assets"},
+     *     @SWG\Parameter(name="id", type="string", in="path", description="ID of the asset", required=true),
+     *     @SWG\Response(response=204, description="Successful operation"),
+     *     @SWG\Response(response="404", description="Journey not found"),
+     * )
+     *
+     * @Delete("/assets/{id}")
+     *
+     * @param int $id
+     *
+     * @return APIResponse
+     */
+    public function deleteAction($id)
+    {
+        $assetService = $this->get('tb.asset');
+
+        return $assetService->deleteFromAPI($id);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/assets/{id}",
+     *     summary="Find an asset by ID",
+     *     description="Returns a single asset.",
+     *     tags={"Assets"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(
+     *         description="ID of the asset to return",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         type="string",
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @SWG\Schema(ref="#/definitions/Asset")
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Asset not found"
+     *     ),
+     * )
+     *
+     * @param string $id
+     *
+     * @return APIResponse
+     */
+    public function getAction($id)
+    {
+        $assetService = $this->get('tb.asset');
+
+        return $assetService->buildGetAPIResponse($id);
     }
 }

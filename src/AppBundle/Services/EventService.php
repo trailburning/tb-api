@@ -113,8 +113,8 @@ class EventService
     }
 
     /**
-     * @param Event  $event
      * @param array  $parameters
+     * @param Event  $event
      * @param string $method
      *
      * @return APIResponse

@@ -8,6 +8,7 @@ use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Asset.
@@ -43,6 +44,8 @@ class Asset
      * @ORM\Column(type="string", length=255, nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Assert\NotBlank()
+     * @Assert\Length(max = "255")
      */
     private $name;
 
@@ -52,6 +55,7 @@ class Asset
      * @ORM\Column(type="text")
      * @SWG\Property()
      * @Serializer\Expose
+     * @Assert\NotBlank()
      */
     private $about;
     
@@ -79,6 +83,7 @@ class Asset
      * @ORM\ManyToOne(targetEntity="AssetCategory", inversedBy="assets")
      * @SWG\Property()
      * @Serializer\Expose
+     * @Assert\NotBlank()
      */
     private $category;
     

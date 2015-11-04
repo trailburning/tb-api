@@ -203,7 +203,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(name="name", type="string", in="formData", description="The name of the journey"),
      *     @SWG\Parameter(name="about", type="string", in="formData", description="About the journey"),
      *     @SWG\Parameter(name="user", type="string", in="formData", description="The ID of the user the journey belongs to"),
-     *     @SWG\Parameter(name="position", type="integer", in="formData", description="The sort position, will be set automatically"),
+     *     @SWG\Parameter(name="position", type="integer", in="formData", description="The sort position, is handled automatically if not specified"),
      *     @SWG\Parameter(name="publish", type="boolean", in="formData", description="Publish this journey, default value is 'false'"),
      *     @SWG\Response(response=201, description="Successful operation. The Location header contains a link to the new journey.",
      *        @SWG\Header(header="location", type="string", description="Link to the new event.")),

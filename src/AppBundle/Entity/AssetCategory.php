@@ -11,7 +11,7 @@ use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
  * AssetCategory.
  *
  * @ORM\Table(name="api_asset_category")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\AssetCategoryRepository")
  * @SWG\Definition(required={"name", "label"}, @SWG\Xml(name="AssetCategory"))
  * @Serializer\ExclusionPolicy("all")
  */
