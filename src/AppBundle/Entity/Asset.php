@@ -92,6 +92,16 @@ class Asset
      * @ORM\Column(name="position", type="integer")
      */
     private $position;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Assert\Length(max = "255")
+     */
+    private $credit;
 
     /**
      * ################################################################################################################
@@ -255,5 +265,25 @@ class Asset
     public function getPosition()
     {
         return $this->position;
+    }
+        
+    /**
+     * @param string $credit
+     *
+     * @return self
+     */
+    public function setCredit($credit)
+    {
+        $this->credit = $credit;
+        
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCredit()
+    {
+        return $this->credit;
     }
 }

@@ -35,6 +35,7 @@ class AssetType extends AbstractType
                 'class' => 'AppBundle:AssetCategory',
             ])
             ->add('position')
+            ->add('credit')
         ;
     }
 

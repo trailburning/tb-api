@@ -62,6 +62,7 @@ class AssetsController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(name="about", type="string", in="formData", description="About the asset"),
      *     @SWG\Parameter(name="category", type="string", in="formData", description="The asset category ID"),
      *     @SWG\Parameter(name="position", type="integer", in="formData", description="The sort position, is handled automatically if not specified"),
+     *     @SWG\Parameter(name="credit", type="string", in="formData", description="The credit of the asset"),
      *     @SWG\Response(response=201, description="Successful operation. The Location header contains a link to the new event.",
      *        @SWG\Header(header="location", type="string", description="Link to the new event.")),
      *     @SWG\Response(response="400", description="Invalid data."),
@@ -101,6 +102,7 @@ class AssetsController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(name="about", type="string", in="formData", description="About the asset"),
      *     @SWG\Parameter(name="category", type="string", in="formData", description="The label of the asset category"),
      *     @SWG\Parameter(name="position", type="integer", in="formData", description="The sort position, is handled automatically if not specified"),
+     *     @SWG\Parameter(name="credit", type="string", in="formData", description="The credit of the asset"),
      *     @SWG\Response(response=204, description="Successful operation"),
      *     @SWG\Response(response="400", description="Invalid data."),
      * )
