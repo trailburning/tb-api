@@ -11,5 +11,6 @@ nelmio_cors:
     paths:
         '^/v2/':
             allow_origin: ['*']
-            allow_methods: ['POST', 'PUT', 'GET', 'DELETE', 'OPTIONS']
+            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
             max_age: 3600
+            allow_headers: ['content-type']
