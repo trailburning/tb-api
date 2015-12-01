@@ -72,6 +72,7 @@ class Asset
     /**
      * @var Event
      *
+     * @Gedmo\SortableGroup
      * @ORM\ManyToOne(targetEntity="Event", inversedBy="assets")
      * @ORM\JoinColumn(nullable=false)
      */

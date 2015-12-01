@@ -62,6 +62,7 @@ class Event
     /**
      * @var Journey
      *
+     * @Gedmo\SortableGroup
      * @ORM\ManyToOne(targetEntity="Journey", inversedBy="events")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank()
