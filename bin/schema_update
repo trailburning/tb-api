@@ -1,0 +1,4 @@
+#!/bin/bash
+
+bin/console doctrine:schema:update --force
+bin/console doctrine:schema:update --force --env=test

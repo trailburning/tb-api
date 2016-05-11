@@ -1,0 +1,38 @@
+app:
+    container_name: tb_api_app
+    build: app
+    volumes:
+        - ./../:/var/www
+    tty: true
+
+php:
+    container_name: tb_api_php
+    build: php
+    expose:
+        - 9000
+    volumes_from:
+        - app
+    links:
+        - postgres
+
+postgres:
+    container_name: tb_api_postgres
+    build: postgres
+    ports:
+        - 5432:5432
+    environment:
+        POSTGRES_PASSWORD: trailburning
+        POSTGRES_DB: trailburning
+        POSTGRES_USER: trailburning
+
+nginx:
+    container_name: tb_api_nginx
+    build: nginx
+    ports:
+        - 80:80
+    links:
+        - php
+    volumes_from:
+        - app
+    volumes:
+        - ./../app/logs/nginx/:/var/log/nginx
