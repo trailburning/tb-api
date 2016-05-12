@@ -2,15 +2,15 @@
 
 namespace AppBundle\Services;
 
-use AppBundle\Response\APIResponse;
-use AppBundle\Repository\JourneyRepository;
-use AppBundle\Repository\EventRepository;
-use AppBundle\Repository\EventCustomRepository;
-use AppBundle\Response\APIResponseBuilder;
 use AppBundle\Entity\Event;
-use Symfony\Component\Form\FormFactoryInterface;
 use AppBundle\Form\Type\EventType;
+use AppBundle\Repository\EventCustomRepository;
+use AppBundle\Repository\EventRepository;
+use AppBundle\Repository\JourneyRepository;
+use AppBundle\Response\APIResponse;
+use AppBundle\Response\APIResponseBuilder;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * Class EventService.

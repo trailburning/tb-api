@@ -2,9 +2,9 @@
 
 namespace AppBundle\Form\DataTransformer;
 
+use AppBundle\Repository\AssetCategoryRepository;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use AppBundle\Repository\AssetCategoryRepository;
 
 class AssetCategoryTransformer implements DataTransformerInterface
 {

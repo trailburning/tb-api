@@ -2,15 +2,15 @@
 
 namespace AppBundle\Services;
 
-use AppBundle\Response\APIResponse;
-use AppBundle\Repository\AssetRepository;
-use AppBundle\Repository\AssetCategoryRepository;
-use AppBundle\Repository\EventRepository;
-use AppBundle\Response\APIResponseBuilder;
 use AppBundle\Entity\Asset;
 use AppBundle\Form\Type\AssetType;
-use Symfony\Component\Form\FormFactoryInterface;
+use AppBundle\Repository\AssetCategoryRepository;
+use AppBundle\Repository\AssetRepository;
+use AppBundle\Repository\EventRepository;
+use AppBundle\Response\APIResponse;
+use AppBundle\Response\APIResponseBuilder;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * Class AssetService.

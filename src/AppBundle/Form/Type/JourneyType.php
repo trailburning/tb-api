@@ -3,8 +3,11 @@
 namespace AppBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class JourneyType extends AbstractType
 {
@@ -12,12 +15,12 @@ class JourneyType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('about', 'textarea')
-            ->add('user', 'entity', [
+            ->add('about', TextareaType::class)
+            ->add('user', EntityType::class, [
                 'class' => 'AppBundle:User',
             ])
             ->add('position')
-            ->add('publish', 'choice', array(
+            ->add('publish', ChoiceType::class, array(
                 'choices' => array('true' => true, 'false' => false),
             ));
     }
@@ -30,7 +33,7 @@ class JourneyType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return '';
     }

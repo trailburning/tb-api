@@ -2,19 +2,20 @@
 
 namespace AppBundle\Form\Type;
 
+use AppBundle\DBAL\Types\MIMEType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\File;
-use AppBundle\DBAL\Types\MIMEType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class MediaUploadType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('media', 'file', [
+            ->add('media', FileType::class, [
                 'required' => true,
                 'constraints' => [
                     new NotBlank(),
@@ -33,7 +34,7 @@ class MediaUploadType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return '';
     }

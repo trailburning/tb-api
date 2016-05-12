@@ -3,9 +3,9 @@
 
 namespace AppBundle\Form\DataTransformer;
 
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
 
 class GeometryPointTransformer implements DataTransformerInterface
 {

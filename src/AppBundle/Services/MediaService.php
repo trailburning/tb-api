@@ -2,16 +2,16 @@
 
 namespace AppBundle\Services;
 
-use Symfony\Component\HttpFoundation\File\File;
-use Gaufrette\Filesystem;
 use AppBundle\DBAL\Types\MIMEType;
+use AppBundle\Entity\Asset;
 use AppBundle\Entity\Media;
 use AppBundle\Entity\MediaAttribute;
-use AppBundle\Entity\Asset;
-use AppBundle\Repository\MediaRepository;
 use AppBundle\Repository\AssetRepository;
-use AppBundle\Response\APIResponseBuilder;
 use AppBundle\Repository\MediaAttributeRepository;
+use AppBundle\Repository\MediaRepository;
+use AppBundle\Response\APIResponseBuilder;
+use Gaufrette\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Class MediaService.
@@ -52,6 +52,7 @@ class MediaService
         MIMEType::JPEG => 'tbmedia2.imgix.net',
         MIMEType::MP3 => 'media.trailburning.com',
         MIMEType::MP4 => 'media.trailburning.com',
+        MIMEType::XM4V => 'media.trailburning.com',
     ];
 
     /**

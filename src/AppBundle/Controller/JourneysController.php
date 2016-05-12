@@ -2,13 +2,14 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Swagger\Annotations as SWG;
-use FOS\RestBundle\Routing\ClassResourceInterface;
+use AppBundle\Form\Type\GPXImportType;
+use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Delete;
-use AppBundle\Form\Type\GPXImportType;
+use FOS\RestBundle\Routing\ClassResourceInterface;
+use Swagger\Annotations as SWG;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class JourneysController extends Controller implements ClassResourceInterface
 {
@@ -128,7 +129,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      *
      * @return APIResponse
      */
-    public function importGPXAction($id)
+    public function importGPXAction(Request $request, $id)
     {
         $journeyRepository = $this->get('tb.journey.repository');
         $apiResponseBuilder = $this->get('tb.response.builder');
@@ -141,8 +142,8 @@ class JourneysController extends Controller implements ClassResourceInterface
             return $apiResponseBuilder->buildNotFoundResponse('Journey not found');
         }
 
-        $form = $this->createForm(new GPXImportType());
-        $form->handleRequest($this->getRequest());
+        $form = $this->createForm(GPXImportType::class);
+        $form->handleRequest($request);
 
         if (!$form->isValid()) {
             return $apiResponseBuilder->buildResponse(400, 'Invalid or empty GPX file.');
@@ -212,11 +213,11 @@ class JourneysController extends Controller implements ClassResourceInterface
      *
      * @return APIResponse
      */
-    public function postAction()
+    public function postAction(Request $request)
     {
         $journeyService = $this->get('tb.journey');
 
-        return $journeyService->createOrUpdateFromAPI($this->getRequest()->request->all());
+        return $journeyService->createOrUpdateFromAPI($request->request->all());
     }
 
     /**
@@ -240,12 +241,12 @@ class JourneysController extends Controller implements ClassResourceInterface
      *
      * @return APIResponse
      */
-    public function putAction($id)
+    public function putAction(Request $request, $id)
     {
         $apiResponseBuilder = $this->get('tb.response.builder');
         $journeyRepository = $this->get('tb.journey.repository');
         $journeyService = $this->get('tb.journey');
-        
+
         $journey = $journeyRepository->findOneBy([
             'oid' => $id,
         ]);
@@ -255,9 +256,9 @@ class JourneysController extends Controller implements ClassResourceInterface
         }
 
         return $journeyService->createOrUpdateFromAPI(
-            $this->getRequest()->request->all(),
+            $request->request->all(),
             $journey,
-            $this->getRequest()->getMethod()
+            $request->getMethod()
         );
     }
 
@@ -269,7 +270,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      *     tags={"Journeys"},
      *     @SWG\Parameter(name="id", type="string", in="path", description="ID of the Journey", required=true),
      *     @SWG\Response(response=204, description="Successful operation"),
-     *     @SWG\Response(response="404", description="Journey not found"), 
+     *     @SWG\Response(response="404", description="Journey not found"),
      * )
      *
      * @Delete("/journeys/{id}")

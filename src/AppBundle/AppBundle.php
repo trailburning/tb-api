@@ -2,8 +2,8 @@
 
 namespace AppBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * @SWG\Info(

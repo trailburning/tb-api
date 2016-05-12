@@ -12,7 +12,7 @@ class SwaggerBridge
      * @var string
      */
     private $rootDir;
-    
+
     /**
      * @var string
      */
@@ -62,6 +62,6 @@ class SwaggerBridge
 
     public function getCachePath()
     {
-        return $this->rootDir . '/cache/' . $this->env . '/swagger.json';
+        return $this->rootDir . '/../var/cache/' . $this->env . '/swagger.json';
     }
 }

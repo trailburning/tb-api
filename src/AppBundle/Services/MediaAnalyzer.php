@@ -3,8 +3,8 @@
 
 namespace AppBundle\Services;
 
-use Symfony\Component\HttpFoundation\File\File;
 use AppBundle\Services\MetadataReader\MetadataReader;
+use Symfony\Component\HttpFoundation\File\File;
 
 class MediaAnalyzer
 {

@@ -35,4 +35,4 @@ nginx:
     volumes_from:
         - app
     volumes:
-        - ./../app/logs/nginx/:/var/log/nginx
+        - ./../var/logs/nginx/:/var/log/nginx

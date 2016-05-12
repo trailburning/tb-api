@@ -2,11 +2,13 @@
 
 namespace AppBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Form\DataTransformer\AssetCategoryTransformer;
 use AppBundle\Repository\AssetCategoryRepository;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class AssetType extends AbstractType
 {
@@ -27,11 +29,11 @@ class AssetType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('about', 'textarea')
-            ->add('event', 'entity', [
+            ->add('about', TextareaType::class)
+            ->add('event', EntityType::class, [
                 'class' => 'AppBundle:Event',
             ])
-            ->add('category', 'entity', [
+            ->add('category', EntityType::class, [
                 'class' => 'AppBundle:AssetCategory',
             ])
             ->add('position')
@@ -47,7 +49,7 @@ class AssetType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return '';
     }

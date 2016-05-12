@@ -2,12 +2,13 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Swagger\Annotations as SWG;
-use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Delete;
+use FOS\RestBundle\Routing\ClassResourceInterface;
+use Swagger\Annotations as SWG;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class AssetsController extends Controller implements ClassResourceInterface
 {
@@ -72,7 +73,7 @@ class AssetsController extends Controller implements ClassResourceInterface
      *
      * @return APIResponse
      */
-    public function postAction($id)
+    public function postAction(Request $request, $id)
     {
         $apiResponseBuilder = $this->get('tb.response.builder');
         $eventRepository = $this->get('tb.event.repository');
@@ -85,9 +86,9 @@ class AssetsController extends Controller implements ClassResourceInterface
         }
 
         $assetService = $this->get('tb.asset');
-        $this->getRequest()->request->set('event', $event->getId());
+        $request->request->set('event', $event->getId());
 
-        return $assetService->createOrUpdateFromAPI($this->getRequest()->request->all());
+        return $assetService->createOrUpdateFromAPI($request->request->all());
     }
 
     /**
@@ -111,7 +112,7 @@ class AssetsController extends Controller implements ClassResourceInterface
      *
      * @return APIResponse
      */
-    public function putAction($id)
+    public function putAction(Request $request, $id)
     {
         $apiResponseBuilder = $this->get('tb.response.builder');
         $assetRepository = $this->get('tb.asset.repository');
@@ -126,9 +127,9 @@ class AssetsController extends Controller implements ClassResourceInterface
         }
 
         return $assetService->createOrUpdateFromAPI(
-            $this->getRequest()->request->all(),
+            $request->request->all(),
             $asset,
-            $this->getRequest()->getMethod()
+            $request->getMethod()
         );
     }
 

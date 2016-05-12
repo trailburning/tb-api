@@ -2,12 +2,13 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Swagger\Annotations as SWG;
-use FOS\RestBundle\Routing\ClassResourceInterface;
+use AppBundle\Form\Type\MediaUploadType;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Post;
-use AppBundle\Form\Type\MediaUploadType;
+use FOS\RestBundle\Routing\ClassResourceInterface;
+use Swagger\Annotations as SWG;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class MediaController extends Controller implements ClassResourceInterface
 {
@@ -54,36 +55,36 @@ class MediaController extends Controller implements ClassResourceInterface
      *
      * @return APIResponse
      */
-    public function postAction($id)
+    public function postAction(Request $request, $id)
     {
         $mediaService = $this->get('tb.media');
         $assetRepository = $this->get('tb.asset.repository');
         $apiResponseBuilder = $this->get('tb.response.builder');
-        
+
         $asset = $assetRepository->findOneBy([
             'oid' => $id,
         ]);
-        
+
         if ($asset === null) {
             return $apiResponseBuilder->buildNotFoundResponse('Asset not found');
         }
-            
-        $form = $this->createForm(new MediaUploadType());
-        $form->handleRequest($this->getRequest());
+
+        $form = $this->createForm(MediaUploadType::class);
+        $form->handleRequest($request);
 
         if (!$form->isValid()) {
             return $apiResponseBuilder->buildBadRequestResponse((string)$form->getErrors(true, true));
         }
-        
+
         $mediaFiles = $form->get('media')->getData();
         // FIXME: multi media upload not working because of File validator
         if (!is_array($mediaFiles)) {
             $mediaFiles = [$mediaFiles];
         }
-        
+
         return $mediaService->createMedia($mediaFiles, $asset);
     }
-    
+
     /**
      * @SWG\Post(
      *     path="/assets/{id}/media/{mediaId}",
@@ -134,39 +135,39 @@ class MediaController extends Controller implements ClassResourceInterface
      *
      * @return APIResponse
      */
-    public function putAction($id, $mediaId)
+    public function putAction(Request $request, $id, $mediaId)
     {
         $mediaService = $this->get('tb.media');
         $assetRepository = $this->get('tb.asset.repository');
         $mediaRepository = $this->get('tb.media.repository');
         $apiResponseBuilder = $this->get('tb.response.builder');
-        
+
         $asset = $assetRepository->findOneBy([
             'oid' => $id,
         ]);
         if ($asset === null) {
             return $apiResponseBuilder->buildNotFoundResponse('Asset not found');
         }
-        
+
         $media = $mediaRepository->findOneBy([
             'oid' => $mediaId,
         ]);
         if ($media === null) {
             return $apiResponseBuilder->buildNotFoundResponse('Media not found');
         }
-            
-        $form = $this->createForm(new MediaUploadType());
-        $form->handleRequest($this->getRequest());
+
+        $form = $this->createForm(MediaUploadType::class);
+        $form->handleRequest($request);
 
         if (!$form->isValid()) {
             return $apiResponseBuilder->buildBadRequestResponse((string)$form->getErrors(true, true));
         }
-        
+
         $file = $form->get('media')->getData();
-        
+
         return $mediaService->updateMedia($file, $media);
     }
-    
+
     /**
      * @SWG\Delete(
      *     path="/assets/{id}/media/{mediaId}",
@@ -208,7 +209,7 @@ class MediaController extends Controller implements ClassResourceInterface
     public function deleteAction($id, $mediaId)
     {
         $mediaService = $this->get('tb.media');
-        
+
         return $mediaService->deleteMedia($mediaId, $id);
     }
 }

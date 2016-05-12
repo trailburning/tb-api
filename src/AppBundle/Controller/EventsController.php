@@ -2,12 +2,13 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Swagger\Annotations as SWG;
-use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Delete;
+use FOS\RestBundle\Routing\ClassResourceInterface;
+use Swagger\Annotations as SWG;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class EventsController extends Controller implements ClassResourceInterface
 {
@@ -45,10 +46,10 @@ class EventsController extends Controller implements ClassResourceInterface
     public function getByJourneyAction($id)
     {
         $eventService = $this->get('tb.event');
-        
+
         return $eventService->buildGetByJourneyAPIResponse($id);
     }
-    
+
     /**
      * @SWG\Post(
      *     path="/journeys/{id}/events",
@@ -75,7 +76,7 @@ class EventsController extends Controller implements ClassResourceInterface
      *
      * @return APIResponse
      */
-    public function postAction($id)
+    public function postAction(Request $request, $id)
     {
         $apiResponseBuilder = $this->get('tb.response.builder');
         $journeyRepository = $this->get('tb.journey.repository');
@@ -87,11 +88,11 @@ class EventsController extends Controller implements ClassResourceInterface
         if ($journey === null) {
             return $apiResponseBuilder->buildNotFoundResponse('Journey not found');
         }
-        
+
         $eventService = $this->get('tb.event');
-        $this->getRequest()->request->set('journey', $journey->getId());
-        
-        return $eventService->createOrUpdateFromAPI($this->getRequest()->request->all());
+        $request->request->set('journey', $journey->getId());
+
+        return $eventService->createOrUpdateFromAPI($request->request->all());
     }
 
     /**
@@ -114,7 +115,7 @@ class EventsController extends Controller implements ClassResourceInterface
      *
      * @return APIResponse
      */
-    public function putAction($id)
+    public function putAction(Request $request, $id)
     {
         $apiResponseBuilder = $this->get('tb.response.builder');
         $eventRepository = $this->get('tb.event.repository');
@@ -129,9 +130,9 @@ class EventsController extends Controller implements ClassResourceInterface
         }
 
         return $eventService->createOrUpdateFromAPI(
-            $this->getRequest()->request->all(),
+            $request->request->all(),
             $event,
-            $this->getRequest()->getMethod()
+            $request->getMethod()
         );
     }
 
@@ -143,7 +144,7 @@ class EventsController extends Controller implements ClassResourceInterface
      *     tags={"Events"},
      *     @SWG\Parameter(name="id", type="string", in="path", description="ID of the event", required=true),
      *     @SWG\Response(response=204, description="Successful operation"),
-     *     @SWG\Response(response="404", description="Journey not found"), 
+     *     @SWG\Response(response="404", description="Journey not found"),
      * )
      *
      * @Delete("/events/{id}")
@@ -158,7 +159,7 @@ class EventsController extends Controller implements ClassResourceInterface
 
         return $eventService->deleteFromAPI($id);
     }
-     
+
     /**
      * @SWG\Get(
      *     path="/events/{id}",

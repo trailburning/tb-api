@@ -2,10 +2,13 @@
 
 namespace AppBundle\Form\Type;
 
+use AppBundle\Form\DataTransformer\GeometryPointTransformer;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use AppBundle\Form\DataTransformer\GeometryPointTransformer;
+use Burgov\Bundle\KeyValueFormBundle\Form\Type\KeyValueRowType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class EventType extends AbstractType
 {
@@ -13,8 +16,8 @@ class EventType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('about', 'textarea')
-            ->add('journey', 'entity', [
+            ->add('about', TextareaType::class)
+            ->add('journey', EntityType::class, [
                 'class' => 'AppBundle:Journey',
             ])
             ->add($builder
@@ -36,7 +39,7 @@ class EventType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return '';
     }

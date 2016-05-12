@@ -2,13 +2,13 @@
 
 namespace AppBundle\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\FixtureInterface;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use AppBundle\DBAL\Types\MIMEType;
 use AppBundle\Entity\Asset;
 use AppBundle\Entity\Media;
-use AppBundle\DBAL\Types\MIMEType;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class AssetData extends AbstractFixture implements FixtureInterface, DependentFixtureInterface
 {

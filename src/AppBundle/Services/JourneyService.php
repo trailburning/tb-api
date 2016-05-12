@@ -2,18 +2,18 @@
 
 namespace AppBundle\Services;
 
-use AppBundle\Response\APIResponse;
-use AppBundle\Repository\JourneyRepository;
-use AppBundle\Repository\RoutePointRepository;
 use AppBundle\Entity\Journey;
 use AppBundle\Entity\RoutePoint;
-use AppBundle\Repository\UserRepository;
-use AppBundle\Response\APIResponseBuilder;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use Symfony\Component\Form\FormFactoryInterface;
 use AppBundle\Form\Type\JourneyType;
+use AppBundle\Repository\JourneyRepository;
+use AppBundle\Repository\RoutePointRepository;
+use AppBundle\Repository\UserRepository;
+use AppBundle\Response\APIResponse;
+use AppBundle\Response\APIResponseBuilder;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class JourneyService.

@@ -2,11 +2,11 @@
 
 namespace AppBundle\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\FixtureInterface;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\Persistence\ObjectManager;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use AppBundle\Entity\User;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 
 
 class UserData extends AbstractFixture implements FixtureInterface

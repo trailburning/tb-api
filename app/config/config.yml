@@ -1,6 +1,6 @@
 imports:
     - { resource: parameters.yml }
-    - { resource: parameters.php }	
+    - { resource: parameters.php }
     - { resource: security.yml }
     - { resource: services.yml }
 
@@ -38,6 +38,7 @@ framework:
         handler_id:  ~
     fragments:       ~
     http_method_override: true
+    assets: ~
 
 # Twig Configuration
 twig:
