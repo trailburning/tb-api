@@ -98,7 +98,7 @@ class AssetCategory
     
     /**
      * @param Asset $assets
-     * @return User
+     * @return self
      */
     public function addAsset(Asset $asset)
     {

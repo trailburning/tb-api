@@ -29,7 +29,6 @@
         "friendsofsymfony/rest-bundle": "^1.7",
         "jms/serializer-bundle": "^1.0",
         "zircote/swagger-php": "^2.0",
-        "sensio/generator-bundle": "~2.3",
         "creof/doctrine2-spatial": "^0.0.1",
         "easybib/doctrinetypes": "*",
         "doctrine/doctrine-fixtures-bundle": "^2.2@dev",
@@ -42,9 +41,11 @@
         "burgov/key-value-form-bundle": "@stable"
     },
     "require-dev": {
+        "sensio/generator-bundle": "^3.0",
         "symfony/phpunit-bridge": "^2.7",
         "phpunit/phpunit": "^5.0",
-        "liip/functional-test-bundle": "^1.2"
+        "liip/functional-test-bundle": "^1.2",
+        "backendweb/generator-bundle": "dev-master"
     },
     "repositories": [
         {

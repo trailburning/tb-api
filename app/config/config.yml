@@ -85,6 +85,8 @@ doctrine:
             # add hstore type from http://github.com/easybiblabs/EasyBib_DoctrineTypes
             hstore:                 EasyBib\Doctrine\Types\Hstore
             MIMEType:               AppBundle\DBAL\Types\MIMEType
+            RaceType:               AppBundle\DBAL\Types\RaceType
+            RaceDistance:           AppBundle\DBAL\Types\RaceDistance
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"

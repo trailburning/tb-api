@@ -8,7 +8,7 @@ knp_gaufrette:
                     create: true
         debug:
             local:
-                directory: %kernel.root_dir%/cache/debug_filesystem
+                directory: %kernel.root_dir%/../var/cache/debug_filesystem
                 
     filesystems:
         media:

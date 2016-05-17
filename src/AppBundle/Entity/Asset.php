@@ -203,7 +203,7 @@ class Asset
     
     /**
      * @param Media $medias
-     * @return User
+     * @return self
      */
     public function addMedia(Media $media)
     {
