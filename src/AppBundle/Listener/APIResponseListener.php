@@ -2,7 +2,7 @@
 
 namespace AppBundle\Listener;
 
-use AppBundle\Response\APIResponse;
+use AppBundle\Model\APIResponse;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 

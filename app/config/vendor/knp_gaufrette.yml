@@ -2,7 +2,7 @@ knp_gaufrette:
     adapters:
         media:
             aws_s3:
-                service_id: tb.s3Client
+                service_id: app.s3Client
                 bucket_name:  trailburning-media
                 options:
                     create: true

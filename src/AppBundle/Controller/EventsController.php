@@ -45,7 +45,7 @@ class EventsController extends Controller implements ClassResourceInterface
      */
     public function getByJourneyAction($id)
     {
-        $eventService = $this->get('tb.event');
+        $eventService = $this->get('app.event');
 
         return $eventService->buildGetByJourneyAPIResponse($id);
     }
@@ -59,9 +59,9 @@ class EventsController extends Controller implements ClassResourceInterface
      *     consumes={"application/json","application/x-www-form-urlencoded"},
      *     produces={"application/json"},
      *     @SWG\Parameter(name="id", type="string", in="path", description="ID of the journey the event belongs to", required=true),
-     *     @SWG\Parameter(name="name", type="string", in="formData", description="The name of the event"),
-     *     @SWG\Parameter(name="about", type="string", in="formData", description="About the event"),
-     *     @SWG\Parameter(name="coords", type="string", in="formData", description="The GPS coordinates of the event in the format '(LNG, LAT)'"),
+     *     @SWG\Parameter(name="name", type="string", in="formData", description="The name of the event", required=true),
+     *     @SWG\Parameter(name="about", type="string", in="formData", description="About the event", required=true),
+     *     @SWG\Parameter(name="coords", type="string", in="formData", description="The GPS coordinates of the event in the format '(LNG, LAT)'", required=true),
      *     @SWG\Parameter(name="position", type="integer", in="formData", description="The sort position, is handled automatically if not specified"),
      *     @SWG\Parameter(name="custom[0][key]", type="string", in="formData", description="The name of the event"),
      *     @SWG\Parameter(name="custom[0][value]", type="string", in="formData", description="The name of the event"),
@@ -78,9 +78,8 @@ class EventsController extends Controller implements ClassResourceInterface
      */
     public function postAction(Request $request, $id)
     {
-        $apiResponseBuilder = $this->get('tb.response.builder');
-        $journeyRepository = $this->get('tb.journey.repository');
-        $journeyService = $this->get('tb.journey');
+        $apiResponseBuilder = $this->get('app.response.builder');
+        $journeyRepository = $this->get('app.journey.repository');
 
         $journey = $journeyRepository->findOneBy([
             'oid' => $id,
@@ -89,7 +88,7 @@ class EventsController extends Controller implements ClassResourceInterface
             return $apiResponseBuilder->buildNotFoundResponse('Journey not found');
         }
 
-        $eventService = $this->get('tb.event');
+        $eventService = $this->get('app.event');
         $request->request->set('journey', $journey->getId());
 
         return $eventService->createOrUpdateFromAPI($request->request->all());
@@ -117,9 +116,9 @@ class EventsController extends Controller implements ClassResourceInterface
      */
     public function putAction(Request $request, $id)
     {
-        $apiResponseBuilder = $this->get('tb.response.builder');
-        $eventRepository = $this->get('tb.event.repository');
-        $eventService = $this->get('tb.event');
+        $apiResponseBuilder = $this->get('app.response.builder');
+        $eventRepository = $this->get('app.event.repository');
+        $eventService = $this->get('app.event');
 
         $event = $eventRepository->findOneBy([
             'oid' => $id,
@@ -155,7 +154,7 @@ class EventsController extends Controller implements ClassResourceInterface
      */
     public function deleteAction($id)
     {
-        $eventService = $this->get('tb.event');
+        $eventService = $this->get('app.event');
 
         return $eventService->deleteFromAPI($id);
     }
@@ -191,7 +190,7 @@ class EventsController extends Controller implements ClassResourceInterface
      */
     public function getAction($id)
     {
-        $eventService = $this->get('tb.event');
+        $eventService = $this->get('app.event');
 
         return $eventService->buildGetAPIResponse($id);
     }

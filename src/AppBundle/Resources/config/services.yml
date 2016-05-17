@@ -1,155 +1,167 @@
 services:
-
-    tb.swaggerBridge:
+    app.swaggerBridge:
         class: AppBundle\Services\SwaggerBridge
         arguments:
-            - %kernel.root_dir%
-            - %kernel.environment%
-            - %kernel.debug%
-
-    tb.journey:
+            - '%kernel.root_dir%'
+            - '%kernel.environment%'
+            - '%kernel.debug%'
+    app.journey:
         class: AppBundle\Services\JourneyService
         arguments:
-            - @tb.journey.repository
-            - @tb.user.repository
-            - @tb.response.builder
-            - @tb.gpxParser
-            - @tb.routePoint.repository
-            - @form.factory
-            - @router
-
-    tb.journey.repository:
+            - '@app.journey.repository'
+            - '@app.user.repository'
+            - '@app.response.builder'
+            - '@app.gpxParser'
+            - '@app.routePoint.repository'
+            - '@form.factory'
+            - '@router'
+    app.journey.repository:
         class: AppBundle\Repository\JourneyRepository
         factory_service: doctrine.orm.entity_manager
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\Journey
-
-    tb.listener.apiResponse:
+    app.listener.apiResponse:
         class: AppBundle\Listener\APIResponseListener
         tags:
-            - { name: "kernel.event_listener", event: "kernel.view", method: "onKernelView", priority: 100 }
-
-    tb.user.repository:
+            -
+                name: kernel.event_listener
+                event: kernel.view
+                method: onKernelView
+                priority: 100
+    app.user.repository:
         class: AppBundle\Repository\UserRepository
         factory_service: doctrine.orm.entity_manager
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\User
-
-    tb.response.builder:
-        class: AppBundle\Response\APIResponseBuilder
+    app.response.builder:
+        class: AppBundle\Services\APIResponseBuilder
         arguments:
-            - @validator
-
-    tb.asset:
+            - '@validator'
+    app.asset:
         class: AppBundle\Services\AssetService
         arguments:
-            - @tb.asset.repository
-            - @tb.event.repository
-            - @tb.response.builder
-            - @tb.assetCategory.repository
-            - @form.factory
-            - @router
-
-    tb.asset.repository:
+            - '@app.asset.repository'
+            - '@app.event.repository'
+            - '@app.response.builder'
+            - '@app.assetCategory.repository'
+            - '@form.factory'
+            - '@router'
+    app.asset.repository:
         class: AppBundle\Repository\AssetRepository
         factory_service: doctrine.orm.entity_manager
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\Asset
-
-    tb.assetCategory.repository:
+    app.assetCategory.repository:
         class: AppBundle\Repository\AssetCategoryRepository
         factory_service: doctrine.orm.entity_manager
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\AssetCategory
-
-    tb.media.repository:
+    app.media.repository:
         class: AppBundle\Repository\MediaRepository
         factory_service: doctrine.orm.entity_manager
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\Media
-
-    tb.event:
+    app.event:
         class: AppBundle\Services\EventService
         arguments:
-            - @tb.event.repository
-            - @tb.journey.repository
-            - @tb.response.builder
-            - @form.factory
-            - @router
-            - @tb.eventCustom.repository
-
-    tb.event.repository:
+            - '@app.event.repository'
+            - '@app.journey.repository'
+            - '@app.response.builder'
+            - '@form.factory'
+            - '@router'
+            - '@app.eventCustom.repository'
+    app.event.repository:
         class: AppBundle\Repository\EventRepository
         factory_service: doctrine.orm.entity_manager
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\Event
-
-    tb.gpxParser:
+    app.gpxParser:
         class: AppBundle\Services\GPXParser
-
-    tb.routePoint.repository:
+    app.routePoint.repository:
         class: AppBundle\Repository\RoutePointRepository
         factory_service: doctrine.orm.entity_manager
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\RoutePoint
-
-    tb.media:
+    app.media:
         class: AppBundle\Services\MediaService
         arguments:
-            - @media_filesystem
-            - @tb.media.repository
-            - @tb.response.builder
-            - @tb.asset.repository
-            - @tb.media.analyzer
-            - @tb.mediaAttribute.repository
-
-    tb.s3Client:
+            - '@media_filesystem'
+            - '@app.media.repository'
+            - '@app.response.builder'
+            - '@app.asset.repository'
+            - '@app.media.analyzer'
+            - '@app.mediaAttribute.repository'
+    app.s3Client:
         class: Aws\S3\S3Client
         factory_class: Aws\S3\S3Client
-        factory_method: 'factory'
+        factory_method: factory
         arguments:
             -
-                region: %aws_region%
-                version: 'latest'
-                credentials:
-                    key: %aws_accesskey%
-                    secret: %aws_secretkey%
-
-    tb.media.analyzer:
+                region: '%aws_region%'
+                version: latest
+                credentials: { key: '%aws_accesskey%', secret: '%aws_secretkey%' }
+    app.media.analyzer:
         class: AppBundle\Services\MediaAnalyzer
         arguments:
             -
-                'image/jpeg': @tb.media.metadata.jpeg
-                'audio/mpeg': @tb.media.metadata.mp3
-                'video/mp4': @tb.media.metadata.mpeg
-                'video/x-m4v': @tb.media.metadata.mpeg
-
-    tb.media.metadata.jpeg:
+                image/jpeg: '@app.media.metadata.jpeg'
+                audio/mpeg: '@app.media.metadata.mp3'
+                video/mp4: '@app.media.metadata.mpeg'
+                video/x-m4v: '@app.media.metadata.mpeg'
+    app.media.metadata.jpeg:
         class: AppBundle\Services\MetadataReader\JPEGMetadataReader
-
-    tb.media.metadata.mp3:
+    app.media.metadata.mp3:
         class: AppBundle\Services\MetadataReader\MPEGMetadataReader
-
-    tb.media.metadata.mpeg:
+    app.media.metadata.mpeg:
         class: AppBundle\Services\MetadataReader\MP4MetadataReader
-
-    tb.mediaAttribute.repository:
+    app.mediaAttribute.repository:
         class: AppBundle\Repository\MediaAttributeRepository
         factory_service: doctrine.orm.entity_manager
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\MediaAttribute
-
-    tb.eventCustom.repository:
+    app.eventCustom.repository:
         class: AppBundle\Repository\EventCustomRepository
         factory_service: doctrine.orm.entity_manager
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\EventCustom
+    app.handler.race_event:
+        class: AppBundle\Handler\RaceEventHandler
+        arguments:
+            - '@app.repository.race_event'
+            - '@app.services.response_builder'
+            - '@form.factory'
+            - '@router'
+    app.services.response_builder:
+        class: AppBundle\Services\APIResponseBuilder
+        arguments:
+            - '@validator'
+    app.repository.race_event:
+        class: AppBundle\Repository\RaceEventRepository
+        arguments:
+            - AppBundle\Entity\RaceEvent
+        factory:
+            - '@doctrine.orm.entity_manager'
+            - getRepository
+    app.handler.race:
+        class: AppBundle\Handler\RaceHandler
+        arguments:
+            - '@app.repository.race'
+            - '@app.services.response_builder'
+            - '@form.factory'
+            - '@router'
+    app.repository.race:
+        class: AppBundle\Repository\RaceRepository
+        arguments:
+            - AppBundle\Entity\Race
+        factory:
+            - '@doctrine.orm.entity_manager'
+            - getRepository

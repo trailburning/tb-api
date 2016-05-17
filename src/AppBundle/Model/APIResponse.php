@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Response;
+namespace AppBundle\Model;
 
 use JMS\Serializer\Annotation as Serializer;
 

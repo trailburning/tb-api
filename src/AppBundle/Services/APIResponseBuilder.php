@@ -1,9 +1,10 @@
 <?php
 
-namespace AppBundle\Response;
+namespace AppBundle\Services;
 
 use Symfony\Component\Form\Form;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use AppBundle\Model\APIResponse;
 
 /**
  * Class APIResponseBuilder.

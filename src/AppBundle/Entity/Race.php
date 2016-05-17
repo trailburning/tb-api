@@ -12,7 +12,7 @@ use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
  * Race
  *
  * @ORM\Table(name="api_race")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\RaceRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\RaceRepository")
  * @SWG\Definition(required={"id", "name"}, @SWG\Xml(name="Race"))
  * @Serializer\ExclusionPolicy("all")
  */
@@ -51,8 +51,6 @@ class Race
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="date")
-     * @SWG\Property()
-     * @Serializer\Expose
      */
     private $date;
 
@@ -93,6 +91,22 @@ class Race
      */
     public function __construct()
     {
+        $this->oid = str_replace('.', '', uniqid(null, true));
+    }
+    
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("date")
+     *
+     * @return array
+     */
+    public function getDateAsString()
+    {
+        if ($this->date === null) {
+            return "";
+        }
+
+        return $this->date->format('Y-m-d');
     }
 
     /**

@@ -57,9 +57,9 @@ class MediaController extends Controller implements ClassResourceInterface
      */
     public function postAction(Request $request, $id)
     {
-        $mediaService = $this->get('tb.media');
-        $assetRepository = $this->get('tb.asset.repository');
-        $apiResponseBuilder = $this->get('tb.response.builder');
+        $mediaService = $this->get('app.media');
+        $assetRepository = $this->get('app.asset.repository');
+        $apiResponseBuilder = $this->get('app.response.builder');
 
         $asset = $assetRepository->findOneBy([
             'oid' => $id,
@@ -137,10 +137,10 @@ class MediaController extends Controller implements ClassResourceInterface
      */
     public function putAction(Request $request, $id, $mediaId)
     {
-        $mediaService = $this->get('tb.media');
-        $assetRepository = $this->get('tb.asset.repository');
-        $mediaRepository = $this->get('tb.media.repository');
-        $apiResponseBuilder = $this->get('tb.response.builder');
+        $mediaService = $this->get('app.media');
+        $assetRepository = $this->get('app.asset.repository');
+        $mediaRepository = $this->get('app.media.repository');
+        $apiResponseBuilder = $this->get('app.response.builder');
 
         $asset = $assetRepository->findOneBy([
             'oid' => $id,
@@ -208,7 +208,7 @@ class MediaController extends Controller implements ClassResourceInterface
      */
     public function deleteAction($id, $mediaId)
     {
-        $mediaService = $this->get('tb.media');
+        $mediaService = $this->get('app.media');
 
         return $mediaService->deleteMedia($mediaId, $id);
     }

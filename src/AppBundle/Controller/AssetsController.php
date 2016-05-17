@@ -45,7 +45,7 @@ class AssetsController extends Controller implements ClassResourceInterface
      */
     public function getByEventAction($id)
     {
-        $assetService = $this->get('tb.asset');
+        $assetService = $this->get('app.asset');
 
         return $assetService->buildGetByEventAPIResponse($id);
     }
@@ -75,8 +75,8 @@ class AssetsController extends Controller implements ClassResourceInterface
      */
     public function postAction(Request $request, $id)
     {
-        $apiResponseBuilder = $this->get('tb.response.builder');
-        $eventRepository = $this->get('tb.event.repository');
+        $apiResponseBuilder = $this->get('app.response.builder');
+        $eventRepository = $this->get('app.event.repository');
 
         $event = $eventRepository->findOneBy([
             'oid' => $id,
@@ -85,7 +85,7 @@ class AssetsController extends Controller implements ClassResourceInterface
             return $apiResponseBuilder->buildNotFoundResponse('Event not found');
         }
 
-        $assetService = $this->get('tb.asset');
+        $assetService = $this->get('app.asset');
         $request->request->set('event', $event->getId());
 
         return $assetService->createOrUpdateFromAPI($request->request->all());
@@ -114,9 +114,9 @@ class AssetsController extends Controller implements ClassResourceInterface
      */
     public function putAction(Request $request, $id)
     {
-        $apiResponseBuilder = $this->get('tb.response.builder');
-        $assetRepository = $this->get('tb.asset.repository');
-        $assetService = $this->get('tb.asset');
+        $apiResponseBuilder = $this->get('app.response.builder');
+        $assetRepository = $this->get('app.asset.repository');
+        $assetService = $this->get('app.asset');
 
         $asset = $assetRepository->findOneBy([
             'oid' => $id,
@@ -152,7 +152,7 @@ class AssetsController extends Controller implements ClassResourceInterface
      */
     public function deleteAction($id)
     {
-        $assetService = $this->get('tb.asset');
+        $assetService = $this->get('app.asset');
 
         return $assetService->deleteFromAPI($id);
     }
@@ -188,7 +188,7 @@ class AssetsController extends Controller implements ClassResourceInterface
      */
     public function getAction($id)
     {
-        $assetService = $this->get('tb.asset');
+        $assetService = $this->get('app.asset');
 
         return $assetService->buildGetAPIResponse($id);
     }

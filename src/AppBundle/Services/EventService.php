@@ -7,8 +7,8 @@ use AppBundle\Form\Type\EventType;
 use AppBundle\Repository\EventCustomRepository;
 use AppBundle\Repository\EventRepository;
 use AppBundle\Repository\JourneyRepository;
-use AppBundle\Response\APIResponse;
-use AppBundle\Response\APIResponseBuilder;
+use AppBundle\Model\APIResponse;
+use AppBundle\Services\APIResponseBuilder;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Form\FormFactoryInterface;
 

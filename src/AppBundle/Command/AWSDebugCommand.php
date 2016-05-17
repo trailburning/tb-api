@@ -17,7 +17,7 @@ class AWSDebugCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $mediaService = $this->getContainer()->get('tb.media');
+        $mediaService = $this->getContainer()->get('app.media');
         $filesystem = $this->getContainer()->get('media_filesystem');
         $mediaService->setFilesystem($filesystem);
 

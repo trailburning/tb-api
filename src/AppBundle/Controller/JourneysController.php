@@ -44,7 +44,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      */
     public function getAction($id)
     {
-        $journeyService = $this->get('tb.journey');
+        $journeyService = $this->get('app.journey');
 
         return $journeyService->buildGetAPIResponse($id);
     }
@@ -82,7 +82,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      */
     public function getByUserAction($id)
     {
-        $journeyService = $this->get('tb.journey');
+        $journeyService = $this->get('app.journey');
 
         return $journeyService->buildGetByUserAPIResponse($id);
     }
@@ -131,8 +131,8 @@ class JourneysController extends Controller implements ClassResourceInterface
      */
     public function importGPXAction(Request $request, $id)
     {
-        $journeyRepository = $this->get('tb.journey.repository');
-        $apiResponseBuilder = $this->get('tb.response.builder');
+        $journeyRepository = $this->get('app.journey.repository');
+        $apiResponseBuilder = $this->get('app.response.builder');
 
         $journey = $journeyRepository->findOneBy([
             'oid' => $id,
@@ -150,7 +150,7 @@ class JourneysController extends Controller implements ClassResourceInterface
         }
 
         $file = $form->get('file')->getData();
-        $journeyService = $this->get('tb.journey');
+        $journeyService = $this->get('app.journey');
 
         return $journeyService->importGPX($file, $journey);
     }
@@ -188,7 +188,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      */
     public function deleteRoutePointsAction($id)
     {
-        $journeyService = $this->get('tb.journey');
+        $journeyService = $this->get('app.journey');
 
         return $journeyService->deleteJourneyRoutePoints($id);
     }
@@ -215,7 +215,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      */
     public function postAction(Request $request)
     {
-        $journeyService = $this->get('tb.journey');
+        $journeyService = $this->get('app.journey');
 
         return $journeyService->createOrUpdateFromAPI($request->request->all());
     }
@@ -243,9 +243,9 @@ class JourneysController extends Controller implements ClassResourceInterface
      */
     public function putAction(Request $request, $id)
     {
-        $apiResponseBuilder = $this->get('tb.response.builder');
-        $journeyRepository = $this->get('tb.journey.repository');
-        $journeyService = $this->get('tb.journey');
+        $apiResponseBuilder = $this->get('app.response.builder');
+        $journeyRepository = $this->get('app.journey.repository');
+        $journeyService = $this->get('app.journey');
 
         $journey = $journeyRepository->findOneBy([
             'oid' => $id,
@@ -281,7 +281,7 @@ class JourneysController extends Controller implements ClassResourceInterface
      */
     public function deleteAction($id)
     {
-        $journeyService = $this->get('tb.journey');
+        $journeyService = $this->get('app.journey');
 
         return $journeyService->deleteFromAPI($id);
     }

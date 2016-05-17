@@ -9,7 +9,7 @@ use AppBundle\Entity\MediaAttribute;
 use AppBundle\Repository\AssetRepository;
 use AppBundle\Repository\MediaAttributeRepository;
 use AppBundle\Repository\MediaRepository;
-use AppBundle\Response\APIResponseBuilder;
+use AppBundle\Services\APIResponseBuilder;
 use Gaufrette\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 

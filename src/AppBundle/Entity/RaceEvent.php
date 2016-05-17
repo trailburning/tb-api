@@ -6,12 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * RaceEvent.
  *
  * @ORM\Table(name="api_race_event")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\RaceEventRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\RaceEventRepository")
  * @SWG\Definition(required={"id", "name", "coords"}, @SWG\Xml(name="RaceEvent"))
  * @Serializer\ExclusionPolicy("all")
  */
@@ -49,7 +50,7 @@ class RaceEvent
     /**
      * @var string
      *
-     * @ORM\Column(name="about", type="text")
+     * @ORM\Column(name="about", type="text", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
      */
@@ -58,7 +59,7 @@ class RaceEvent
     /**
      * @var string
      *
-     * @ORM\Column(name="website", type="string", length=255)
+     * @ORM\Column(name="website", type="string", length=255, nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
      */
@@ -89,6 +90,7 @@ class RaceEvent
      */
     public function __construct()
     {
+        $this->oid = str_replace('.', '', uniqid(null, true));
         $this->races = new ArrayCollection();
     }
 
