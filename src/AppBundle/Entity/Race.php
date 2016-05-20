@@ -58,7 +58,7 @@ class Race
      * @var string
      *
      * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\RaceType")
-     * @ORM\Column(type="RaceType")
+     * @ORM\Column(type="RaceType", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
      */
@@ -68,7 +68,7 @@ class Race
      * @var string
      *
      * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\RaceDistance")
-     * @ORM\Column(type="RaceDistance")
+     * @ORM\Column(type="RaceDistance", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
      */
