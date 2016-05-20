@@ -39,13 +39,13 @@
         "aws/aws-sdk-php": "3.*",
         "nelmio/cors-bundle": "^1.4@dev",
         "burgov/key-value-form-bundle": "@stable",
-        "sensio/generator-bundle": "^3.0"
+        "sensio/generator-bundle": "^3.0",
+        "backendweb/generator-bundle": "dev-master"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^2.7",
         "phpunit/phpunit": "^5.0",
-        "liip/functional-test-bundle": "^1.2",
-        "backendweb/generator-bundle": "dev-master"
+        "liip/functional-test-bundle": "^1.2"
     },
     "repositories": [
         {
