@@ -1,7 +1,11 @@
 /var/bootstrap.php.cache
 /var/cache/*
 !var/cache/.gitkeep
+/var/logs/*
 !var/logs/.gitkeep
+!var/logs/nginx
+var/logs/nginx/*
+!var/logs/nginx/.gitkeep
 /var/config/parameters.yml
 /phpunit.xml
 /vendor/

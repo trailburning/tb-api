@@ -9,7 +9,7 @@ class SwaggerBridgeTest extends BaseWebTestCase
 {
     public function testGenerateJson()
     {
-        $swaggerBridge = $this->getContainer()->get('tb.swaggerBridge');
+        $swaggerBridge = $this->getContainer()->get('app.swaggerBridge');
         @unlink($swaggerBridge->getCachePath());
         
         $result = $swaggerBridge->generateJson();

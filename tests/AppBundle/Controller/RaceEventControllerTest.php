@@ -93,7 +93,7 @@ class RaceEventControllerTest extends BaseWebTestCase
 
         $client = $this->makeClient();
 
-        $client->request('PUT', '/raceevents/0', []);
+        $client->request('PUT', '/v2/raceevents/0', []);
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
@@ -107,7 +107,7 @@ class RaceEventControllerTest extends BaseWebTestCase
         $raceEventRepository = $this->getContainer()->get('app.repository.race_event');
         $raceEvent = $raceEventRepository->findAll()[0];
 
-        $client->request('DELETE', '/raceevents/'.$raceEvent->getOid());
+        $client->request('DELETE', '/v2/raceevents/'.$raceEvent->getOid());
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
     }
 
@@ -115,7 +115,7 @@ class RaceEventControllerTest extends BaseWebTestCase
     {
         $client = $this->makeClient();
 
-        $client->request('DELETE', '/raceevents/0');
+        $client->request('DELETE', '/v2/raceevents/0');
         $this->assertJsonResponse($client->getResponse(), 404);
     }
 

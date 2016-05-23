@@ -9,7 +9,7 @@ class JPEGMetadataReaderTest extends BaseWebTestCase
 {
     public function testRead() 
     {
-        $reader = $this->getContainer()->get('tb.media.metadata.jpeg');
+        $reader = $this->getContainer()->get('app.media.metadata.jpeg');
         $file = new File(realpath(__DIR__ . '/../../../DataFixtures/Media/test.jpg'));
         
         $result = $reader->read($file);
@@ -20,7 +20,7 @@ class JPEGMetadataReaderTest extends BaseWebTestCase
     
     public function testReadGPS() 
     {
-        $reader = $this->getContainer()->get('tb.media.metadata.jpeg');
+        $reader = $this->getContainer()->get('app.media.metadata.jpeg');
         $file = new File(realpath(__DIR__ . '/../../../DataFixtures/Media/test_gps.jpg'));
         
         $result = $reader->read($file);
@@ -30,7 +30,7 @@ class JPEGMetadataReaderTest extends BaseWebTestCase
     
     public function testReadDimensions() 
     {
-        $reader = $this->getContainer()->get('tb.media.metadata.jpeg');
+        $reader = $this->getContainer()->get('app.media.metadata.jpeg');
         $file = new File(realpath(__DIR__ . '/../../../DataFixtures/Media/test_dimensions.jpg'));
         
         $result = $reader->read($file);

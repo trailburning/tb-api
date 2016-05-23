@@ -10,7 +10,7 @@ class MediaAnalyzerTest extends BaseWebTestCase
     
     public function testGetMIMEType($value='') 
     {
-        $mediaAnalyzer = $this->getContainer()->get('tb.media.analyzer');
+        $mediaAnalyzer = $this->getContainer()->get('app.media.analyzer');
         $file = new UploadedFile(
             realpath(__DIR__ . '/../../DataFixtures/Media/test.jpg'),
             'test.jpg'

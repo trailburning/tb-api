@@ -14,7 +14,7 @@ class JourneyServiceTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\JourneyData',
         ]); 
         
-        $journeyService = $this->getContainer()->get('tb.journey');
+        $journeyService = $this->getContainer()->get('app.journey');
         $journey = $this->getJourney('Test Journey 1');
         
         $file = new UploadedFile(
@@ -39,7 +39,7 @@ class JourneyServiceTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\JourneyData',
         ]); 
         
-        $journeyService = $this->getContainer()->get('tb.journey');
+        $journeyService = $this->getContainer()->get('app.journey');
         $journey = $this->getJourney('Test Journey 1');
                 
         $this->assertEquals(3, count($journey->getRoutePoints()));
