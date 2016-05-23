@@ -23,13 +23,13 @@ class JourneyServiceTest extends BaseWebTestCase
         );
         
         $result = $journeyService->importGPX($file, $journey);
-        $this->assertInstanceOf('AppBundle\Response\APIResponse', $result);
+        $this->assertInstanceOf('AppBundle\Model\APIResponse', $result);
         $this->refreshEntity($journey);
         $this->assertEquals(2, count($journey->getRoutePoints()));
         $this->assertNotNull($journey->getRoutePoints()[0]->getElevation());
         
         $result = $journeyService->importGPX($file, $journey);
-        $this->assertInstanceOf('AppBundle\Response\APIResponse', $result);
+        $this->assertInstanceOf('AppBundle\Model\APIResponse', $result);
         $this->assertEquals(2, count($journey->getRoutePoints()));
     }
     
