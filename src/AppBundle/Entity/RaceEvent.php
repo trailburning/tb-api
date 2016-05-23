@@ -78,6 +78,9 @@ class RaceEvent
      * @var Race[]
      *
      * @ORM\OneToMany(targetEntity="Race", mappedBy="raceEvent", cascade={"persist", "remove"})
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @ORM\OrderBy({"date" = "ASC"})
      */
     private $races;
 
