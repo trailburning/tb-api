@@ -133,7 +133,7 @@ class RaceEventController extends Controller implements ClassResourceInterface
     public function putAction($id, Request $request)
     {
         $apiResponseBuilder = $this->get('app.services.response_builder');
-        $raceEventRepository = $this->get('tags={"Race Event"}');
+        $raceEventRepository = $this->get('app.repository.race_event');
         $raceEventHandler = $this->get('app.handler.race_event');
 
         $raceEvent = $raceEventRepository->findOneBy([
