@@ -14,6 +14,7 @@ php:
         - app
     links:
         - postgres
+        - elasticsearch
 
 postgres:
     container_name: tb_api_postgres
@@ -42,4 +43,16 @@ elasticsearch:
     image: elasticsearch
     ports: 
         - 9200:9200
+        
+kibana:
+    container_name: tb_api_kibana
+    image: ditointernet/docker-kibana-sense
+    ports: 
+        - 5601:5601
+    links:
+        - elasticsearch
+    environment:
+        ELASTICSEARCH_URL: http://elasticsearch:9200
+        SENSE.DEFAULT_SERVER_URL: http://elasticsearch:9200
+
     
