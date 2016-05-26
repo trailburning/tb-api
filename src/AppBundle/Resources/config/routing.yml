@@ -1,3 +1,8 @@
+search:
+    resource: "AppBundle\Controller\SearchController"
+    type: rest
+    prefix: /v2
+
 race:
     resource: "AppBundle\Controller\RaceController"
     type: rest

@@ -105,16 +105,12 @@ class RaceEvent
      */
     public function getCoordsAsArray()
     {
-        if ($this->coords === null) {
-            return [];
-        }
-
         return [
             $this->coords->getLongitude(),
             $this->coords->getLatitude(),
         ];
     }
-
+    
     /**
      * ################################################################################################################.
      *

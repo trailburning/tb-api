@@ -1,0 +1,5 @@
+#!/bin/bash
+
+bin/console app:search:setup
+bin/console app:search:mapping race_event
+bin/console app:search:index all

@@ -165,3 +165,23 @@ services:
         factory:
             - '@doctrine.orm.entity_manager'
             - getRepository
+
+    app.factory.elasticsearch.client:
+        class: AppBundle\Factory\ElasticsearchClientFactory
+
+    vendor.elasticsearch.client:
+        class: Elasticsearch\Client
+        factory: ["@app.factory.elasticsearch.client", create]
+        arguments: 
+            - %elasticsearch%
+            
+    app.handler.search:
+        class: AppBundle\Handler\SearchHandler
+        arguments:
+            - '@app.services.response_builder'
+            - '@app.services.search'
+    
+    app.services.search:
+        class: AppBundle\Services\SearchService
+        arguments:
+            - '@vendor.elasticsearch.client'

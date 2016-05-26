@@ -13,3 +13,6 @@ parameters:
     aws_accesskey: AKIAJ2MQ25WCZNHH6UHQ
     aws_secretkey: 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
     aws_region: eu-west-1
+    elasticsearch:
+        hosts:
+            - 'elasticsearch:9200'

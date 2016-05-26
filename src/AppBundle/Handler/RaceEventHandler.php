@@ -8,6 +8,7 @@ use AppBundle\Repository\RaceEventRepository;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use AppBundle\Entity\RaceEvent;
+
 /**
  * RaceEvent handler.
  */
@@ -22,7 +23,7 @@ class RaceEventHandler
      * @var APIResponseBuilder
      */
     private $apiResponseBuilder;
-        /**
+    /**
      * @var FormFactoryInterface
      */
     private $formFactory;
@@ -31,23 +32,23 @@ class RaceEventHandler
      * @var Router
      */
     private $router;
-     
+
     /**
-     * @param RaceEventRepository $raceEventRepository
-     * @param APIResponseBuilder $apiResponseBuilder
+     * @param RaceEventRepository  $raceEventRepository
+     * @param APIResponseBuilder   $apiResponseBuilder
      * @param FormFactoryInterface $formFactory
-     * @param Router $router 
+     * @param Router               $router
      */
     public function __construct(
         RaceEventRepository $raceEventRepository,
         APIResponseBuilder $apiResponseBuilder,
         FormFactoryInterface $formFactory,
-        Router $router 
+        Router $router
     ) {
         $this->raceEventRepository = $raceEventRepository;
         $this->apiResponseBuilder = $apiResponseBuilder;
-                $this->formFactory = $formFactory;
-        $this->router = $router; 
+        $this->formFactory = $formFactory;
+        $this->router = $router;
     }
 
     /**
@@ -56,7 +57,7 @@ class RaceEventHandler
      * @return APIResponse
      */
     public function handleGet($id)
-    {        
+    {
         $raceEvents = $this->raceEventRepository->findBy([
             'oid' => $id,
         ]);
@@ -79,9 +80,9 @@ class RaceEventHandler
     }
 
     /**
-     * @param array   $parameters
+     * @param array     $parameters
      * @param RaceEvent $raceEvent
-     * @param string  $method
+     * @param string    $method
      *
      * @return APIResponse
      */
@@ -90,7 +91,7 @@ class RaceEventHandler
         if ($raceEvent === null) {
             $raceEvent = new RaceEvent();
         }
-        
+
         $form = $this->formFactory->create('AppBundle\Form\RaceEventType', $raceEvent, ['method' => $method]);
         $clearMissing = ($method !== 'PUT') ? true : false;
         $form->submit($parameters, $clearMissing);

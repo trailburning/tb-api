@@ -16,13 +16,31 @@ class RaceData extends AbstractFixture implements FixtureInterface, DependentFix
     public function load(ObjectManager $manager)
     {
         $race = new Race();
-        $race->setName('name');
-        $race->setDate(new \DateTime('2016-05-17'));
+        $race->setName('Grand 46K');
+        $race->setDate(new \DateTime('2017-05-16'));
         $race->setType('road');
         $race->setDistance('marathon');
         $race->setRaceEvent($this->getReference('RaceEvent-1'));
         $manager->persist($race);
         $this->addReference('Race-1', $race);
+        
+        $race = new Race();
+        $race->setName('Media 30K');
+        $race->setDate(new \DateTime('2017-05-17'));
+        $race->setType('road');
+        $race->setDistance('marathon');
+        $race->setRaceEvent($this->getReference('RaceEvent-1'));
+        $manager->persist($race);
+        $this->addReference('Race-2', $race);
+        
+        $race = new Race();
+        $race->setName('Berlin Marathon');
+        $race->setDate(new \DateTime('2017-06-01'));
+        $race->setType('road');
+        $race->setDistance('marathon');
+        $race->setRaceEvent($this->getReference('RaceEvent-2'));
+        $manager->persist($race);
+        $this->addReference('Race-3', $race);
 
         $manager->flush();
     }
