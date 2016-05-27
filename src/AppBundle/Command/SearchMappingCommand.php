@@ -66,6 +66,14 @@ class SearchMappingCommand extends ContainerAwareCommand
                         'coords' => [
                             'type' => 'geo_point',
                         ],
+                        'type' => [
+                            'type' => 'string',
+                            'store' => false,
+                        ],
+                        'distance' => [
+                            'type' => 'string',
+                            'store' => false,
+                        ],
                         'races' => [
                             'type' => 'nested',
                             'properties' => [

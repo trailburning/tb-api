@@ -40,6 +40,8 @@ class SearchService
             $queryTerm = new MultiMatchQuery([
                 'name',
                 'about',
+                'type',
+                'distance',
             ], $term);
             $boolQuery->add($queryTerm, BoolQuery::SHOULD);
 
@@ -71,7 +73,7 @@ class SearchService
             'type' => 'race_event',
             'body' => $search->toArray(),
         ];
-
+        
         return $this->client->search($params);
     }
 
@@ -80,12 +82,17 @@ class SearchService
      *
      * @return array
      */
-    public function extractRaceEventHits(array $searchResult)
+    public function extractRaceEventHits(array $searchResult): array
     {
+        $filter = [
+            'type' => null, 
+            'distance' => null,
+        ];
         $results = [];
         if (isset($searchResult['hits']['hits'])) {
             foreach ($searchResult['hits']['hits'] as $result) {
-                $results[] = $result['_source'];
+                $raceEvent = array_diff_key($result['_source'], $filter);
+                $results[] = $raceEvent;
             }
         }
 
