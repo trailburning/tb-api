@@ -2,7 +2,13 @@
 
 namespace AppBundle\Services;
 
+use DateTime;
 use Elasticsearch\Client;
+use ONGR\ElasticsearchDSL\Search;
+use ONGR\ElasticsearchDSL\Query\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\MultiMatchQuery;
+use ONGR\ElasticsearchDSL\Query\NestedQuery;
+use ONGR\ElasticsearchDSL\Query\RangeQuery;
 
 /**
  * Class MediaService.
@@ -22,42 +28,49 @@ class SearchService
         $this->client = $client;
     }
 
-    /**
-     * @param string $q
-     */
-    public function search(string $q)
-    {
+    public function search(
+        string $term = null,
+        DateTime $dateFrom = null,
+        DateTime $dateTo = null
+    ) {
+        $boolQuery = new BoolQuery();
+        $boolQuery->addParameter('minimum_should_match', 1);
+
+        if ($term !== null) {
+            $queryTerm = new MultiMatchQuery([
+                'name',
+                'about',
+            ], $term);
+            $boolQuery->add($queryTerm, BoolQuery::SHOULD);
+
+            $queryRace = new MultiMatchQuery([
+                'races.name',
+            ], $term);
+            $nestedRace = new NestedQuery('races', $queryRace);
+            $boolQuery->add($nestedRace, BoolQuery::SHOULD);
+        }
+
+        if ($dateFrom !== null || $dateTo !== null) {
+            $dateRange = [];
+            if ($dateFrom !== null) {
+                $dateRange[RangeQuery::GTE] = $dateFrom->format('Y-m-d');
+            }
+            if ($dateTo !== null) {
+                $dateRange[RangeQuery::LTE] = $dateTo->format('Y-m-d');
+            }
+            $queryDate = new RangeQuery('races.date', $dateRange);
+            $nestedDate = new NestedQuery('races', $queryDate);
+            $boolQuery->add($nestedDate, BoolQuery::FILTER);
+        }
+
+        $search = new Search();
+        $search->addQuery($boolQuery);
+
         $params = [
             'index' => 'search',
             'type' => 'race_event',
-            'body' => [],
+            'body' => $search->toArray(),
         ];
-
-        if ($q !== '') {
-            $params['body']['query'] = [
-                'bool' => [
-                    'should' => [
-                        [
-                            'multi_match' => [
-                                'query' => $q,
-                                'fields' => ['name', 'about'],
-                            ]
-                        ],
-                        [
-                            'nested' => [
-                                'path' => 'races',
-                                'query' => [
-                                    'multi_match' => [
-                                        'query' => $q,
-                                        'fields' => ['races.name'],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ];
-        }
 
         return $this->client->search($params);
     }

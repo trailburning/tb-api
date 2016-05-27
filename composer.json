@@ -41,7 +41,8 @@
         "burgov/key-value-form-bundle": "@stable",
         "sensio/generator-bundle": "^3.0",
         "backendweb/generator-bundle": "dev-master",
-        "elasticsearch/elasticsearch": "^2.1"
+        "elasticsearch/elasticsearch": "^2.1",
+        "ongr/elasticsearch-dsl": "^2.0"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^2.7",

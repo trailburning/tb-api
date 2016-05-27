@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "284b0f635f62c9f652cbbb16cc395d3f",
-    "content-hash": "1601c630408d42a7e2fafe8e4b3740f1",
+    "hash": "55965a652a2832566e9c3dc7774852d7",
+    "content-hash": "b55ac8c80812d3bd7f50ae8a674dea18",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -2591,6 +2591,55 @@
                 "crossdomain"
             ],
             "time": "2015-12-09 17:26:34"
+        },
+        {
+            "name": "ongr/elasticsearch-dsl",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ongr-io/ElasticsearchDSL.git",
+                "reference": "7cd0ab4b2a8b1d7c9f265954ce5d69feb4b19069"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ongr-io/ElasticsearchDSL/zipball/7cd0ab4b2a8b1d7c9f265954ce5d69feb4b19069",
+                "reference": "7cd0ab4b2a8b1d7c9f265954ce5d69feb4b19069",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4",
+                "symfony/options-resolver": "~2.7|~3.0",
+                "symfony/serializer": "~2.7|~3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.4",
+                "satooshi/php-coveralls": "~0.7",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ONGR\\ElasticsearchDSL\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "ONGR team",
+                    "homepage": "http://www.ongr.io"
+                }
+            ],
+            "description": "Elasticsearch DSL library",
+            "homepage": "http://ongr.io",
+            "time": "2016-05-03 01:24:48"
         },
         {
             "name": "paragonie/random_compat",

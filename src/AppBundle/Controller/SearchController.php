@@ -26,6 +26,18 @@ class SearchController extends Controller implements ClassResourceInterface
      *         name="q",
      *         type="string",
      *     ),
+     *     @SWG\Parameter(
+     *         description="Filter results by date from (yyyy-MM-dd)",
+     *         in="query",
+     *         name="date_from",
+     *         type="string",
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Filter results by date to (yyyy-MM-dd)",
+     *         in="query",
+     *         name="date_to",
+     *         type="string",
+     *     ),
      *     @SWG\Response(
      *         response=200,
      *         description="Successful operation"
