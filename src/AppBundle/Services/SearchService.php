@@ -42,6 +42,7 @@ class SearchService
                 'about',
                 'type',
                 'distance',
+                'location',
             ], $term);
             $boolQuery->add($queryTerm, BoolQuery::SHOULD);
 

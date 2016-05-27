@@ -83,6 +83,15 @@ class RaceEvent
      * @ORM\OrderBy({"date" = "ASC"})
      */
     private $races;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="location", type="text", nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     */
+    private $location;
 
     /**
      * ################################################################################################################.
@@ -255,5 +264,25 @@ class RaceEvent
     public function getRaces()
     {
         return $this->races;
+    }
+    
+    /**
+     * @param string $location
+     *
+     * @return self
+     */
+    public function setLocation($location)
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation()
+    {
+        return $this->location;
     }
 }

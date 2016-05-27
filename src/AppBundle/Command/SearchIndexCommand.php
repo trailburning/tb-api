@@ -62,6 +62,7 @@ class SearchIndexCommand extends ContainerAwareCommand
                 'about' => $raceEvent->getAbout(),
                 'website' => $raceEvent->getWebsite(),
                 'coords' => $raceEvent->getCoordsAsArray(),
+                'location' => $raceEvent->getLocation(),
                 'races' => [],
                 'type' => [],
                 'distance' => [],
