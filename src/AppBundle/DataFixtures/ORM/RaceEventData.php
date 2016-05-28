@@ -20,7 +20,7 @@ class RaceEventData extends AbstractFixture implements FixtureInterface//, Depen
         $raceEvent->setName('Engadin Ultraks‚');
         $raceEvent->setAbout('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.');
         $raceEvent->setWebsite('http://www.trailburning.com');
-        $raceEvent->setCoords(new Point(13.221316, 52.489695, 4326));
+        $raceEvent->setCoords(new Point(7.7491, 46.0207, 4326));
         $raceEvent->setLocation('Zermatt, Switzerland');
         $manager->persist($raceEvent);
         $this->addReference('RaceEvent-1', $raceEvent);

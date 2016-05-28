@@ -38,10 +38,18 @@ class SearchController extends Controller implements ClassResourceInterface
      *         name="date_to",
      *         type="string",
      *     ),
-     *     @SWG\Response(
-     *         response=200,
-     *         description="Successful operation"
-     *     )
+     *     @SWG\Parameter(
+     *         description="Filter results by GeoData Point in the format '(LNG, LAT)'",
+     *         in="query",
+     *         name="coords",
+     *         type="string",
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Sets a distance in meters to filter results for the 'coords' parameter",
+     *         in="query",
+     *         name="distance",
+     *         type="integer",
+     *     ),
      * )
      *
      * @Get("/search")

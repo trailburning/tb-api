@@ -2,6 +2,7 @@
 
 namespace AppBundle\Services;
 
+use Exception;
 use DateTime;
 use Elasticsearch\Client;
 use ONGR\ElasticsearchDSL\Search;
@@ -9,6 +10,8 @@ use ONGR\ElasticsearchDSL\Query\BoolQuery;
 use ONGR\ElasticsearchDSL\Query\MultiMatchQuery;
 use ONGR\ElasticsearchDSL\Query\NestedQuery;
 use ONGR\ElasticsearchDSL\Query\RangeQuery;
+use ONGR\ElasticsearchDSL\Query\GeoDistanceQuery;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
 
 /**
  * Class MediaService.
@@ -31,7 +34,9 @@ class SearchService
     public function search(
         string $term = null,
         DateTime $dateFrom = null,
-        DateTime $dateTo = null
+        DateTime $dateTo = null,
+        Point $coords = null,
+        int $distance = null
     ) {
         $boolQuery = new BoolQuery();
         $boolQuery->addParameter('minimum_should_match', 1);
@@ -64,6 +69,16 @@ class SearchService
             $queryDate = new RangeQuery('races.date', $dateRange);
             $nestedDate = new NestedQuery('races', $queryDate);
             $boolQuery->add($nestedDate, BoolQuery::FILTER);
+        }
+        
+        if ($coords !== null) {
+            $coordsValue = [
+                'lat' => $coords->getLatitude(),
+                'lon' => $coords->getLongitude(),
+            ];
+            $distanceValue = (int)$distance . "m";
+            $queryLocation = new GeoDistanceQuery('coords', $distanceValue, $coordsValue);
+            $boolQuery->add($queryLocation, BoolQuery::FILTER);
         }
 
         $search = new Search();
@@ -98,5 +113,21 @@ class SearchService
         }
 
         return $results;
+    }
+    
+    /**
+     * @param string $coords 
+     * @return Point
+     * @throws Exception
+     */
+    public function parseCoordsParameter($coords) 
+    {
+        $results = preg_match('/([\d]+\.[\d]+), ([\d]+\.[\d]+)/', $coords, $match);
+        if ($results === false) {
+            throw new Exception('Unable to parse GeoData Point, expected format: (LNG, LAT)');
+        }
+        $point = new Point($match[1], $match[2], 4326);
+        
+        return $point;
     }
 }
