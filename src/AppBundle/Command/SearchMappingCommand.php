@@ -72,11 +72,11 @@ class SearchMappingCommand extends ContainerAwareCommand
                         ],
                         'type' => [
                             'type' => 'string',
-                            'store' => false,
+                            'analyzer' => 'simple',
                         ],
-                        'distance' => [
+                        'category' => [
                             'type' => 'string',
-                            'store' => false,
+                            'analyzer' => 'simple',
                         ],
                         'races' => [
                             'type' => 'nested',
@@ -96,9 +96,12 @@ class SearchMappingCommand extends ContainerAwareCommand
                                     'type' => 'string',
                                     'index' => 'not_analyzed',
                                 ],
-                                'distance' => [
+                                'category' => [
                                     'type' => 'string',
                                     'index' => 'not_analyzed',
+                                ],
+                                'distance' => [
+                                    'type' => 'integer',
                                 ],
                             ],
                         ],

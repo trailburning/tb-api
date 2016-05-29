@@ -1,5 +1,7 @@
 #!/bin/bash
-
+echo "Delete index \"search"\"
+docker exec -it tb_api_elasticsearch curl -XDELETE localhost:9200/search
+echo ""
 bin/console app:search:setup
 bin/console app:search:mapping race_event
 bin/console app:search:index all

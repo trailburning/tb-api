@@ -8,6 +8,7 @@ use AppBundle\Repository\RaceRepository;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use AppBundle\Entity\Race;
+use AppBundle\DBAL\Types\RaceCategory;
 use AppBundle\Entity\RaceEvent;
 
 /**
@@ -106,7 +107,9 @@ class RaceHandler
         if ($race === null) {
             $race = new Race();
         }
-
+        
+        $parameters = $this->setCategoryFromDistance($parameters);
+        
         $form = $this->formFactory->create('AppBundle\Form\RaceType', $race, ['method' => $method]);
         $clearMissing = ($method !== 'PUT') ? true : false;
         $form->submit($parameters, $clearMissing);
@@ -148,5 +151,28 @@ class RaceHandler
         $this->raceRepository->store();
 
         return $this->apiResponseBuilder->buildEmptyResponse(204);
+    }
+    
+    /**
+     * @param array $parameters 
+     * @return array
+     */
+    private function setCategoryFromDistance(array $parameters): array
+    {
+        if (!isset($parameters['distance']) || isset($parameters['category'])) {
+            return $parameters;
+        }
+        
+        if ($parameters['distance'] >= 42600) {
+            $parameters['category'] = RaceCategory::MARATHON;
+        } elseif ($parameters['distance'] >= 21300) {
+            $parameters['category'] = RaceCategory::HALF_MARATHON;
+        } elseif ($parameters['distance'] >= 10000) {
+            $parameters['category'] = RaceCategory::TEN_K;
+        } elseif ($parameters['distance'] >= 5000) {
+            $parameters['category'] = RaceCategory::FIVE_K;
+        }
+        
+        return $parameters;
     }
 }

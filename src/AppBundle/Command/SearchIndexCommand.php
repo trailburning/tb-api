@@ -65,7 +65,7 @@ class SearchIndexCommand extends ContainerAwareCommand
                 'location' => $raceEvent->getLocation(),
                 'races' => [],
                 'type' => [],
-                'distance' => [],
+                'category' => [],
             ];
             
             foreach ($raceEvent->getRaces() as $race) {
@@ -74,11 +74,15 @@ class SearchIndexCommand extends ContainerAwareCommand
                     'name' => $race->getName(),
                     'date' => $race->getDateAsString(),
                     'type' => $race->getType(),
+                    'category' => $race->getCategory(),
                     'distance' => $race->getDistance(),
                 ];
                 $doc['type'][] = $race->getType();
-                $doc['distance'][] = $race->getDistance();
+                $doc['category'][] = $race->getCategory();
             }
+            
+            $doc['type'] = array_unique($doc['type']);
+            $doc['category'] = array_unique($doc['category']);
 
             $params = [
                 'body' => $doc,

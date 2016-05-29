@@ -86,6 +86,7 @@ doctrine:
             hstore:                 EasyBib\Doctrine\Types\Hstore
             MIMEType:               AppBundle\DBAL\Types\MIMEType
             RaceType:               AppBundle\DBAL\Types\RaceType
+            RaceCategory:           AppBundle\DBAL\Types\RaceCategory
             RaceDistance:           AppBundle\DBAL\Types\RaceDistance
 
     orm:

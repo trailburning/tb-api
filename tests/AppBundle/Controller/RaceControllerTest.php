@@ -56,7 +56,8 @@ class RaceControllerTest extends BaseWebTestCase
             'name' => 'name',
             'date' => '2016-05-17',
             'type' => 'road',
-            'distance' => 'marathon',
+            'category' => 'marathon',
+            'distance' => 42000,
         ];
         
         $client->request('POST', '/v2/raceevents/' . $raceEvent->getOid() . '/races', $data);
@@ -90,7 +91,8 @@ class RaceControllerTest extends BaseWebTestCase
             'name' => 'name',
             'date' => '2016-05-17',
             'type' => 'road',
-            'distance' => 'marathon',
+            'category' => 'marathon',
+            'distance' => 42000,
         ];
 
         $client->request('PUT', '/v2/races/'.$race->getOid(), $data);

@@ -46,7 +46,7 @@ class SearchService
                 'name',
                 'about',
                 'type',
-                'distance',
+                'category',
                 'location',
             ], $term);
             $boolQuery->add($queryTerm, BoolQuery::SHOULD);
@@ -101,13 +101,13 @@ class SearchService
     public function extractRaceEventHits(array $searchResult): array
     {
         $filter = [
-            'type' => null, 
-            'distance' => null,
+            'type', 
+            'category',
         ];
         $results = [];
         if (isset($searchResult['hits']['hits'])) {
             foreach ($searchResult['hits']['hits'] as $result) {
-                $raceEvent = array_diff_key($result['_source'], $filter);
+                $raceEvent = array_diff_key($result['_source'], array_flip($filter));
                 $results[] = $raceEvent;
             }
         }

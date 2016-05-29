@@ -9,6 +9,6 @@ class RaceType extends AbstractEnumType
     const ROAD = 'road';
     
     protected static $choices = [
-        self::ROAD => self::ROAD,
+        self::ROAD => 'Road',
     ];
 }

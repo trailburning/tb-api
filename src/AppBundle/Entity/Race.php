@@ -65,14 +65,23 @@ class Race
     private $type;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\RaceDistance")
-     * @ORM\Column(type="RaceDistance", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
      */
     private $distance;
+
+    /**
+     * @var string
+     *
+     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\RaceCategory")
+     * @ORM\Column(type="RaceCategory", nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     */
+    private $category;
     
     /**
      * @var RaceEvent
@@ -225,6 +234,29 @@ class Race
     public function getDistance()
     {
         return $this->distance;
+    }
+    
+    /**
+     * Set category
+     *
+     * @param string $category
+     * @return Race
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Get category
+     *
+     * @return string 
+     */
+    public function getCategory()
+    {
+        return $this->category;
     }
     
     /**
