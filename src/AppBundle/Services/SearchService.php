@@ -2,7 +2,6 @@
 
 namespace AppBundle\Services;
 
-use Exception;
 use DateTime;
 use Elasticsearch\Client;
 use ONGR\ElasticsearchDSL\Search;
@@ -70,13 +69,13 @@ class SearchService
             $nestedDate = new NestedQuery('races', $queryDate);
             $boolQuery->add($nestedDate, BoolQuery::FILTER);
         }
-        
+
         if ($coords !== null) {
             $coordsValue = [
                 'lat' => $coords->getLatitude(),
                 'lon' => $coords->getLongitude(),
             ];
-            $distanceValue = (int)$distance . "m";
+            $distanceValue = (int) $distance.'m';
             $queryLocation = new GeoDistanceQuery('coords', $distanceValue, $coordsValue);
             $boolQuery->add($queryLocation, BoolQuery::FILTER);
         }
@@ -89,45 +88,7 @@ class SearchService
             'type' => 'race_event',
             'body' => $search->toArray(),
         ];
-        
+
         return $this->client->search($params);
-    }
-
-    /**
-     * @param array $searchResult
-     *
-     * @return array
-     */
-    public function extractRaceEventHits(array $searchResult): array
-    {
-        $filter = [
-            'type', 
-            'category',
-        ];
-        $results = [];
-        if (isset($searchResult['hits']['hits'])) {
-            foreach ($searchResult['hits']['hits'] as $result) {
-                $raceEvent = array_diff_key($result['_source'], array_flip($filter));
-                $results[] = $raceEvent;
-            }
-        }
-
-        return $results;
-    }
-    
-    /**
-     * @param string $coords 
-     * @return Point
-     * @throws Exception
-     */
-    public function parseCoordsParameter($coords) 
-    {
-        $results = preg_match('/([\d]+\.[\d]+), ([\d]+\.[\d]+)/', $coords, $match);
-        if ($results === false) {
-            throw new Exception('Unable to parse GeoData Point, expected format: (LNG, LAT)');
-        }
-        $point = new Point($match[1], $match[2], 4326);
-        
-        return $point;
     }
 }
