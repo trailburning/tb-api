@@ -6,6 +6,7 @@ use DateTime;
 use Elasticsearch\Client;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchDSL\Query\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\MatchQuery;
 use ONGR\ElasticsearchDSL\Query\MultiMatchQuery;
 use ONGR\ElasticsearchDSL\Query\NestedQuery;
 use ONGR\ElasticsearchDSL\Query\RangeQuery;
@@ -38,7 +39,9 @@ class SearchService
         Point $coords = null,
         int $distance = null,
         string $sort = null,
-        string $order = null
+        string $order = null,
+        string $type = null,
+        string $category = null
     ) {
         $search = new Search();
         $search->setFrom(0);
@@ -84,6 +87,18 @@ class SearchService
             $distanceValue = (int) $distance.'m';
             $queryLocation = new GeoDistanceQuery('coords', $distanceValue, $coordsValue);
             $boolQuery->add($queryLocation, BoolQuery::FILTER);
+        }
+        
+        if ($type !== null) {
+            $queryType = new MatchQuery('races.type', $type);
+            $nestedType = new NestedQuery('races', $queryType);
+            $boolQuery->add($nestedType, BoolQuery::FILTER);
+        }
+        
+        if ($category !== null) {
+            $queryCategory = new MatchQuery('races.category', $category);
+            $nestedCategory = new NestedQuery('races', $queryCategory);
+            $boolQuery->add($nestedCategory, BoolQuery::FILTER);
         }
         
         if ($this->sortByDistance($coords, $sort)) {
