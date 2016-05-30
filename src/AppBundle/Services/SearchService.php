@@ -41,6 +41,8 @@ class SearchService
         string $order = null
     ) {
         $search = new Search();
+        $search->setFrom(0);
+        $search->setSize(100);
         $boolQuery = new BoolQuery();
         $boolQuery->addParameter('minimum_should_match', 1);
 
