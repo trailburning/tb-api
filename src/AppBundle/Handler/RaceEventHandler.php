@@ -92,7 +92,7 @@ class RaceEventHandler
             $raceEvent = new RaceEvent();
         }
 
-        $form = $this->formFactory->create('AppBundle\Form\RaceEventType', $raceEvent, ['method' => $method]);
+        $form = $this->formFactory->create('AppBundle\Form\Type\RaceEventType', $raceEvent, ['method' => $method]);
         $clearMissing = ($method !== 'PUT') ? true : false;
         $form->submit($parameters, $clearMissing);
 

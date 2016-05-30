@@ -29,13 +29,13 @@ class SearchController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(
      *         description="Filter results by date from (yyyy-MM-dd)",
      *         in="query",
-     *         name="date_from",
+     *         name="dateFrom",
      *         type="string",
      *     ),
      *     @SWG\Parameter(
      *         description="Filter results by date to (yyyy-MM-dd)",
      *         in="query",
-     *         name="date_to",
+     *         name="dateTo",
      *         type="string",
      *     ),
      *     @SWG\Parameter(
@@ -84,6 +84,6 @@ class SearchController extends Controller implements ClassResourceInterface
     {
         $searchHandler = $this->get('app.handler.search');
 
-        return $searchHandler->handleSearch($request->query);
+        return $searchHandler->handleSearch($request->query->all());
     }
 }

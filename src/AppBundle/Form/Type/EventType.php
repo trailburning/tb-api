@@ -7,7 +7,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Burgov\Bundle\KeyValueFormBundle\Form\Type\KeyValueRowType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class EventType extends AbstractType
@@ -28,7 +27,6 @@ class EventType extends AbstractType
                 'value_type' => 'text',
                 'use_container_object' => true,
             ]);
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -137,7 +137,7 @@ class RaceController extends Controller implements ClassResourceInterface
         }
         $request->request->set('raceEvent', $raceEvent->getId());
 
-        return $raceHandler->handleCreateOrUpdate($request->request->all());;
+        return $raceHandler->handleCreateOrUpdate($request->request->all());
     }
 
     /**

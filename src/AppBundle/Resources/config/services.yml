@@ -180,6 +180,7 @@ services:
         arguments:
             - '@app.services.response_builder'
             - '@app.services.search'
+            - '@form.factory'
     
     app.services.search:
         class: AppBundle\Services\SearchService

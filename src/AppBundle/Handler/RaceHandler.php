@@ -25,6 +25,7 @@ class RaceHandler
      * @var APIResponseBuilder
      */
     private $apiResponseBuilder;
+
     /**
      * @var FormFactoryInterface
      */
@@ -110,7 +111,7 @@ class RaceHandler
         
         $parameters = $this->setCategoryFromDistance($parameters);
         
-        $form = $this->formFactory->create('AppBundle\Form\RaceType', $race, ['method' => $method]);
+        $form = $this->formFactory->create('AppBundle\Form\Type\RaceType', $race, ['method' => $method]);
         $clearMissing = ($method !== 'PUT') ? true : false;
         $form->submit($parameters, $clearMissing);
 

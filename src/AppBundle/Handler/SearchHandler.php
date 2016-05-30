@@ -12,6 +12,8 @@ use AppBundle\Services\SearchService;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use AppBundle\DBAL\Types\RaceType;
 use AppBundle\DBAL\Types\RaceCategory;
+use Symfony\Component\Form\FormFactoryInterface;
+use AppBundle\Model\Search;
 
 /**
  * RaceEvent handler.
@@ -27,91 +29,43 @@ class SearchHandler
      * @var SearchService
      */
     private $searchService;
+    
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
 
     /**
      * @param APIResponseBuilder $apiResponseBuilder
      * @param SearchService      $searchService
+     * @param FormFactoryInterface $formFactory
      */
     public function __construct(
         APIResponseBuilder $apiResponseBuilder,
-        SearchService $searchService
+        SearchService $searchService,
+        FormFactoryInterface $formFactory
     ) {
         $this->apiResponseBuilder = $apiResponseBuilder;
         $this->searchService = $searchService;
+        $this->formFactory = $formFactory;
     }
 
     /**
-     * @param ParameterBag $parameters
+     * @param array $parameters
      *
      * @return APIResponse
      */
-    public function handleSearch(ParameterBag $parameters)
+    public function handleSearch(array $parameters)
     {
-        $q = $parameters->get('q');
+        $form = $this->formFactory->create('AppBundle\Form\Type\SearchType', new Search(), ['method' => 'GET']);
+        $form->submit($parameters);
 
-        $errors = [];
-        $dateFrom = null;
-        $dateTo = null;
-        $coords = null;
-        $distance = null;
-        $sort = null;
-        $order = null;
-        
-        try {
-            $dateFrom = $this->parseDateParameter($parameters, 'date_from');
-        } catch (Exception $e) {
-            $errors[] = $e->getMessage();
-        }
-        
-        try {
-            $dateTo = $this->parseDateParameter($parameters, 'date_to');
-        } catch (Exception $e) {
-            $errors[] = $e->getMessage();
-        }
-        
-        try {
-            $coords = $this->parseCoordsParameter($parameters, 'coords');
-        } catch (Exception $e) {
-            $errors[] = $e->getMessage();
-        }
-        
-        if ($coords !== null) {
-            try {
-                $distance = $this->parseDistanceParameter($parameters, 'distance');
-            } catch (Exception $e) {
-                $errors[] = $e->getMessage();
-            }
-        }
-        
-        try {
-            $sort = $this->parseSortParameter($parameters, 'sort');
-        } catch (Exception $e) {
-            $errors[] = $e->getMessage();
-        }
-        
-        try {
-            $type = $this->parseTypeFilterParameter($parameters, 'type');
-        } catch (Exception $e) {
-            $errors[] = $e->getMessage();
-        }
-        
-        try {
-            $category = $this->parseCategoryFilterParameter($parameters, 'category');
-        } catch (Exception $e) {
-            $errors[] = $e->getMessage();
-        }
-        
-        try {
-            $order = $this->parseSortOrderParameter($parameters, 'order');
-        } catch (Exception $e) {
-            $errors[] = $e->getMessage();
+        if (!$form->isValid()) {
+            return $this->apiResponseBuilder->buildFormErrorResponse($form);
         }
 
-        if (count($errors) > 0) {
-            return $this->apiResponseBuilder->buildBadRequestResponse($errors);
-        }
-        
-        $results = $this->searchService->search($q, $dateFrom, $dateTo, $coords, $distance, $sort, $order, $type, $category);
+        $search = $form->getData();
+        $results = $this->searchService->search($search);
         $raceEvents = $this->extractRaceEventHits($results);
 
         return $this->apiResponseBuilder->buildSuccessResponse($raceEvents, 'raceevents');

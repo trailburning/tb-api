@@ -1,43 +1,48 @@
 <?php
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use AppBundle\Form\DataTransformer\GeometryPointTransformer;
 
-class RaceType extends AbstractType
+class SearchType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
-            ->add('date', DateType::class, [
+            ->add('q')
+            ->add('dateFrom', DateType::class, [
                 'widget' => 'single_text',
             ])
-            ->add('type')
-            ->add('distance', IntegerType::class)
-            ->add('category')
-            ->add('raceEvent', EntityType::class, [
-                'class' => 'AppBundle:RaceEvent',
+            ->add('dateTo', DateType::class, [
+                'widget' => 'single_text',
             ])
+            ->add($builder
+                ->create('coords')
+                ->addModelTransformer(new GeometryPointTransformer()))
+            ->add('distance', IntegerType::class)
+            ->add('type')
+            ->add('category')
+            ->add('order')
+            ->add('sort')
         ;
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Race',
+            'data_class' => 'AppBundle\Model\Search',
             'csrf_protection' => false,
         ));
     }
