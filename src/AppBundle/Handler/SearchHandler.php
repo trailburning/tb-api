@@ -47,34 +47,57 @@ class SearchHandler
     {
         $q = $parameters->get('q');
 
+        $errors = [];
         $dateFrom = null;
-        if ($parameters->has('date_from')) {
-            $dateFrom = DateTime::createFromFormat('Y-m-d', $parameters->get('date_from'));
-            if ($dateFrom === false) {
-                return $this->apiResponseBuilder->buildBadRequestResponse('Unable to parse date_from, expected format: yyyy-MM-dd');
-            }
-        }
-
         $dateTo = null;
-        if ($parameters->has('date_to')) {
-            $dateTo = DateTime::createFromFormat('Y-m-d', $parameters->get('date_to'));
-            if ($dateTo === false) {
-                return $this->apiResponseBuilder->buildBadRequestResponse('Unable to parse date_to, expected format: yyyy-MM-dd');
-            }
-        }
-
         $coords = null;
         $distance = null;
-        if ($parameters->has('coords')) {
+        $sort = null;
+        $order = null;
+        
+        try {
+            $dateFrom = $this->parseDateParameter($parameters, 'date_from');
+        } catch (Exception $e) {
+            $errors[] = $e->getMessage();
+        }
+        
+        try {
+            $dateTo = $this->parseDateParameter($parameters, 'date_to');
+        } catch (Exception $e) {
+            $errors[] = $e->getMessage();
+        }
+        
+        try {
+            $coords = $this->parseCoordsParameter($parameters, 'coords');
+        } catch (Exception $e) {
+            $errors[] = $e->getMessage();
+        }
+        
+        if ($coords !== null) {
             try {
-                $coords = $this->parseCoordsParameter($parameters->get('coords'));
-                $distance = $this->parseDistanceParameter($parameters->get('distance', 50000));
+                $distance = $this->parseDistanceParameter($parameters, 'distance');
             } catch (Exception $e) {
-                return $this->apiResponseBuilder->buildBadRequestResponse($e->getMessage());
+                $errors[] = $e->getMessage();
             }
         }
+        
+        try {
+            $sort = $this->parseSortParameter($parameters, 'sort');
+        } catch (Exception $e) {
+            $errors[] = $e->getMessage();
+        }
+        
+        try {
+            $order = $this->parseSortOrderParameter($parameters, 'order');
+        } catch (Exception $e) {
+            $errors[] = $e->getMessage();
+        }
 
-        $results = $this->searchService->search($q, $dateFrom, $dateTo, $coords, $distance);
+        if (count($errors) > 0) {
+            return $this->apiResponseBuilder->buildBadRequestResponse($errors);
+        }
+        
+        $results = $this->searchService->search($q, $dateFrom, $dateTo, $coords, $distance, $sort, $order);
         $raceEvents = $this->extractRaceEventHits($results);
 
         return $this->apiResponseBuilder->buildSuccessResponse($raceEvents, 'raceevents');
@@ -103,15 +126,40 @@ class SearchHandler
     }
     
     /**
-     * @param string $coords 
+     * @param ParameterBag $parameters
+     * @param string $key 
      * @return Point
      * @throws Exception
      */
-    private function parseCoordsParameter($value) 
+    private function parseDateParameter(ParameterBag $parameters, string $key) 
     {
-        $results = preg_match('/^\(([\d]+\.[\d]+),\s?([\d]+\.[\d]+)\)$/', trim($value), $match);
+        if (!$parameters->has($key)) {
+            return null;
+        }
+        
+        $date = DateTime::createFromFormat('Y-m-d', trim($parameters->get($key)));
+        if ($date === false) {
+            throw new Exception($key . ': Unable to parse date, expected format: yyyy-MM-dd');
+        }
+        
+        return $date;
+    }
+    
+    /**
+     * @param ParameterBag $parameters
+     * @param string $key 
+     * @return Point
+     * @throws Exception
+     */
+    private function parseCoordsParameter(ParameterBag $parameters, string $key) 
+    {
+        if (!$parameters->has($key)) {
+            return null;
+        }
+        
+        $results = preg_match('/^\(([\d]+\.[\d]+),\s?([\d]+\.[\d]+)\)$/', trim($parameters->get($key)), $match);
         if ($results !== 1) {
-            throw new Exception('Unable to parse GeoData Point, expected format: (LNG, LAT)');
+            throw new Exception($key . ': Unable to parse GeoData Point, expected format: (LNG, LAT)');
         }
         
         $point = new Point($match[1], $match[2], 4326);
@@ -119,13 +167,73 @@ class SearchHandler
         return $point;
     }
     
-    private function parseDistanceParameter($value): int 
+    /**
+     * @param ParameterBag $parameters
+     * @param string $key 
+     * @return integer
+     * @throws Exception
+     */
+    private function parseDistanceParameter(ParameterBag $parameters, string $key)
     {
-        $distance = intval($value);
+        if (!$parameters->has($key)) {
+            return 5000;
+        }
+        
+        $distance = intval(trim($parameters->get($key)));
         if (!$distance > 0) {
-            throw new Exception('Distance must be a positive integer value.');
+            throw new Exception($key . ': Value must be a positive integer.');
         }
         
         return $distance;
+    }
+    
+    /**
+     * @param ParameterBag $parameters
+     * @param string $key 
+     * @return integer
+     * @throws Exception
+     */
+    private function parseSortParameter(ParameterBag $parameters, string $key)
+    {
+        if (!$parameters->has($key)) {
+            return null;
+        }
+        
+        $validSortParameters = [
+            'relevance',
+            'distance',
+        ];
+        
+        $sort = trim($parameters->get($key));
+        if (!in_array($sort, $validSortParameters)) {
+            throw new Exception($key . ': Invalid value. Allowed values are: "' . implode('", "', $validSortParameters) . '"');
+        }
+        
+        return $sort;
+    }
+    
+    /**
+     * @param ParameterBag $parameters
+     * @param string $key 
+     * @return integer
+     * @throws Exception
+     */
+    private function parseSortOrderParameter(ParameterBag $parameters, string $key)
+    {
+        if (!$parameters->has($key)) {
+            return null;
+        }
+        
+        $validSortParameters = [
+            'asc',
+            'desc',
+        ];
+        
+        $order = trim($parameters->get($key));
+        if (!in_array($order, $validSortParameters)) {
+            throw new Exception($key . ': Invalid value. Allowed values are: "' . implode('", "', $validSortParameters) . '"');
+        }
+        
+        return $order;
     }
 }

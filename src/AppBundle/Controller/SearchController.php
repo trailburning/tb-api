@@ -50,6 +50,18 @@ class SearchController extends Controller implements ClassResourceInterface
      *         name="distance",
      *         type="integer",
      *     ),
+     *     @SWG\Parameter(
+     *         description="Sort the search results. Valid options are: 'relevance' and 'distance'.",
+     *         in="query",
+     *         name="sort",
+     *         type="string",
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Sort order direction. Valid options are: 'asc' and 'desc'.",
+     *         in="query",
+     *         name="order",
+     *         type="string",
+     *     ),
      * )
      *
      * @Get("/search")

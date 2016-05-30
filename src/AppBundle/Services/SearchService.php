@@ -10,6 +10,7 @@ use ONGR\ElasticsearchDSL\Query\MultiMatchQuery;
 use ONGR\ElasticsearchDSL\Query\NestedQuery;
 use ONGR\ElasticsearchDSL\Query\RangeQuery;
 use ONGR\ElasticsearchDSL\Query\GeoDistanceQuery;
+use ONGR\ElasticsearchDSL\Sort\FieldSort;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 
 /**
@@ -35,8 +36,11 @@ class SearchService
         DateTime $dateFrom = null,
         DateTime $dateTo = null,
         Point $coords = null,
-        int $distance = null
+        int $distance = null,
+        string $sort = null,
+        string $order = null
     ) {
+        $search = new Search();
         $boolQuery = new BoolQuery();
         $boolQuery->addParameter('minimum_should_match', 1);
 
@@ -79,8 +83,24 @@ class SearchService
             $queryLocation = new GeoDistanceQuery('coords', $distanceValue, $coordsValue);
             $boolQuery->add($queryLocation, BoolQuery::FILTER);
         }
+        
+        if ($this->sortByDistance($coords, $sort)) {
+            if ($order === null) {
+                $order == 'asc';
+            }
+            $fieldSort = new FieldSort('_geo_distance', $order, [
+                'coords' => $coordsValue,
+                'distance_type' => 'sloppy_arc',
+            ]);
+            $search->addSort($fieldSort);
+        } else {
+            if ($order === null) {
+                $order == 'desc';
+            }
+            $fieldSort = new FieldSort('_score', $order);
+            $search->addSort($fieldSort);
+        }
 
-        $search = new Search();
         $search->addQuery($boolQuery);
 
         $params = [
@@ -90,5 +110,14 @@ class SearchService
         ];
 
         return $this->client->search($params);
+    }
+    
+    private function sortByDistance(Point $coords = null, string $sort = null) 
+    {
+        if ($coords !== null && ($sort === 'distance' || $sort === null)) {
+            return true;
+        }
+        
+        return false;
     }
 }

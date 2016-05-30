@@ -66,15 +66,20 @@ class APIResponseBuilder
     }
 
     /**
-     * @param mixed  $body
-     * @param string $name
+     * @param mixed  $messages
      *
      * @return APIResponse
      */
-    public function buildBadRequestResponse($message)
+    public function buildBadRequestResponse($messages)
     {
         $response = new APIResponse(400);
-        $response->addMessage($message);
+        if (!is_array($messages)) {
+            $messages = [$messages];
+        }
+        
+        foreach ($messages as $message) {
+            $response->addMessage($message);
+        }
 
         return $response;
     }
