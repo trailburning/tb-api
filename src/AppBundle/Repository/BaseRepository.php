@@ -23,6 +23,21 @@ class BaseRepository extends EntityRepository
         $this->getEntityManager()->flush();
     }
     
+    public function beginnTransaction()
+    {
+        $this->getEntityManager()->getConnection()->beginTransaction();
+    }
+    
+    public function commit() 
+    {
+        $this->getEntityManager()->getConnection()->commit();
+    }
+    
+    public function rollback() 
+    {
+        $this->getEntityManager()->getConnection()->rollback();
+    }
+    
     /**
      * @return QueryBuilder
      */

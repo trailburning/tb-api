@@ -2,6 +2,7 @@
 
 namespace AppBundle\Handler;
 
+use Exception;
 use AppBundle\Response\APIResponse;
 use AppBundle\Services\APIResponseBuilder;
 use AppBundle\Repository\RaceRepository;
@@ -10,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use AppBundle\Entity\Race;
 use AppBundle\DBAL\Types\RaceCategory;
 use AppBundle\Entity\RaceEvent;
+use AppBundle\Services\SearchIndexService;
+use AppBundle\Repository\RaceEventRepository;
 
 /**
  * Race handler.
@@ -35,23 +38,39 @@ class RaceHandler
      * @var Router
      */
     private $router;
+    
+    /**
+     * @var SearchIndexService
+     */
+    private $searchIndexService;
+    
+    /**
+     * @var RaceEventRepository
+     */
+    private $raceEventRepository;
 
     /**
      * @param RaceRepository       $raceRepository
      * @param APIResponseBuilder   $apiResponseBuilder
      * @param FormFactoryInterface $formFactory
      * @param Router               $router
+     * @param SearchIndexService   $searchIndexService
+     * @param RaceEventRepository  $raceEventRepository
      */
     public function __construct(
         RaceRepository $raceRepository,
         APIResponseBuilder $apiResponseBuilder,
         FormFactoryInterface $formFactory,
-        Router $router
+        Router $router,
+        SearchIndexService $searchIndexService,
+        RaceEventRepository $raceEventRepository
     ) {
         $this->raceRepository = $raceRepository;
         $this->apiResponseBuilder = $apiResponseBuilder;
         $this->formFactory = $formFactory;
         $this->router = $router;
+        $this->raceEventRepository = $raceEventRepository;
+        $this->searchIndexService = $searchIndexService;
     }
 
     /**
@@ -120,9 +139,20 @@ class RaceHandler
         }
 
         $race = $form->getData();
-
-        $this->raceRepository->add($race);
-        $this->raceRepository->store();
+        $raceEvent = $this->raceEventRepository->findOneBy([
+            'id' => $race->getRaceEvent()->getId(),
+        ]);
+        
+        $this->raceRepository->beginnTransaction();
+        try {
+            $this->raceRepository->add($race);
+            $this->raceRepository->store();
+            $this->searchIndexService->updateRaceEvent($raceEvent);
+            $this->raceRepository->commit();
+        } catch (Exception $e) {
+            $this->raceRepository->rollback();
+            throw $e;
+        }
 
         $response = $this->apiResponseBuilder->buildEmptyResponse(204);
         if ($method === 'POST') {
@@ -148,8 +178,20 @@ class RaceHandler
             return $this->apiResponseBuilder->buildNotFoundResponse('Race not found');
         }
 
-        $this->raceRepository->remove($race);
-        $this->raceRepository->store();
+        $raceEvent = $this->raceEventRepository->findOneBy([
+            'id' => $race->getRaceEvent()->getId(),
+        ]);
+
+        $this->raceRepository->beginnTransaction();
+        try {
+            $this->raceRepository->remove($race);
+            $this->raceRepository->store();
+            $this->searchIndexService->updateRaceEvent($raceEvent);
+            $this->raceRepository->commit();
+        } catch (Exception $e) {
+            $this->raceRepository->rollback();
+            throw $e;
+        }
 
         return $this->apiResponseBuilder->buildEmptyResponse(204);
     }

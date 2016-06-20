@@ -37,8 +37,10 @@ class SearchMappingCommand extends ContainerAwareCommand
 
     protected function populateRaceEventMapping()
     {
+        $indexName = $this->getContainer()->getParameter('search_index_name');
+        
         $params = [
-            'index' => 'search',
+            'index' => $indexName,
             'type' => 'race_event',
             'body' => [
                 'race_event' => [

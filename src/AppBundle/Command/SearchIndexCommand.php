@@ -24,6 +24,7 @@ class SearchIndexCommand extends ContainerAwareCommand
     {   
         $this->em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $this->client = $this->getContainer()->get('vendor.elasticsearch.client');
+        $this->searchIndexService = $this->getContainer()->get('app.services.searchIndex');
         $type = $input->getArgument('type');
         $id = $input->getArgument('id');
         
@@ -33,7 +34,7 @@ class SearchIndexCommand extends ContainerAwareCommand
                 break;
             case 'all':
                 $this->indexRaceEventType($output);
-                break;                                    
+                break;
             default:
                 $output->writeln(sprintf('<error>Unknown type "%s"</error>', $type));
                 break;
@@ -55,42 +56,7 @@ class SearchIndexCommand extends ContainerAwareCommand
         }
         
         foreach ($raceEvents as $raceEvent) {
-                
-            $doc = [
-                'id' => $raceEvent->getOid(),
-                'name' => $raceEvent->getName(),
-                'about' => $raceEvent->getAbout(),
-                'website' => $raceEvent->getWebsite(),
-                'coords' => $raceEvent->getCoordsAsArray(),
-                'location' => $raceEvent->getLocation(),
-                'races' => [],
-                'type' => [],
-                'category' => [],
-            ];
-            
-            foreach ($raceEvent->getRaces() as $race) {
-                $doc['races'][] = [
-                    'id' => $race->getOid(),
-                    'name' => $race->getName(),
-                    'date' => $race->getDateAsString(),
-                    'type' => $race->getType(),
-                    'category' => $race->getCategory(),
-                    'distance' => $race->getDistance(),
-                ];
-                $doc['type'][] = $race->getType();
-                $doc['category'][] = $race->getCategory();
-            }
-            
-            $doc['type'] = array_unique($doc['type']);
-            $doc['category'] = array_unique($doc['category']);
-
-            $params = [
-                'body' => $doc,
-                'index' => 'search',
-                'type' => 'race_event',
-                'id' => $raceEvent->getOid(),
-            ];
-            $this->client->index($params);
+            $this->searchIndexService->createRaceEvent($raceEvent);
         }
         
         $output->writeln(sprintf('%s document(s) were indexed for type  "race_event"', count($raceEvents)));

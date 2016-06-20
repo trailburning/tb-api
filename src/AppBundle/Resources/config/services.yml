@@ -140,6 +140,7 @@ services:
             - '@app.services.response_builder'
             - '@form.factory'
             - '@router'
+            - '@app.services.searchIndex'
     app.services.response_builder:
         class: AppBundle\Services\APIResponseBuilder
         arguments:
@@ -158,6 +159,8 @@ services:
             - '@app.services.response_builder'
             - '@form.factory'
             - '@router'
+            - '@app.services.searchIndex'
+            - '@app.repository.race_event'
     app.repository.race:
         class: AppBundle\Repository\RaceRepository
         arguments:
@@ -186,3 +189,10 @@ services:
         class: AppBundle\Services\SearchService
         arguments:
             - '@vendor.elasticsearch.client'
+            - '%search_index_name%'
+    
+    app.services.searchIndex:
+        class: AppBundle\Services\SearchIndexService
+        arguments:
+            - '@vendor.elasticsearch.client'
+            - '%search_index_name%'

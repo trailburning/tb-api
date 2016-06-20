@@ -5,6 +5,11 @@ namespace Tests\AppBundle;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\HttpFoundation\Response;
 
 abstract class BaseWebTestCase extends WebTestCase
 {   
@@ -129,5 +134,25 @@ abstract class BaseWebTestCase extends WebTestCase
         }
 
         return $assetCategory;
+    }
+    
+    protected function updateSearchIndex() 
+    {   
+        $kernel = $this->getContainer()->get('kernel');
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+           'command' => 'app:search:index',
+           'type' => 'race_event',
+           '--env' => 'test',
+        ));
+
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        $content = $output->fetch();
+
+        return new Response($content);        
     }
 }

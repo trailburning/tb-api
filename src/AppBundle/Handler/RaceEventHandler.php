@@ -2,12 +2,14 @@
 
 namespace AppBundle\Handler;
 
+use Exception;
 use AppBundle\Model\APIResponse;
 use AppBundle\Services\APIResponseBuilder;
 use AppBundle\Repository\RaceEventRepository;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use AppBundle\Entity\RaceEvent;
+use AppBundle\Services\SearchIndexService;
 
 /**
  * RaceEvent handler.
@@ -23,6 +25,7 @@ class RaceEventHandler
      * @var APIResponseBuilder
      */
     private $apiResponseBuilder;
+
     /**
      * @var FormFactoryInterface
      */
@@ -34,21 +37,29 @@ class RaceEventHandler
     private $router;
 
     /**
+     * @var SearchIndexService
+     */
+    private $searchIndexService;
+
+    /**
      * @param RaceEventRepository  $raceEventRepository
      * @param APIResponseBuilder   $apiResponseBuilder
      * @param FormFactoryInterface $formFactory
      * @param Router               $router
+     * @param SearchIndexService   $searchIndexService
      */
     public function __construct(
         RaceEventRepository $raceEventRepository,
         APIResponseBuilder $apiResponseBuilder,
         FormFactoryInterface $formFactory,
-        Router $router
+        Router $router,
+        SearchIndexService $searchIndexService
     ) {
         $this->raceEventRepository = $raceEventRepository;
         $this->apiResponseBuilder = $apiResponseBuilder;
         $this->formFactory = $formFactory;
         $this->router = $router;
+        $this->searchIndexService = $searchIndexService;
     }
 
     /**
@@ -101,9 +112,21 @@ class RaceEventHandler
         }
 
         $raceEvent = $form->getData();
-
-        $this->raceEventRepository->add($raceEvent);
-        $this->raceEventRepository->store();
+        
+        $this->raceEventRepository->beginnTransaction();
+        try {
+            $this->raceEventRepository->add($raceEvent);
+            $this->raceEventRepository->store();
+            if ($method === 'POST') {
+                $this->searchIndexService->createRaceEvent($raceEvent);
+            } else {
+                $this->searchIndexService->updateRaceEvent($raceEvent);
+            }
+            $this->raceEventRepository->commit();
+        } catch (Exception $e) {
+            $this->raceEventRepository->rollback();
+            throw $e;
+        }
 
         $response = $this->apiResponseBuilder->buildEmptyResponse(204);
         if ($method === 'POST') {
@@ -129,8 +152,16 @@ class RaceEventHandler
             return $this->apiResponseBuilder->buildNotFoundResponse('RaceEvent not found');
         }
 
-        $this->raceEventRepository->remove($raceEvent);
-        $this->raceEventRepository->store();
+        $this->raceEventRepository->beginnTransaction();
+        try {
+            $this->raceEventRepository->remove($raceEvent);
+            $this->raceEventRepository->store();
+            $this->searchIndexService->deleteRaceEvent($raceEvent);
+            $this->raceEventRepository->commit();
+        } catch (Exception $e) {
+            $this->raceEventRepository->rollback();
+            throw $e;
+        }
 
         return $this->apiResponseBuilder->buildEmptyResponse(204);
     }

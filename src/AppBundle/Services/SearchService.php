@@ -24,13 +24,20 @@ class SearchService
      * @var Client
      */
     private $client;
+    
+    /**
+     * @var string
+     */
+    private $indexName;
 
     /**
      * @param Client $client
+     * @param string $indexName
      */
-    public function __construct(Client $client)
+    public function __construct(Client $client, string $indexName)
     {
         $this->client = $client;
+        $this->indexName = $indexName;
     }
 
     public function search(Search $search)
@@ -116,7 +123,7 @@ class SearchService
         $searchQuery->addQuery($boolQuery);
 
         $params = [
-            'index' => 'search',
+            'index' => $this->indexName,
             'type' => 'race_event',
             'body' => $searchQuery->toArray(),
         ];

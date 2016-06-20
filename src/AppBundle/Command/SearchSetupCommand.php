@@ -30,7 +30,7 @@ class SearchSetupCommand extends ContainerAwareCommand
 
     protected function setupSearchIndex(OutputInterface $output)
     {
-        $indexName = 'search';
+        $indexName = $this->getContainer()->getParameter('search_index_name');
         
         $this->createIndexIfNotExist($indexName, $output);
         $this->closeIndex($indexName);
