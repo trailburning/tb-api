@@ -206,9 +206,11 @@ class RaceHandler
             return $parameters;
         }
         
-        if ($parameters['distance'] >= 42600) {
+        if ($parameters['distance'] >= 45000) {
+            $parameters['category'] = RaceCategory::ULTRA_MARATHON;
+        } elseif ($parameters['distance'] >= 40000) {
             $parameters['category'] = RaceCategory::MARATHON;
-        } elseif ($parameters['distance'] >= 21300) {
+        } elseif ($parameters['distance'] >= 20000) {
             $parameters['category'] = RaceCategory::HALF_MARATHON;
         } elseif ($parameters['distance'] >= 10000) {
             $parameters['category'] = RaceCategory::TEN_K;

@@ -111,7 +111,7 @@ class RaceController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(name="name", type="string", in="formData", required="true", description="The name of the race"),
      *     @SWG\Parameter(name="date", type="string", in="formData", required="true", description="The date of the race (yyyy-MM-dd)"),
      *     @SWG\Parameter(name="type", type="string", in="formData", description="The type of the race (road)"),
-     *     @SWG\Parameter(name="category", type="string", in="formData", description="The category of the race (marathon, half_marathon, 10k, 5k)"),
+     *     @SWG\Parameter(name="category", type="string", in="formData", description="The category of the race (ultra_marathon, marathon, half_marathon, 10k, 5k)"),
      *     @SWG\Parameter(name="distance", type="int", in="formData", description="The distance of the race in meters."),
      *     @SWG\Response(response=201, description="Successful operation. The Location header contains a link to the new race.",
      *        @SWG\Header(header="location", type="string", description="Link to the new race.")),
