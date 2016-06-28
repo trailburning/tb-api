@@ -141,6 +141,7 @@ services:
             - '@form.factory'
             - '@router'
             - '@app.services.searchIndex'
+            - '@app.services.mapbox_api'
     app.services.response_builder:
         class: AppBundle\Services\APIResponseBuilder
         arguments:

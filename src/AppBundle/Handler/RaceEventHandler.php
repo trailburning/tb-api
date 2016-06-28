@@ -10,6 +10,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use AppBundle\Entity\RaceEvent;
 use AppBundle\Services\SearchIndexService;
+use AppBundle\Services\MapboxAPI;
 
 /**
  * RaceEvent handler.
@@ -40,6 +41,12 @@ class RaceEventHandler
      * @var SearchIndexService
      */
     private $searchIndexService;
+    
+    /**
+     * @var MapboxAPI
+     */
+    private $mapboxAPI;
+    
 
     /**
      * @param RaceEventRepository  $raceEventRepository
@@ -47,19 +54,22 @@ class RaceEventHandler
      * @param FormFactoryInterface $formFactory
      * @param Router               $router
      * @param SearchIndexService   $searchIndexService
+     * @param MapboxAPI            $mapboxAPI    
      */
     public function __construct(
         RaceEventRepository $raceEventRepository,
         APIResponseBuilder $apiResponseBuilder,
         FormFactoryInterface $formFactory,
         Router $router,
-        SearchIndexService $searchIndexService
+        SearchIndexService $searchIndexService,
+        MapboxAPI $mapboxAPI
     ) {
         $this->raceEventRepository = $raceEventRepository;
         $this->apiResponseBuilder = $apiResponseBuilder;
         $this->formFactory = $formFactory;
         $this->router = $router;
         $this->searchIndexService = $searchIndexService;
+        $this->mapboxAPI = $mapboxAPI;
     }
 
     /**
@@ -112,6 +122,7 @@ class RaceEventHandler
         }
 
         $raceEvent = $form->getData();
+        $this->setLocationFromCoords($raceEvent, $parameters);
         
         $this->raceEventRepository->beginnTransaction();
         try {
@@ -136,6 +147,22 @@ class RaceEventHandler
         }
 
         return $response;
+    }
+    
+    /**
+     * @param RaceEvent $raceEvent 
+     * @param array $parameters 
+     */
+    private function setLocationFromCoords(RaceEvent $raceEvent, array $parameters)
+    {
+        if (isset($parameters['location'])) {
+            return;
+        }
+        
+        if (isset($parameters['coords']) && $raceEvent->getCoords() !== null) {
+            $region = $this->mapboxAPI->reverseGeocode($raceEvent->getCoords());
+            $raceEvent->setLocation($region);
+        }
     }
 
     /**
