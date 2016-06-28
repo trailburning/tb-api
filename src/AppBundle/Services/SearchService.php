@@ -16,7 +16,7 @@ use AppBundle\Model\Search;
 use AppBundle\DBAL\Types\SearchOrder;
 
 /**
- * Class MediaService.
+ * Class SearchService.
  */
 class SearchService
 {

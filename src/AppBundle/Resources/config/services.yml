@@ -196,3 +196,16 @@ services:
         arguments:
             - '@vendor.elasticsearch.client'
             - '%search_index_name%'
+    
+    app.services.mapbox_api:
+        class: AppBundle\Services\MapboxAPI
+        arguments:
+            - '@vendor.guzzle.mapbox_api_client'
+            - '%mapbox_api_token%'
+
+    vendor.guzzle.mapbox_api_client:
+        class: GuzzleHttp\Client
+        arguments: 
+            -
+                base_uri: 'https://api.mapbox.com'
+                timeout: 10
