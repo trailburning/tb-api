@@ -27,6 +27,6 @@ class MapboxAPITest extends BaseWebTestCase
 
         $result = $mapbox->reverseGeocode($point);
         
-        $this->assertEquals($result, 'Berlin, Germany');
+        $this->assertEquals($result, 'Berlin, Berlin, Germany'');
     }
 }
