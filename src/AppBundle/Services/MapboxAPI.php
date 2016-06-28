@@ -48,8 +48,9 @@ class MapboxAPI
         }
 
         $body = (string) $response->getBody();
-        $response = json_decode($body);
-        $region = $this->parseRegionInResponse($response);
+        $responseData = json_decode($body);
+        
+        $region = $this->parseRegionInResponse($responseData);
         
         return $region;
     }
@@ -63,10 +64,10 @@ class MapboxAPI
         $features = $this->getFeaturesFromResponse($response);
         
         $region = '';
-        if (isset($features['region'])) {
-            $region = $features['region']->place_name;
-        } elseif (isset($features['place'])) {
+        if (isset($features['place'])) {
             $region = $features['place']->place_name;
+        } elseif (isset($features['region'])) {
+            $region = $features['region']->place_name;
         } elseif (count($features) > 0) {
             $region = array_pop($features)->place_name;
         }
