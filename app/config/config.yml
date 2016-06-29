@@ -16,6 +16,7 @@ imports:
 parameters:
     locale: en
     search_index_name: 'search'
+    autosuggest_index_name: 'autosuggest'
 
 framework:
     #esi:             ~

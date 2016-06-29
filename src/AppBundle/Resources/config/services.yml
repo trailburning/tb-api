@@ -142,6 +142,7 @@ services:
             - '@router'
             - '@app.services.searchIndex'
             - '@app.services.mapbox_api'
+            - '@app.region.repository'
     app.services.response_builder:
         class: AppBundle\Services\APIResponseBuilder
         arguments:
@@ -210,3 +211,9 @@ services:
             -
                 base_uri: 'https://api.mapbox.com'
                 timeout: 10
+    app.region.repository:
+        class: AppBundle\Repository\RegionRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\Region

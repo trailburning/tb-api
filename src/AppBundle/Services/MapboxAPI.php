@@ -32,9 +32,9 @@ class MapboxAPI
 
     /**
      * @param Point $point 
-     * @return string
+     * @return object|null
      */
-    public function reverseGeocode(Point $point) : string
+    public function reverseGeocode(Point $point)
     {
         $url = sprintf('/geocoding/v5/mapbox.places/%s,%s.json?access_token=%s', 
             $point->getLongitude(),
@@ -50,29 +50,32 @@ class MapboxAPI
         $body = (string) $response->getBody();
         $responseData = json_decode($body);
         
-        $region = $this->parseRegionInResponse($responseData);
+        $feature = $this->parseFeatureInResponse($responseData);
         
-        return $region;
+        return $feature;
     }
     
     /**
      * @param object $response 
-     * @return string
+     * @return object|null
      */
-    private function parseRegionInResponse($response) : string
+    private function parseFeatureInResponse($response)
     {
         $features = $this->getFeaturesFromResponse($response);
         
-        $region = '';
-        if (isset($features['place'])) {
-            $region = $features['place']->place_name;
-        } elseif (isset($features['region'])) {
-            $region = $features['region']->place_name;
-        } elseif (count($features) > 0) {
-            $region = array_pop($features)->place_name;
+        if (count($features) === 0) {
+            return;
         }
         
-        return $region;
+        if (isset($features['place'])) {
+            $feature = $features['place'];
+        } elseif (isset($features['region'])) {
+            $feature = $features['region'];
+        } elseif (count($features) > 0) {
+            $feature = array_pop($features);
+        }
+        
+        return $feature;
     }
     
     /**

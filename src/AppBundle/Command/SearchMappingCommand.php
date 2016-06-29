@@ -29,11 +29,74 @@ class SearchMappingCommand extends ContainerAwareCommand
                 $this->populateRaceEventMapping();
                 $output->writeln(sprintf('Mapping for type "%s" was updated', $type));
                 break;
+            case 'autosuggest':
+                $this->populateAutosuggestMapping();
+                $output->writeln(sprintf('Mapping for type "%s" was updated', $type));
+                break;
             default:
                 $output->writeln(sprintf('<error>Unknown type "%s"</error>', $type));
                 break;
         }
     }
+    
+    protected function populateAutosuggestMapping()
+    {   
+        $indexName = $this->getContainer()->getParameter('autosuggest_index_name');
+        
+        $params = [
+            'index' => $indexName,
+            'type' => 'location',
+            'body' => [
+                'location' => [
+                    'dynamic' => 'strict',
+                    'properties' => [
+                        'id' => [
+                            'type' => 'string', 
+                            'index' => 'not_analyzed',
+                        ],
+                        'suggest_text' => [
+                            'type' => 'string',
+                            'term_vector' => 'with_positions_offsets',
+                            'copy_to' => [
+                                'suggest_engram_part', 
+                                'suggest_engram_full', 
+                                'suggest_phon'
+                            ],
+                        ],
+                        'suggest_engram_part' => [
+                            'type' => 'string',
+                            'index' => 'analyzed',
+                            'store' => true,
+                            'term_vector' => 'with_positions_offsets',
+                            'analyzer' => 'autocomplete_engram_part',
+                            'search_analyzer' => 'autocomplete_engram_part_q',
+                        ],
+                        'suggest_engram_full' => [
+                            'type' => 'string',
+                            'index' => 'analyzed',
+                            'store' => true,
+                            'term_vector' => 'with_positions_offsets',
+                            'analyzer' => 'autocomplete_engram_full',
+                            'search_analyzer' => 'autocomplete_engram_full_q',
+                        ],
+                        'suggest_phon' => [
+                            'type' => 'string',
+                            'index' => 'analyzed',
+                            'analyzer' => 'phonetic_text',
+                        ],
+                        'name' => [
+                            'type' => 'string', 
+                        ],
+                        'coords' => [
+                            'type' => 'geo_point',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        
+        $this->client->indices()->putMapping($params);
+    } 
 
     protected function populateRaceEventMapping()
     {

@@ -21,3 +21,4 @@ doctrine:
         
 parameters:
     search_index_name: 'search_test'
+    autosuggest_index_name: 'autosuggest_test'

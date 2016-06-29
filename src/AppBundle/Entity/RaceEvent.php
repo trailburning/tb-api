@@ -92,6 +92,14 @@ class RaceEvent
      * @Serializer\Expose
      */
     private $location;
+    
+    /**
+     * @var Region
+     *
+     * @ORM\ManyToOne(targetEntity="Region", inversedBy="raceEvents")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $region;
 
     /**
      * ################################################################################################################.
@@ -284,5 +292,24 @@ class RaceEvent
     public function getLocation()
     {
         return $this->location;
+    }
+    
+    /**
+     * @param Region $region
+     * @return self
+     */
+    public function setRegion(Region $region)
+    {
+        $this->region = $region;
+    
+        return $this;
+    }
+
+    /**
+     * @return Region
+     */
+    public function getRegion()
+    {
+        return $this->region;
     }
 }

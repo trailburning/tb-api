@@ -32,8 +32,12 @@ class SearchIndexCommand extends ContainerAwareCommand
             case 'race_event':
                 $this->indexRaceEventType($output, $id);
                 break;
+            case 'autosuggest_region':
+                $this->indexAutosuggestRegionType($output, $id);
+                break;
             case 'all':
                 $this->indexRaceEventType($output);
+                $this->indexAutosuggestRegionType($output, $id);
                 break;
             default:
                 $output->writeln(sprintf('<error>Unknown type "%s"</error>', $type));
@@ -59,7 +63,43 @@ class SearchIndexCommand extends ContainerAwareCommand
             $this->searchIndexService->createRaceEvent($raceEvent);
         }
         
-        $output->writeln(sprintf('%s document(s) were indexed for type  "race_event"', count($raceEvents)));
+        $output->writeln(sprintf('%s document(s) were indexed for type "race_event"', count($raceEvents)));
+        $output->writeln('OK');
+    }
+    
+    protected function indexAutosuggestRegionType($output, $id = null)
+    {        
+        $indexName = $this->getContainer()->getParameter('autosuggest_index_name');
+        
+        if ($id == null) {
+            $regions = $this->em->createQuery('
+                    SELECT r FROM AppBundle:Region r')
+                ->getResult();
+        } else {
+            $regions = $this->em->createQuery('
+                    SELECT r FROM AppBundle:Region r
+                    WHERE r.id = :id')
+                ->setParameter('id', $id)
+                ->getResult();
+        }
+        
+        foreach ($regions as $region) {
+            $doc = [
+                'suggest_text' => $region->getName(),
+                'name' => $region->getName(),
+                'coords' => $region->getCoordsAsArray(),
+            ];
+
+            $params = [
+                'body' => $doc,
+                'index' => $indexName,
+                'type' => 'location',
+                'id' => $region->getId(),
+            ];
+            $this->client->index($params);
+        }
+        
+        $output->writeln(sprintf('%s document(s) were indexed for type "autosuggest_location"', count($regions)));
         $output->writeln('OK');
     }
 }

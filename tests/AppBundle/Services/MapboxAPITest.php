@@ -21,12 +21,9 @@ class MapboxAPITest extends BaseWebTestCase
         $handler = HandlerStack::create($mock);
         $client = new Client(['handler' => $handler]);
         $mapbox = new MapboxAPI($client, 'token');
-        
         $point = new Point(13.221316, 52.489695, 4326);
-        
 
         $result = $mapbox->reverseGeocode($point);
-        
-        $this->assertEquals($result, 'Berlin, Berlin, Germany'');
+        $this->assertEquals($result->place_name, 'Berlin, Berlin, Germany');
     }
 }
