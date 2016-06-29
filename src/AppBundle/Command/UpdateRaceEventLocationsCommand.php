@@ -23,7 +23,7 @@ class UpdateRaceEventLocationsCommand extends ContainerAwareCommand
     {   
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $mapboxAPI = $this->getContainer()->get('app.services.mapbox_api');
-        $regionRepository = $this->getContainer()->get('app.repository.region');
+        $regionRepository = $this->getContainer()->get('app.region.repository');
         $id = $input->getArgument('id');
         
         if ($id == null) {
@@ -40,7 +40,7 @@ class UpdateRaceEventLocationsCommand extends ContainerAwareCommand
         
         foreach ($raceEvents as $raceEvent) {
             $regionFeature = $mapboxAPI->reverseGeocode($raceEvent->getCoords());
-            $region = $this->regionRepository->getOrCreateRegion($regionFeature->id, $regionFeature->place_name, $regionFeature->center[0], $regionFeature->center[1]);
+            $region = $regionRepository->getOrCreateRegion($regionFeature->id, $regionFeature->place_name, $regionFeature->center[0], $regionFeature->center[1]);
             
             $raceEvent->setLocation($regionFeature->place_name);
             $raceEvent->setRegion($region);
