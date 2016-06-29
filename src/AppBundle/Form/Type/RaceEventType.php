@@ -20,6 +20,7 @@ class RaceEventType extends AbstractType
             ->add('name')
             ->add('about', TextareaType::class)
             ->add('website')
+            ->add('email')
             ->add($builder
                 ->create('coords')
                 ->addModelTransformer(new GeometryPointTransformer()))

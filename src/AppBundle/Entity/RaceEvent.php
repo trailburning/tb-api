@@ -64,6 +64,15 @@ class RaceEvent
      * @Serializer\Expose
      */
     private $website;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255, nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     */
+    private $email;
 
     /**
      * @var Point point
@@ -224,6 +233,30 @@ class RaceEvent
     public function getWebsite()
     {
         return $this->website;
+    }
+
+    /**
+     * Set email.
+     *
+     * @param string $email
+     *
+     * @return RaceEvent
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email.
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     /**
