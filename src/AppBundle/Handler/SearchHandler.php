@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use AppBundle\Model\Search;
 
 /**
- * RaceEvent handler.
+ * SearchHandler handler.
  */
 class SearchHandler
 {

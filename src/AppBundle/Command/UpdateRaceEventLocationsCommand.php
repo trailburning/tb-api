@@ -46,7 +46,7 @@ class UpdateRaceEventLocationsCommand extends ContainerAwareCommand
             $raceEvent->setRegion($region);
             
             $em->persist($raceEvent);
-            usleep(100000);;
+            usleep(100000);
         }
         $em->flush();
         

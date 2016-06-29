@@ -1,3 +1,8 @@
+autosuggest:
+    resource: "AppBundle\Controller\AutosuggestController"
+    type: rest
+    prefix: /v2
+
 search:
     resource: "AppBundle\Controller\SearchController"
     type: rest
