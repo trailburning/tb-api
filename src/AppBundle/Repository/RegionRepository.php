@@ -15,21 +15,22 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
  */
 class RegionRepository extends BaseRepository
 {
-    public function getOrCreateRegion($mapboxID, $name, $latitude, $longitude) 
+    public function getOrCreateRegion($mapboxID, $name, $longitude, $latitude) 
     {
         $region = $this->findOneBy([
             'mapboxID' => $mapboxID,
         ]);
         
         if ($region === null) {
-            $point = new Point($longitude, $latitude, 4326);
             $region = new Region();
             $region->setName($name);
             $region->setMapboxID($mapboxID);
-            $region->setCoords($point);
-            $this->add($region);
-            $this->store();
         }
+        
+        $point = new Point($longitude, $latitude, 4326);
+        $region->setCoords($point);
+        $this->add($region);
+        $this->store();
         
         return $region;
     }
