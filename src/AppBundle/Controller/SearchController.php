@@ -39,13 +39,25 @@ class SearchController extends Controller implements ClassResourceInterface
      *         type="string",
      *     ),
      *     @SWG\Parameter(
+     *         description="Filter results by distance from in metres",
+     *         in="query",
+     *         name="distanceFrom",
+     *         type="string",
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Filter results by distance to in metres",
+     *         in="query",
+     *         name="distanceTo",
+     *         type="string",
+     *     ),
+     *     @SWG\Parameter(
      *         description="Filter results by GeoData Point in the format '(LNG, LAT)'",
      *         in="query",
      *         name="coords",
      *         type="string",
      *     ),
      *     @SWG\Parameter(
-     *         description="Sets a distance in meters to filter results for the 'coords' parameter",
+     *         description="Sets a distance in metres to filter results for the 'coords' parameter",
      *         in="query",
      *         name="distance",
      *         type="integer",

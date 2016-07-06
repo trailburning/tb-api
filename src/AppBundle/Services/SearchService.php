@@ -48,6 +48,27 @@ class SearchService
         $boolQuery = new BoolQuery();
         $boolQuery->addParameter('minimum_should_match', 1);
 
+        $this->handleSearchParameterQ($boolQuery, $search);
+        $this->handleSearchParameterDateFromTo($boolQuery, $search);
+        $this->handleSearchParameterDistanceFromTo($boolQuery, $search);
+        $this->handleSearchParameterCoords($boolQuery, $search);
+        $this->handleSearchParameterType($boolQuery, $search);
+        $this->handleSearchParameterCategory($boolQuery, $search);
+        $this->handleSearchSort($searchQuery, $search);
+
+        $searchQuery->addQuery($boolQuery);
+
+        $params = [
+            'index' => $this->indexName,
+            'type' => 'race_event',
+            'body' => $searchQuery->toArray(),
+        ];
+
+        return $this->client->search($params);
+    }
+    
+    private function handleSearchParameterQ(BoolQuery $boolQuery, Search $search) : BoolQuery
+    {
         if ($search->getQ() !== null) {
             $queryTerm = new MultiMatchQuery([
                 'name',
@@ -64,7 +85,12 @@ class SearchService
             $nestedRace = new NestedQuery('races', $queryRace);
             $boolQuery->add($nestedRace, BoolQuery::SHOULD);
         }
-
+        
+        return $boolQuery;
+    }
+    
+    private function handleSearchParameterDateFromTo(BoolQuery $boolQuery, Search $search) : BoolQuery
+    {
         if ($search->getDateFrom() !== null || $search->getDateTo() !== null) {
             $dateRange = [];
             if ($search->getDateFrom() !== null) {
@@ -77,7 +103,31 @@ class SearchService
             $nestedDate = new NestedQuery('races', $queryDate);
             $boolQuery->add($nestedDate, BoolQuery::FILTER);
         }
-
+        
+        return $boolQuery;
+    }
+    
+    private function handleSearchParameterDistanceFromTo(BoolQuery $boolQuery, Search $search) : BoolQuery
+    {
+        if ($search->getDistanceFrom() !== null || $search->getDistanceTo() !== null) {
+            $distanceRange = [];
+            if ($search->getDistanceFrom() !== null) {
+                $distanceRange[RangeQuery::GTE] = $search->getDistanceFrom();
+            }
+            if ($search->getDistanceTo() !== null) {
+                $distanceRange[RangeQuery::LTE] = $search->getDistanceTo();
+            }
+            $queryDistance = new RangeQuery('races.distance', $distanceRange);
+            dump($distanceRange);
+            $nestedDistance = new NestedQuery('races', $queryDistance);
+            $boolQuery->add($nestedDistance, BoolQuery::FILTER);
+        }
+        
+        return $boolQuery;
+    }
+    
+    private function handleSearchParameterCoords(BoolQuery $boolQuery, Search $search) : BoolQuery
+    {
         if ($search->getCoords() !== null) {
             $coordsValue = [
                 'lat' => $search->getCoords()->getLatitude(),
@@ -90,19 +140,34 @@ class SearchService
             $queryLocation = new GeoDistanceQuery('coords', $distanceValue, $coordsValue);
             $boolQuery->add($queryLocation, BoolQuery::FILTER);
         }
-
+        
+        return $boolQuery;
+    }
+    
+    private function handleSearchParameterType(BoolQuery $boolQuery, Search $search) : BoolQuery
+    {
         if ($search->getType() !== null) {
             $queryType = new MatchQuery('races.type', $search->getType());
             $nestedType = new NestedQuery('races', $queryType);
             $boolQuery->add($nestedType, BoolQuery::FILTER);
         }
+    
+        return $boolQuery;
+    }
 
+    private function handleSearchParameterCategory(BoolQuery $boolQuery, Search $search) : BoolQuery
+    {
         if ($search->getCategory() !== null) {
             $queryCategory = new MatchQuery('races.category', $search->getCategory());
             $nestedCategory = new NestedQuery('races', $queryCategory);
             $boolQuery->add($nestedCategory, BoolQuery::FILTER);
         }
+    
+        return $boolQuery;
+    }
 
+    private function handleSearchSort(SearchQuery $searchQuery, Search $search) : SearchQuery
+    {
         if ($this->sortByDistance($search->getCoords(), $search->getSort())) {
             if ($search->getOrder() === null) {
                 $search->setOrder(SearchOrder::ASC);
@@ -119,16 +184,8 @@ class SearchService
             $fieldSort = new FieldSort('_score', $search->getOrder());
             $searchQuery->addSort($fieldSort);
         }
-
-        $searchQuery->addQuery($boolQuery);
-
-        $params = [
-            'index' => $this->indexName,
-            'type' => 'race_event',
-            'body' => $searchQuery->toArray(),
-        ];
-
-        return $this->client->search($params);
+    
+        return $searchQuery;
     }
 
     private function sortByDistance(Point $coords = null, string $sort = null)

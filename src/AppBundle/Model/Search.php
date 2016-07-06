@@ -24,6 +24,16 @@ class Search
      * @var string
      */
     private $dateTo;
+    
+    /**
+     * @var string
+     */
+    private $distanceFrom;
+
+    /**
+     * @var string
+     */
+    private $distanceTo;
 
     /**
      * @var Point
@@ -272,6 +282,54 @@ class Search
     public function setOrder($order)
     {
         $this->order = $order;
+
+        return $this;
+    }
+    
+    /**
+     * Get the value of Distance From.
+     *
+     * @return string
+     */
+    public function getDistanceFrom()
+    {
+        return $this->distanceFrom;
+    }
+
+    /**
+     * Set the value of Distance From.
+     *
+     * @param string distanceFrom
+     *
+     * @return self
+     */
+    public function setDistanceFrom($distanceFrom)
+    {
+        $this->distanceFrom = $distanceFrom;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Distance To.
+     *
+     * @return string
+     */
+    public function getDistanceTo()
+    {
+        return $this->distanceTo;
+    }
+
+    /**
+     * Set the value of Distance To.
+     *
+     * @param string distanceTo
+     *
+     * @return self
+     */
+    public function setDistanceTo($distanceTo)
+    {
+        $this->distanceTo = $distanceTo;
 
         return $this;
     }

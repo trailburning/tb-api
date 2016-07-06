@@ -25,6 +25,8 @@ class SearchType extends AbstractType
             ->add('dateTo', DateType::class, [
                 'widget' => 'single_text',
             ])
+            ->add('distanceFrom', IntegerType::class)
+            ->add('distanceTo', IntegerType::class)
             ->add($builder
                 ->create('coords')
                 ->addModelTransformer(new GeometryPointTransformer()))
