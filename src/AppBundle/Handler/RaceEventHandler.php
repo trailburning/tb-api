@@ -130,7 +130,7 @@ class RaceEventHandler
         }
 
         $raceEvent = $form->getData();
-        $this->setRegionFromCoords($raceEvent, $parameters);
+        $this->setRegionsFromCoords($raceEvent, $parameters);
 
         $this->raceEventRepository->beginnTransaction();
         try {
@@ -161,24 +161,36 @@ class RaceEventHandler
      * @param RaceEvent $raceEvent
      * @param array     $parameters
      */
-    private function setRegionFromCoords(RaceEvent $raceEvent, array $parameters)
+    private function setRegionsFromCoords(RaceEvent $raceEvent, array $parameters)
     {
         if (!isset($parameters['coords']) || $raceEvent->getCoords() === null) {
             return;
         }
 
-        $regionFeature = $this->mapboxAPI->reverseGeocode($raceEvent->getCoords());
-
-        if ($regionFeature === null) {
-            return;
-        }
-
+        $regionFeatures = $this->mapboxAPI->reverseGeocode($raceEvent->getCoords());
         if (!isset($parameters['location'])) {
-            $raceEvent->setLocation($regionFeature->place_name);
+            $raceEvent->setLocation($this->mapboxAPI->getLocationNameFromFeatures($regionFeatures));
         }
 
-        $region = $this->regionRepository->getOrCreateRegion($regionFeature->id, $regionFeature->place_name, $regionFeature->center[0], $regionFeature->center[1]);
-        $raceEvent->setRegion($region);
+        $regions = [];
+        foreach ($regionFeatures as $regionFeature) {
+            $bboxRadius = $this->mapboxAPI->calculateBoundingBoxRadius(
+                $regionFeature->bbox[0], 
+                $regionFeature->bbox[1], 
+                $regionFeature->bbox[2], 
+                $regionFeature->bbox[3]
+            );
+            $region = $this->regionRepository->getOrCreateRegion(
+                $regionFeature->id, 
+                $regionFeature->place_name, 
+                $regionFeature->center[0], 
+                $regionFeature->center[1], 
+                $bboxRadius
+            );
+            $regions[] = $region;
+        }
+        
+        $raceEvent->setRegions($regions);
     }
 
     /**

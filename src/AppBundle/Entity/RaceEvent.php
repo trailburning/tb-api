@@ -109,6 +109,12 @@ class RaceEvent
      * @ORM\JoinColumn(nullable=true)
      */
     private $region;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Region", inversedBy="raceEvents")
+     * @ORM\JoinTable(name="race_event_region")
+     */
+    private $regions;
 
     /**
      * ################################################################################################################.
@@ -121,6 +127,7 @@ class RaceEvent
     {
         $this->oid = str_replace('.', '', uniqid(null, true));
         $this->races = new ArrayCollection();
+        $this->regions = new ArrayCollection();
     }
 
     /**
@@ -344,5 +351,41 @@ class RaceEvent
     public function getRegion()
     {
         return $this->region;
+    }
+    
+    /**
+     * @return ArrayCollection
+     */
+    public function getRegions()
+    {
+        return $this->regions;
+    }
+
+    /**
+     * @param array $regions 
+     * @return self
+     */
+    function setRegions($regions) {
+        $this->regions = new ArrayCollection($regions);
+        
+        return $this;
+    }
+    
+    /**
+     * @param Region $region
+     * @return self
+     */
+    public function addRegion(Region $region) {
+        $this->regions->add($region);
+        $regions->addRaceEvent($this);
+    }
+
+    /**
+     * @param Region $region
+     * @return self
+     */
+    public function removeRegion(Region $region) {
+        $this->regions->removeElement($region);
+        $comment->removeRaceEvent($this);
     }
 }

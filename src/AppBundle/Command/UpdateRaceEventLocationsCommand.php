@@ -1,11 +1,11 @@
-<?php 
+<?php
+
 
 namespace AppBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateRaceEventLocationsCommand extends ContainerAwareCommand
@@ -20,12 +20,12 @@ class UpdateRaceEventLocationsCommand extends ContainerAwareCommand
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
-    {   
+    {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $mapboxAPI = $this->getContainer()->get('app.services.mapbox_api');
         $regionRepository = $this->getContainer()->get('app.region.repository');
         $id = $input->getArgument('id');
-        
+
         if ($id == null) {
             $raceEvents = $em->createQuery('
                     SELECT e FROM AppBundle:RaceEvent e')
@@ -37,21 +37,37 @@ class UpdateRaceEventLocationsCommand extends ContainerAwareCommand
                 ->setParameter('id', $id)
                 ->getResult();
         }
-        
+
         foreach ($raceEvents as $raceEvent) {
-            $regionFeature = $mapboxAPI->reverseGeocode($raceEvent->getCoords());
-            $region = $regionRepository->getOrCreateRegion($regionFeature->id, $regionFeature->place_name, $regionFeature->center[0], $regionFeature->center[1]);
+            $regionFeatures = $mapboxAPI->reverseGeocode($raceEvent->getCoords());
+            $regions = [];
             
-            $raceEvent->setLocation($regionFeature->place_name);
+            foreach ($regionFeatures as $regionFeature) {
+                $bboxRadius = $mapboxAPI->calculateBoundingBoxRadius(
+                    $regionFeature->bbox[0],
+                    $regionFeature->bbox[1],
+                    $regionFeature->bbox[2],
+                    $regionFeature->bbox[3]
+                );
+                $region = $regionRepository->getOrCreateRegion(
+                    $regionFeature->id,
+                    $regionFeature->place_name,
+                    $regionFeature->center[0],
+                    $regionFeature->center[1],
+                    $bboxRadius
+                );
+                $regions[] = $region;
+            }
+
+            $raceEvent->setLocation($mapboxAPI->getLocationNameFromFeatures($regionFeatures));
             $raceEvent->setRegion($region);
-            
+
             $em->persist($raceEvent);
             usleep(100000);
         }
         $em->flush();
-        
+
         $output->writeln(sprintf('%s RaceEvent object(s) were updated', count($raceEvents)));
         $output->writeln('OK');
     }
-    
 }

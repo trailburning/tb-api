@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
+use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 
 /**
  * Region
@@ -33,6 +34,28 @@ class Region
     /**
      * @var string
      *
+     * @ORM\Column(name="text", type="string", length=255, nullable=true)
+     */
+    private $text;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="bbox_radius", type="integer", nullable=true)
+     */
+    private $bboxRadius;
+    
+    /**
+     * @var string
+     *
+     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\RegionType")
+     * @ORM\Column(type="RegionType", nullable=true)
+     */
+    private $type;
+    
+    /**
+     * @var string
+     *
      * @ORM\Column(name="mapbox_id", type="string", length=255)
      */
     private $mapboxID;
@@ -48,10 +71,9 @@ class Region
     /**
      * @var RaceEvents[]
      *
-     * @ORM\OneToMany(targetEntity="RaceEvent", mappedBy="region", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="RaceEvent", mappedBy="regions")
      */
     private $raceEvents;
-
 
     /**
      * ################################################################################################################.
@@ -121,6 +143,29 @@ class Region
     }
     
     /**
+     * Set text
+     *
+     * @param string $text
+     * @return self
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+
+        return $this;
+    }
+
+    /**
+     * Get text
+     *
+     * @return string 
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+    
+    /**
      * Set mapboxID
      *
      * @param string $mapboxID
@@ -169,7 +214,6 @@ class Region
      */
     public function addRaceEvent(RaceEvent $raceEvent)
     {
-        $raceEvent->setRegion($this);
         $this->raceEvents[] = $raceEvent;
 
         return $this;
@@ -189,5 +233,43 @@ class Region
     public function getRaceEvents()
     {
         return $this->raceEvents;
+    }
+    
+    /**
+     * @param string $type
+     * @return self
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+    
+    /**
+     * @param string $bboxRadius
+     * @return self
+     */
+    public function setBboxRadius($bboxRadius)
+    {
+        $this->bboxRadius = $bboxRadius;
+    
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBboxRadius()
+    {
+        return $this->bboxRadius;
     }
 }

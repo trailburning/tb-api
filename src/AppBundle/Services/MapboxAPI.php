@@ -34,7 +34,7 @@ class MapboxAPI
      * @param Point $point 
      * @return object|null
      */
-    public function reverseGeocode(Point $point)
+    public function reverseGeocode(Point $point) : array
     {
         $url = sprintf('/geocoding/v5/mapbox.places/%s,%s.json?access_token=%s', 
             $point->getLongitude(),
@@ -50,32 +50,28 @@ class MapboxAPI
         $body = (string) $response->getBody();
         $responseData = json_decode($body);
         
-        $feature = $this->parseFeatureInResponse($responseData);
+        $features = $this->getFeaturesFromResponse($responseData);
         
-        return $feature;
+        return $features;
     }
     
     /**
      * @param object $response 
-     * @return object|null
+     * @return string
      */
-    private function parseFeatureInResponse($response)
+    public function getLocationNameFromFeatures(array $features) : string
     {
-        $features = $this->getFeaturesFromResponse($response);
-        
-        if (count($features) === 0) {
-            return;
-        }
+        $locationName = '';
         
         if (isset($features['place'])) {
-            $feature = $features['place'];
+            $locationName = $features['place']->place_name;
         } elseif (isset($features['region'])) {
-            $feature = $features['region'];
+            $locationName = $features['region']->place_name;
         } elseif (count($features) > 0) {
-            $feature = array_pop($features);
+            $locationName = array_pop($features)->place_name;
         }
         
-        return $feature;
+        return $locationName;
     }
     
     /**
@@ -88,9 +84,51 @@ class MapboxAPI
         
         foreach ($response->features as $feature) {
             $type = substr($feature->id, 0, strpos($feature->id, '.'));
-            $features[$type] = $feature;
+            if (in_array($type, ['country', 'region', 'place'])) {
+                $features[$type] = $feature;
+            }
         }
         
         return $features;
+    }
+    
+    /**
+     * @param Point $pointA 
+     * @param Point $pointB 
+     * @return int
+     */
+    public function calculateBoundingBoxRadius(float $pointALongitude, float $pointALatitude, float $pointBLongitude, float $pointBLatitude) : int
+    {      
+        $pointA = new Point($pointALongitude, $pointALatitude, 4326);
+        $pointB = new Point($pointBLongitude, $pointBLatitude, 4326);
+        
+        $distance = $this->calculateDistance($pointA, $pointB);
+        $radius = round($distance / 2);
+        
+        return $radius;
+    }
+    
+    /**
+     * @param Point $pointA 
+     * @param Point $pointB 
+     * @return float
+     */
+    public function calculateDistance(Point $pointA, Point $pointB) : float
+    {      
+        $earthRadius = 6371000;
+        $latFrom = deg2rad($pointA->getLatitude());
+        $lonFrom = deg2rad($pointA->getLongitude());
+        $latTo = deg2rad($pointB->getLatitude());
+        $lonTo = deg2rad($pointB->getLongitude());
+
+        $lonDelta = $lonTo - $lonFrom;
+        $a = pow(cos($latTo) * sin($lonDelta), 2) +
+        pow(cos($latFrom) * sin($latTo) - sin($latFrom) * cos($latTo) * cos($lonDelta), 2);
+        $b = sin($latFrom) * sin($latTo) + cos($latFrom) * cos($latTo) * cos($lonDelta);
+        
+        $angle = atan2(sqrt($a), $b);
+        $distance = $angle * $earthRadius;
+        
+        return $distance;
     }
 }
