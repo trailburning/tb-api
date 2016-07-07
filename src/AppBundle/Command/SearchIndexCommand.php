@@ -32,12 +32,24 @@ class SearchIndexCommand extends ContainerAwareCommand
             case 'race_event':
                 $this->indexRaceEventType($output, $id);
                 break;
-            case 'autosuggest_region':
-                $this->indexAutosuggestRegionType($output, $id);
+            case 'autosuggest_location':
+                $this->indexAutosuggestLocationType($output, $id);
+                $output->writeln('OK');
+                break;
+            case 'autosuggest_race_event':
+                $this->indexAutosuggestRaceEventType($output, $id);
+                $output->writeln('OK');
+                break;
+            case 'autosuggest':
+                $this->indexAutosuggestLocationType($output, $id);
+                $this->indexAutosuggestRaceEventType($output, $id);
+                $output->writeln('OK');
                 break;
             case 'all':
                 $this->indexRaceEventType($output);
-                $this->indexAutosuggestRegionType($output, $id);
+                $this->indexAutosuggestLocationType($output, $id);
+                $this->indexAutosuggestRaceEventType($output, $id);
+                $output->writeln('OK');
                 break;
             default:
                 $output->writeln(sprintf('<error>Unknown type "%s"</error>', $type));
@@ -64,10 +76,9 @@ class SearchIndexCommand extends ContainerAwareCommand
         }
         
         $output->writeln(sprintf('%s document(s) were indexed for type "race_event"', count($raceEvents)));
-        $output->writeln('OK');
     }
     
-    protected function indexAutosuggestRegionType($output, $id = null)
+    protected function indexAutosuggestLocationType($output, $id = null)
     {        
         $indexName = $this->getContainer()->getParameter('autosuggest_index_name');
         
@@ -102,6 +113,40 @@ class SearchIndexCommand extends ContainerAwareCommand
         }
         
         $output->writeln(sprintf('%s document(s) were indexed for type "autosuggest_location"', count($regions)));
-        $output->writeln('OK');
+    }
+    
+    protected function indexAutosuggestRaceEventType($output, $id = null)
+    {        
+        $indexName = $this->getContainer()->getParameter('autosuggest_index_name');
+        
+        if ($id == null) {
+            $raceEvents = $this->em->createQuery('
+                    SELECT r FROM AppBundle:RaceEvent r')
+                ->getResult();
+        } else {
+            $raceEvents = $this->em->createQuery('
+                    SELECT r FROM AppBundle:Region r
+                    WHERE r.id = :id')
+                ->setParameter('id', $id)
+                ->getResult();
+        }
+        
+        foreach ($raceEvents as $raceEvent) {
+            $doc = [
+                'suggest_text' => $raceEvent->getName(),
+                'name' => $raceEvent->getName(),
+                'oid' => $raceEvent->getOid(),
+            ];
+
+            $params = [
+                'body' => $doc,
+                'index' => $indexName,
+                'type' => 'race_event',
+                'id' => $raceEvent->getId(),
+            ];
+            $this->client->index($params);
+        }
+        
+        $output->writeln(sprintf('%s document(s) were indexed for type "autosuggest_race_event"', count($raceEvents)));
     }
 }
