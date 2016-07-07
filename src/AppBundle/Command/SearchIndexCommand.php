@@ -88,6 +88,8 @@ class SearchIndexCommand extends ContainerAwareCommand
                 'suggest_text' => $region->getName(),
                 'name' => $region->getName(),
                 'coords' => $region->getCoordsAsArray(),
+                'bbox_radius' => $region->getBboxRadius(),
+                'type' => $region->getType(),
             ];
 
             $params = [

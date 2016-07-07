@@ -90,6 +90,12 @@ class SearchMappingCommand extends ContainerAwareCommand
                         'coords' => [
                             'type' => 'geo_point',
                         ],
+                        'bbox_radius' => [
+                            'type' => 'integer',
+                        ],
+                        'type' => [
+                            'type' => 'string', 
+                        ],
                     ],
                 ],
             ],
