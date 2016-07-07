@@ -112,7 +112,7 @@ class RaceEvent
     
     /**
      * @ORM\ManyToMany(targetEntity="Region", inversedBy="raceEvents")
-     * @ORM\JoinTable(name="race_event_region")
+     * @ORM\JoinTable(name="api_race_event_region")
      */
     private $regions;
 
