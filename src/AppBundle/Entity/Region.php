@@ -34,14 +34,14 @@ class Region
     /**
      * @var string
      *
-     * @ORM\Column(name="text", type="string", length=255, nullable=true)
+     * @ORM\Column(name="text", type="string", length=255)
      */
     private $text;
     
     /**
      * @var string
      *
-     * @ORM\Column(name="bbox_radius", type="integer", nullable=true)
+     * @ORM\Column(name="bbox_radius", type="integer")
      */
     private $bboxRadius;
     
@@ -49,7 +49,7 @@ class Region
      * @var string
      *
      * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\RegionType")
-     * @ORM\Column(type="RegionType", nullable=true)
+     * @ORM\Column(type="RegionType")
      */
     private $type;
     
