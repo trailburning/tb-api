@@ -50,6 +50,7 @@ class AutosuggestHandler
     public function handleGet(array $parameters)
     {
         $q = isset($parameters['q']) ? $parameters['q'] : '';
+        $q = strtolower($q); // FIXME: elasticsearch does not use analyzer for the term query
 
         $body = '{
             "query": {
