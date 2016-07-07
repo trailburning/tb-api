@@ -29,8 +29,8 @@ class SearchMappingCommand extends ContainerAwareCommand
                 $this->populateRaceEventMapping();
                 $output->writeln(sprintf('Mapping for type "%s" was updated', $type));
                 break;
-            case 'autosuggest_region':
-                $this->populateAutosuggestRegionMapping();
+            case 'autosuggest_location':
+                $this->populateAutosuggestLocationMapping();
                 $output->writeln(sprintf('Mapping for type "%s" was updated', $type));
                 break;
             case 'autosuggest_race_event':
@@ -43,7 +43,7 @@ class SearchMappingCommand extends ContainerAwareCommand
         }
     }
     
-    protected function populateAutosuggestRegionMapping()
+    protected function populateAutosuggestLocationMapping()
     {   
         $indexName = $this->getContainer()->getParameter('autosuggest_index_name');
         
