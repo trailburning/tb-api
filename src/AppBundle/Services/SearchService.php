@@ -14,6 +14,7 @@ use ONGR\ElasticsearchDSL\Sort\FieldSort;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use AppBundle\Model\Search;
 use AppBundle\DBAL\Types\SearchOrder;
+use AppBundle\DBAL\Types\SearchSort;
 
 /**
  * Class SearchService.
@@ -163,7 +164,7 @@ class SearchService
 
     private function handleSearchSort(SearchQuery $searchQuery, Search $search) : SearchQuery
     {
-        if ($this->sortByDistance($search->getCoords(), $search->getSort())) {
+        if ($this->isSortByDistance($search->getCoords(), $search->getSort())) {
             if ($search->getOrder() === null) {
                 $search->setOrder(SearchOrder::ASC);
             }
@@ -171,6 +172,12 @@ class SearchService
                 'coords' => $search->getCoordsAsAsocArray(),
                 'distance_type' => 'sloppy_arc',
             ]);
+            $searchQuery->addSort($fieldSort);
+        } elseif ($search->getSort() === SearchSort::DATE) {
+            if ($search->getOrder() === null) {
+                $search->setOrder(SearchOrder::ASC);
+            }
+            $fieldSort = new FieldSort('date', $search->getOrder());
             $searchQuery->addSort($fieldSort);
         } else {
             if ($search->getOrder() === null) {
@@ -183,9 +190,9 @@ class SearchService
         return $searchQuery;
     }
 
-    private function sortByDistance(Point $coords = null, string $sort = null)
+    private function isSortByDistance(Point $coords = null, string $sort = null)
     {
-        if ($coords !== null && ($sort === 'distance' || $sort === null)) {
+        if ($coords !== null && ($sort === SearchSort::DISTANCE || $sort === null)) {
             return true;
         }
 

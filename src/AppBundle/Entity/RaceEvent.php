@@ -144,6 +144,18 @@ class RaceEvent
         ];
     }
     
+    public function getStartDate() 
+    {
+        $startDate = null;
+        foreach ($this->getRaces() as $race) {
+            if ($startDate === null || $race->getDate() < $startDate) {
+                $startDate = $race->getDate();
+            }
+        }
+        
+        return $startDate;
+    }
+    
     /**
      * ################################################################################################################.
      *

@@ -100,7 +100,12 @@ class SearchIndexService
             'type' => [],
             'category' => [],
         ];
+        
+        if ($raceEvent->getStartDate() !== null) {
+            $doc['date'] = $raceEvent->getStartDate()->format('Y-m-d');
+        }
 
+        $earliestDate = null;
         foreach ($raceEvent->getRaces() as $race) {
             $doc['races'][] = [
                 'id' => $race->getOid(),

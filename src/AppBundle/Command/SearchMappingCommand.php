@@ -212,6 +212,9 @@ class SearchMappingCommand extends ContainerAwareCommand
                             'type' => 'string',
                             'analyzer' => 'simple',
                         ],
+                        'date' => [
+                            'type' => 'date',
+                        ],
                         'races' => [
                             'type' => 'nested',
                             'properties' => [
