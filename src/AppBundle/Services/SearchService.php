@@ -44,6 +44,7 @@ class SearchService
     public function search(Search $search)
     {
         $searchQuery = new SearchQuery();
+
         $searchQuery->setFrom(0);
         $searchQuery->setSize(10000);
         $boolQuery = new BoolQuery();
@@ -70,6 +71,9 @@ class SearchService
     
     private function handleSearchParameterQ(BoolQuery $boolQuery, Search $search) : BoolQuery
     {
+        $parameters = [
+            'operator' => 'ond',
+        ];
         if ($search->getQ() !== null) {
             $queryTerm = new MultiMatchQuery([
                 'name',
@@ -77,12 +81,12 @@ class SearchService
                 'type',
                 'category',
                 'location',
-            ], $search->getQ());
+            ], $search->getQ(), $parameters);
             $boolQuery->add($queryTerm, BoolQuery::SHOULD);
 
             $queryRace = new MultiMatchQuery([
                 'races.name',
-            ], $search->getQ());
+            ], $search->getQ(), $parameters);
             $nestedRace = new NestedQuery('races', $queryRace);
             $boolQuery->add($nestedRace, BoolQuery::SHOULD);
         }
