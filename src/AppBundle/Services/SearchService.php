@@ -72,7 +72,7 @@ class SearchService
     private function handleSearchParameterQ(BoolQuery $boolQuery, Search $search) : BoolQuery
     {
         $parameters = [
-            'operator' => 'ond',
+            'operator' => 'and',
         ];
         if ($search->getQ() !== null) {
             $queryTerm = new MultiMatchQuery([
