@@ -118,7 +118,6 @@ class SearchService
                 $distanceRange[RangeQuery::LTE] = $search->getDistanceTo();
             }
             $queryDistance = new RangeQuery('races.distance', $distanceRange);
-            dump($distanceRange);
             $nestedDistance = new NestedQuery('races', $queryDistance);
             $boolQuery->add($nestedDistance, BoolQuery::FILTER);
         }
@@ -129,15 +128,11 @@ class SearchService
     private function handleSearchParameterCoords(BoolQuery $boolQuery, Search $search) : BoolQuery
     {
         if ($search->getCoords() !== null) {
-            $coordsValue = [
-                'lat' => $search->getCoords()->getLatitude(),
-                'lon' => $search->getCoords()->getLongitude(),
-            ];
             if ($search->getDistance() === null) {
                 $search->setDistance(50000);
             }
             $distanceValue = $search->getDistance().'m';
-            $queryLocation = new GeoDistanceQuery('coords', $distanceValue, $coordsValue);
+            $queryLocation = new GeoDistanceQuery('coords', $distanceValue, $search->getCoordsAsAsocArray());
             $boolQuery->add($queryLocation, BoolQuery::FILTER);
         }
         
@@ -173,7 +168,7 @@ class SearchService
                 $search->setOrder(SearchOrder::ASC);
             }
             $fieldSort = new FieldSort('_geo_distance', $search->getOrder(), [
-                'coords' => $coordsValue,
+                'coords' => $search->getCoordsAsAsocArray(),
                 'distance_type' => 'sloppy_arc',
             ]);
             $searchQuery->addSort($fieldSort);
