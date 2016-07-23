@@ -4,6 +4,7 @@ namespace AppBundle\Services;
 
 use Elasticsearch\Client;
 use AppBundle\Entity\RaceEvent;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 
 /**
  * Class SearchIndexService.
@@ -14,20 +15,26 @@ class SearchIndexService
      * @var Client
      */
     private $client;
-    
+
     /**
      * @var string
      */
-    private $indexName;
+    private $searchIndexName;
+
+    /**
+     * @var string
+     */
+    private $autosuggestIndexName;
 
     /**
      * @param Client $client
-     * @param string $indexName
+     * @param string $searchIndexName
      */
-    public function __construct(Client $client, string $indexName)
+    public function __construct(Client $client, string $searchIndexName, string $autosuggestIndexName)
     {
         $this->client = $client;
-        $this->indexName = $indexName;
+        $this->searchIndexName = $searchIndexName;
+        $this->autosuggestIndexName = $autosuggestIndexName;
     }
 
     /**
@@ -39,11 +46,11 @@ class SearchIndexService
     {
         $params = [
             'body' => $this->generateRaceEventDoc($raceEvent),
-            'index' => $this->indexName,
+            'index' => $this->searchIndexName,
             'type' => 'race_event',
             'id' => $raceEvent->getOid(),
         ];
-        
+
         return $this->client->index($params);
     }
 
@@ -58,11 +65,11 @@ class SearchIndexService
             'body' => [
                 'doc' => $this->generateRaceEventDoc($raceEvent),
             ],
-            'index' => $this->indexName,
+            'index' => $this->searchIndexName,
             'type' => 'race_event',
             'id' => $raceEvent->getOid(),
         ];
-        
+
         return $this->client->update($params);
     }
 
@@ -74,12 +81,57 @@ class SearchIndexService
     public function deleteRaceEvent(RaceEvent $raceEvent)
     {
         $params = [
-            'index' => $this->indexName,
+            'index' => $this->searchIndexName,
             'type' => 'race_event',
             'id' => $raceEvent->getOid(),
         ];
 
-        return $this->client->delete($params);
+        try {
+            return $this->client->delete($params);
+        } catch (Missing404Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * @param RaceEvent $raceEvent
+     *
+     * @return array|false
+     */
+    public function deleteRaceEventAutosuggest(RaceEvent $raceEvent)
+    {
+        $params = [
+            'index' => $this->autosuggestIndexName,
+            'type' => 'race_event',
+            'body' => [
+                'query' => [
+                    'term' => [
+                        'oid' => $raceEvent->getOid(),
+                    ],
+                ],
+            ],
+        ];
+
+        $result = $this->client->search($params);
+        if (count($result['hits']['hits']) === 0) {
+            return;
+        }
+
+        $id = $result['hits']['hits'][0]['_id'];
+
+        $params = [
+            'index' => $this->autosuggestIndexName,
+            'type' => 'race_event',
+            'id' => $id,
+        ];
+
+        try {
+            $result = $this->client->delete($params);
+        } catch (Missing404Exception $e) {
+            $result = $e->getMessage();
+        }
+
+        return $result;
     }
 
     /**
@@ -100,7 +152,7 @@ class SearchIndexService
             'type' => [],
             'category' => [],
         ];
-        
+
         if ($raceEvent->getStartDate() !== null) {
             $doc['date'] = $raceEvent->getStartDate()->format('Y-m-d');
         }

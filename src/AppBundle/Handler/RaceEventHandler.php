@@ -212,6 +212,7 @@ class RaceEventHandler
             $this->raceEventRepository->remove($raceEvent);
             $this->raceEventRepository->store();
             $this->searchIndexService->deleteRaceEvent($raceEvent);
+            $this->searchIndexService->deleteRaceEventAutosuggest($raceEvent);
             $this->raceEventRepository->commit();
         } catch (Exception $e) {
             $this->raceEventRepository->rollback();
