@@ -47,8 +47,6 @@ class SearchService
 
         $searchQuery->setFrom($search->getOffset());
         $searchQuery->setSize($search->getLimit());
-        // $searchQuery->setFrom(0);
-        // $searchQuery->setSize(1);
         $boolQuery = new BoolQuery();
         $boolQuery->addParameter('minimum_should_match', 1);
 

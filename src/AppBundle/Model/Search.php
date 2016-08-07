@@ -73,7 +73,7 @@ class Search
     /**
      * @var int
      */
-    private $limit = 100000;
+    private $limit = 0;
 
     /**
      * @var int
@@ -378,6 +378,10 @@ class Search
      */
     public function getLimit()
     {
+        if ($this->limit === null) {
+            return 100000;
+        }
+        
         return $this->limit;
     }
 
