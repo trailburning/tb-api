@@ -73,7 +73,7 @@ class Search
     /**
      * @var int
      */
-    private $limit = 10;
+    private $limit;
 
     /**
      * @var int
