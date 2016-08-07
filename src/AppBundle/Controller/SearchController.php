@@ -87,7 +87,7 @@ class SearchController extends Controller implements ClassResourceInterface
      *         type="string",
      *     ),
      *     @SWG\Parameter(
-     *         description="Limit the search results, default value is 10",
+     *         description="Limit the search results, default is unlimited",
      *         in="query",
      *         name="limit",
      *         type="string",

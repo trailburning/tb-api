@@ -35,6 +35,8 @@ class SearchType extends AbstractType
             ->add('category')
             ->add('order')
             ->add('sort')
+            ->add('limit')
+            ->add('offset')
         ;
     }
 
