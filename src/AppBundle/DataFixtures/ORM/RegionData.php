@@ -44,7 +44,7 @@ class RegionData extends AbstractFixture implements FixtureInterface//, Dependen
         $region->setBboxRadius(29489);
         $region->setCoords(new Point(13.4049, 52.52, 4326));
         $manager->persist($region);
-        $this->addReference('Region-2', $region);
+        $this->addReference('Region-3', $region);
 
         $manager->flush();
     }

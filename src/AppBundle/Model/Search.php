@@ -24,7 +24,7 @@ class Search
      * @var string
      */
     private $dateTo;
-    
+
     /**
      * @var string
      */
@@ -69,7 +69,17 @@ class Search
      * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\SearchOrder")
      */
     private $order;
-    
+
+    /**
+     * @var int
+     */
+    private $limit = 10;
+
+    /**
+     * @var int
+     */
+    private $offset = 0;
+
     /**
      * ################################################################################################################.
      *
@@ -77,7 +87,7 @@ class Search
      *
      * ################################################################################################################
      */
-    
+
     /**
      * @return array
      */
@@ -88,7 +98,7 @@ class Search
             'lon' => $this->coords->getLongitude(),
         ];
     }
-    
+
     /**
      * ################################################################################################################.
      *
@@ -312,7 +322,7 @@ class Search
 
         return $this;
     }
-    
+
     /**
      * Get the value of Distance From.
      *
@@ -360,4 +370,53 @@ class Search
 
         return $this;
     }
+
+    /**
+     * Get the value of Limit
+     *
+     * @return int
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * Set the value of Limit
+     *
+     * @param int limit
+     *
+     * @return self
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Offset
+     *
+     * @return int
+     */
+    public function getOffset()
+    {
+        return $this->offset;
+    }
+
+    /**
+     * Set the value of Offset
+     *
+     * @param int offset
+     *
+     * @return self
+     */
+    public function setOffset($offset)
+    {
+        $this->offset = $offset;
+
+        return $this;
+    }
+
 }

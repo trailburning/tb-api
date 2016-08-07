@@ -86,6 +86,18 @@ class SearchController extends Controller implements ClassResourceInterface
      *         name="order",
      *         type="string",
      *     ),
+     *     @SWG\Parameter(
+     *         description="Limit the search results, default value is 10",
+     *         in="query",
+     *         name="limit",
+     *         type="string",
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Offset the search results, default value is 0.",
+     *         in="query",
+     *         name="offset",
+     *         type="string",
+     *     ),    
      * )
      *
      * @Get("/search")

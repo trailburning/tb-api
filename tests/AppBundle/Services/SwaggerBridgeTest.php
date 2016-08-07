@@ -18,7 +18,7 @@ class SwaggerBridgeTest extends BaseWebTestCase
     
     public function testGenerateJsonReadsFromCache()
     {
-        $swaggerBridge = new SwaggerBridge($this->getContainer()->get('kernel')->getRootDir(), 'dev', false);
+        $swaggerBridge = new SwaggerBridge($this->getContainer()->get('kernel')->getRootDir(), 'test', false);
         file_put_contents($swaggerBridge->getCachePath(), 'cache-test');
         
         $result = $swaggerBridge->generateJson();
