@@ -379,7 +379,7 @@ class Search
     public function getLimit()
     {
         if ($this->limit === null) {
-            return 10000;
+            return 10;
         }
         
         return $this->limit;
