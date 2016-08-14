@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 class SearchIndexCommand extends ContainerAwareCommand
 {
@@ -82,32 +83,38 @@ class SearchIndexCommand extends ContainerAwareCommand
     {        
         $indexName = $this->getContainer()->getParameter('autosuggest_index_name');
         
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('id', 'id');
+        $rsm->addScalarResult('name', 'name');
+        $rsm->addScalarResult('bbox_radius', 'bbox_radius');
+        $rsm->addScalarResult('type', 'type');
+        $rsm->addScalarResult('lng', 'lng');
+        $rsm->addScalarResult('lat', 'lat');
+                
         if ($id == null) {
-            $regions = $this->em->createQuery('
-                    SELECT r FROM AppBundle:Region r')
-                ->getResult();
+            $query = $this->em->createNativeQuery('SELECT DISTINCT ON (name, coords, type) id, name, bbox_radius, type, ST_X(coords) AS lng, ST_Y(coords) AS lat FROM api_region', $rsm);
         } else {
-            $regions = $this->em->createQuery('
-                    SELECT r FROM AppBundle:Region r
-                    WHERE r.id = :id')
-                ->setParameter('id', $id)
-                ->getResult();
+            $query = $this->em->createNativeQuery('SELECT DISTINCT ON (name, coords, type) id, name, bbox_radius, type, ST_X(coords) AS lng, ST_Y(coords) AS lat FROM api_region WHERE id =  ?', $rsm);
+            $query->setParameter(1, $id);
         }
+
+        $regions = $query->getResult();
         
         foreach ($regions as $region) {
+            $coords = [floatval($region['lng']), floatval($region['lat'])];
             $doc = [
-                'suggest_text' => $region->getName(),
-                'name' => $region->getName(),
-                'coords' => $region->getCoordsAsArray(),
-                'bbox_radius' => $region->getBboxRadius(),
-                'type' => $region->getType(),
+                'suggest_text' => $region['name'],
+                'name' => $region['name'],
+                'coords' => $coords,
+                'bbox_radius' => $region['bbox_radius'],
+                'type' => $region['type'],
             ];
 
             $params = [
                 'body' => $doc,
                 'index' => $indexName,
                 'type' => 'location',
-                'id' => $region->getId(),
+                'id' => $region['id'],
             ];
             $this->client->index($params);
         }

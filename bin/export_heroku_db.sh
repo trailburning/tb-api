@@ -1,0 +1,1 @@
+pg_dump -h ec2-54-217-227-230.eu-west-1.compute.amazonaws.com -U uctkdl3ocp1bum -p 5482 deafgsk53d4p8v > var/cache/dump.sql
