@@ -36,7 +36,7 @@ class MapboxAPI
      */
     public function reverseGeocode(Point $point) : array
     {
-        $url = sprintf('/geocoding/v5/mapbox.places/%s,%s.json?access_token=%s', 
+        $url = sprintf('/geocoding/v5/mapbox.places/%s,%s.json?access_token=%s&language=en', 
             $point->getLongitude(),
             $point->getLatitude(), 
             $this->accessToken
