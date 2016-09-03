@@ -39,7 +39,9 @@ class UpdateRaceEventLocationsCommand extends ContainerAwareCommand
         }
 
         foreach ($raceEvents as $raceEvent) {
-            
+            if (count($raceEvent->getRegions()) > 0) {
+                continue;
+            }
             
             $regionFeatures = $mapboxAPI->reverseGeocode($raceEvent->getCoords());
             $raceEvent->setLocation($mapboxAPI->getLocationNameFromFeatures($regionFeatures));
