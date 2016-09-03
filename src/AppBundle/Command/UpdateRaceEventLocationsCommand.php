@@ -39,29 +39,30 @@ class UpdateRaceEventLocationsCommand extends ContainerAwareCommand
         }
 
         foreach ($raceEvents as $raceEvent) {
-            $regionFeatures = $mapboxAPI->reverseGeocode($raceEvent->getCoords());
-            $regions = [];
             
+            
+            $regionFeatures = $mapboxAPI->reverseGeocode($raceEvent->getCoords());
+            $raceEvent->setLocation($mapboxAPI->getLocationNameFromFeatures($regionFeatures));
+
+            $regions = [];
             foreach ($regionFeatures as $regionFeature) {
                 $bboxRadius = $mapboxAPI->calculateBoundingBoxRadius(
-                    $regionFeature->bbox[0],
-                    $regionFeature->bbox[1],
-                    $regionFeature->bbox[2],
+                    $regionFeature->bbox[0], 
+                    $regionFeature->bbox[1], 
+                    $regionFeature->bbox[2], 
                     $regionFeature->bbox[3]
                 );
                 $region = $regionRepository->getOrCreateRegion(
-                    $regionFeature->id,
-                    $regionFeature->place_name,
-                    $regionFeature->center[0],
-                    $regionFeature->center[1],
+                    $regionFeature->id, 
+                    $regionFeature->place_name, 
+                    $regionFeature->center[0], 
+                    $regionFeature->center[1], 
                     $bboxRadius
                 );
                 $regions[] = $region;
             }
-
-            $raceEvent->setLocation($mapboxAPI->getLocationNameFromFeatures($regionFeatures));
-            $raceEvent->setRegion($region);
-
+            $raceEvent->setRegions($regions);
+            
             $em->persist($raceEvent);
             usleep(100000);
         }
