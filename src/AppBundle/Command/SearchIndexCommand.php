@@ -80,7 +80,7 @@ class SearchIndexCommand extends ContainerAwareCommand
     }
     
     protected function indexAutosuggestLocationType($output, $id = null)
-    {        
+    {   
         $indexName = $this->getContainer()->getParameter('autosuggest_index_name');
         
         $rsm = new ResultSetMapping();
@@ -92,7 +92,7 @@ class SearchIndexCommand extends ContainerAwareCommand
         $rsm->addScalarResult('lat', 'lat');
                 
         if ($id == null) {
-            $query = $this->em->createNativeQuery('SELECT DISTINCT ON (name, coords, type) id, name, bbox_radius, type, ST_X(coords) AS lng, ST_Y(coords) AS lat FROM api_region', $rsm);
+            $query = $this->em->createNativeQuery('SELECT DISTINCT ON (name, coords, type) id, name, bbox_radius, type, ST_X(coords) AS lng, ST_Y(coords) AS lat FROM api_region ORDER BY name, coords, type, id ASC', $rsm);
         } else {
             $query = $this->em->createNativeQuery('SELECT DISTINCT ON (name, coords, type) id, name, bbox_radius, type, ST_X(coords) AS lng, ST_Y(coords) AS lat FROM api_region WHERE id =  ?', $rsm);
             $query->setParameter(1, $id);
