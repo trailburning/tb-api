@@ -64,6 +64,15 @@ class RaceEvent
      * @Serializer\Expose
      */
     private $website;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255, nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     */
+    private $email;
 
     /**
      * @var Point point
@@ -92,6 +101,20 @@ class RaceEvent
      * @Serializer\Expose
      */
     private $location;
+    
+    /**
+     * @var Region
+     *
+     * @ORM\ManyToOne(targetEntity="Region", inversedBy="raceEvents")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $region;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Region", inversedBy="raceEvents")
+     * @ORM\JoinTable(name="api_race_event_region")
+     */
+    private $regions;
 
     /**
      * ################################################################################################################.
@@ -104,6 +127,7 @@ class RaceEvent
     {
         $this->oid = str_replace('.', '', uniqid(null, true));
         $this->races = new ArrayCollection();
+        $this->regions = new ArrayCollection();
     }
 
     /**
@@ -118,6 +142,18 @@ class RaceEvent
             $this->coords->getLongitude(),
             $this->coords->getLatitude(),
         ];
+    }
+    
+    public function getStartDate() 
+    {
+        $startDate = null;
+        foreach ($this->getRaces() as $race) {
+            if ($startDate === null || $race->getDate() < $startDate) {
+                $startDate = $race->getDate();
+            }
+        }
+        
+        return $startDate;
     }
     
     /**
@@ -219,6 +255,30 @@ class RaceEvent
     }
 
     /**
+     * Set email.
+     *
+     * @param string $email
+     *
+     * @return RaceEvent
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email.
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
      * @param point $coords
      *
      * @return self
@@ -284,5 +344,60 @@ class RaceEvent
     public function getLocation()
     {
         return $this->location;
+    }
+    
+    /**
+     * @param Region $region
+     * @return self
+     */
+    public function setRegion(Region $region)
+    {
+        $this->region = $region;
+    
+        return $this;
+    }
+
+    /**
+     * @return Region
+     */
+    public function getRegion()
+    {
+        return $this->region;
+    }
+    
+    /**
+     * @return ArrayCollection
+     */
+    public function getRegions()
+    {
+        return $this->regions;
+    }
+
+    /**
+     * @param array $regions 
+     * @return self
+     */
+    function setRegions($regions) {
+        $this->regions = new ArrayCollection($regions);
+        
+        return $this;
+    }
+    
+    /**
+     * @param Region $region
+     * @return self
+     */
+    public function addRegion(Region $region) {
+        $this->regions->add($region);
+        $regions->addRaceEvent($this);
+    }
+
+    /**
+     * @param Region $region
+     * @return self
+     */
+    public function removeRegion(Region $region) {
+        $this->regions->removeElement($region);
+        $comment->removeRaceEvent($this);
     }
 }

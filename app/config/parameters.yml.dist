@@ -25,3 +25,5 @@ parameters:
     elasticsearch:
         hosts:
             - 'elasticsearch:9200'
+            
+    mapbox_api_token: pk.eyJ1IjoibWFsbGJldXJ5IiwiYSI6IjJfV1MzaE0ifQ.scrjDE31p7wBx7-GemqV3A

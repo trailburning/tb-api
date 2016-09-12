@@ -40,7 +40,7 @@ nginx:
 
 elasticsearch:
     container_name: tb_api_elasticsearch
-    image: elasticsearch
+    build: elasticsearch
     ports: 
         - 9200:9200
         

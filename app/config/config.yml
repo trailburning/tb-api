@@ -16,6 +16,7 @@ imports:
 parameters:
     locale: en
     search_index_name: 'search'
+    autosuggest_index_name: 'autosuggest'
 
 framework:
     #esi:             ~
@@ -89,6 +90,7 @@ doctrine:
             RaceType:               AppBundle\DBAL\Types\RaceType
             RaceCategory:           AppBundle\DBAL\Types\RaceCategory
             RaceDistance:           AppBundle\DBAL\Types\RaceDistance
+            RegionType:             AppBundle\DBAL\Types\RegionType
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"

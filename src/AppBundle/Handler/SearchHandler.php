@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use AppBundle\Model\Search;
 
 /**
- * RaceEvent handler.
+ * SearchHandler handler.
  */
 class SearchHandler
 {
@@ -67,8 +67,12 @@ class SearchHandler
         $search = $form->getData();
         $results = $this->searchService->search($search);
         $raceEvents = $this->extractRaceEventHits($results);
-
-        return $this->apiResponseBuilder->buildSuccessResponse($raceEvents, 'raceevents');
+        $response = $this->apiResponseBuilder->buildSuccessResponse($raceEvents, 'raceevents');
+        $response->setMeta([
+            'count' => $results['hits']['total'],
+        ]);
+        
+        return $response;
     }
     
     /**

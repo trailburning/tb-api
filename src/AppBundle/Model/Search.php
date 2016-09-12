@@ -26,6 +26,16 @@ class Search
     private $dateTo;
 
     /**
+     * @var string
+     */
+    private $distanceFrom;
+
+    /**
+     * @var string
+     */
+    private $distanceTo;
+
+    /**
      * @var Point
      */
     private $coords;
@@ -59,6 +69,43 @@ class Search
      * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\SearchOrder")
      */
     private $order;
+
+    /**
+     * @var int
+     */
+    private $limit = 0;
+
+    /**
+     * @var int
+     */
+    private $offset = 0;
+
+    /**
+     * ################################################################################################################.
+     *
+     *                                         User Defined
+     *
+     * ################################################################################################################
+     */
+
+    /**
+     * @return array
+     */
+    public function getCoordsAsAsocArray()
+    {
+        return [
+            'lat' => $this->coords->getLatitude(),
+            'lon' => $this->coords->getLongitude(),
+        ];
+    }
+
+    /**
+     * ################################################################################################################.
+     *
+     *                                         Getters and Setters
+     *
+     * ################################################################################################################
+     */
 
     /**
      * Get the value of q.
@@ -275,4 +322,105 @@ class Search
 
         return $this;
     }
+
+    /**
+     * Get the value of Distance From.
+     *
+     * @return string
+     */
+    public function getDistanceFrom()
+    {
+        return $this->distanceFrom;
+    }
+
+    /**
+     * Set the value of Distance From.
+     *
+     * @param string distanceFrom
+     *
+     * @return self
+     */
+    public function setDistanceFrom($distanceFrom)
+    {
+        $this->distanceFrom = $distanceFrom;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Distance To.
+     *
+     * @return string
+     */
+    public function getDistanceTo()
+    {
+        return $this->distanceTo;
+    }
+
+    /**
+     * Set the value of Distance To.
+     *
+     * @param string distanceTo
+     *
+     * @return self
+     */
+    public function setDistanceTo($distanceTo)
+    {
+        $this->distanceTo = $distanceTo;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Limit
+     *
+     * @return int
+     */
+    public function getLimit()
+    {
+        if ($this->limit === null) {
+            return 10;
+        }
+        
+        return $this->limit;
+    }
+
+    /**
+     * Set the value of Limit
+     *
+     * @param int limit
+     *
+     * @return self
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Offset
+     *
+     * @return int
+     */
+    public function getOffset()
+    {
+        return $this->offset;
+    }
+
+    /**
+     * Set the value of Offset
+     *
+     * @param int offset
+     *
+     * @return self
+     */
+    public function setOffset($offset)
+    {
+        $this->offset = $offset;
+
+        return $this;
+    }
+
 }

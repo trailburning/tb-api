@@ -43,6 +43,7 @@ class RaceEventControllerTest extends BaseWebTestCase
     public function testPostAction()
     {
         $this->loadFixtures([]);
+        $this->getContainer()->set('app.services.mapbox_api', $this->getMapboxAPIMock());
 
         $client = $this->makeClient();
         $data = [
@@ -70,6 +71,7 @@ class RaceEventControllerTest extends BaseWebTestCase
         $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\RaceEventData',
         ]);
+        $this->getContainer()->set('app.services.mapbox_api', $this->getMapboxAPIMock());
         $this->updateSearchIndex();
 
         $client = $this->makeClient();

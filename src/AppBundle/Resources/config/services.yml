@@ -141,6 +141,8 @@ services:
             - '@form.factory'
             - '@router'
             - '@app.services.searchIndex'
+            - '@app.services.mapbox_api'
+            - '@app.region.repository'
     app.services.response_builder:
         class: AppBundle\Services\APIResponseBuilder
         arguments:
@@ -178,6 +180,13 @@ services:
         arguments: 
             - %elasticsearch%
             
+    app.handler.autosuggest:
+        class: AppBundle\Handler\AutosuggestHandler
+        arguments:
+            - '@app.services.response_builder'
+            - '@vendor.elasticsearch.client'
+            - '%autosuggest_index_name%'
+            
     app.handler.search:
         class: AppBundle\Handler\SearchHandler
         arguments:
@@ -196,3 +205,23 @@ services:
         arguments:
             - '@vendor.elasticsearch.client'
             - '%search_index_name%'
+            - '%autosuggest_index_name%'
+    
+    app.services.mapbox_api:
+        class: AppBundle\Services\MapboxAPI
+        arguments:
+            - '@vendor.guzzle.mapbox_api_client'
+            - '%mapbox_api_token%'
+
+    vendor.guzzle.mapbox_api_client:
+        class: GuzzleHttp\Client
+        arguments: 
+            -
+                base_uri: 'https://api.mapbox.com'
+                timeout: 10
+    app.region.repository:
+        class: AppBundle\Repository\RegionRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\Region

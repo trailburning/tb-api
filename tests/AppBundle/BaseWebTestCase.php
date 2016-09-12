@@ -1,66 +1,70 @@
 <?php
 
-namespace Tests\AppBundle;
+namespace tests\AppBundle;
 
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\Response;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use AppBundle\Services\MapboxAPI;
 
 abstract class BaseWebTestCase extends WebTestCase
-{   
+{
     public function __construct($name = null, array $data = array(), $dataName = '')
-    {      
+    {
         date_default_timezone_set('UTC');
         parent::__construct($name, $data, $dataName);
     }
-    
-    protected function makeClient($authentication = false, array $params = array()) 
+
+    protected function makeClient($authentication = false, array $params = array())
     {
         $client = parent::makeClient($authentication, $params);
         $client->getContainer()->set('media_filesystem', $client->getContainer()->get('debug_filesystem'));
-        
+
         return $client;
     }
-    
+
     protected function loadFixtures(array $classNames, $omName = null, $registryName = 'doctrine', $purgeMode = null)
     {
         return parent::loadFixtures($classNames, $omName, $registryName, ORMPurger::PURGE_MODE_TRUNCATE);
     }
-    
-    protected function refreshEntity($entity) 
+
+    protected function refreshEntity($entity)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $em->refresh($entity);
     }
-    
+
     protected function callProtectedMethod($obj, $methodName, $parameter = array())
     {
         $method = new \ReflectionMethod($obj, $methodName);
         $method->setAccessible(true);
-        
+
         return $method->invokeArgs($obj, $parameter);
     }
-    
-    protected function debugClient(Client $client) 
+
+    protected function debugClient(Client $client)
     {
-        $filepath = $this->getContainer()->get('kernel')->getRootDir() . '/../web/debug.html';
+        $filepath = $this->getContainer()->get('kernel')->getRootDir().'/../web/debug.html';
         $content = $client->getResponse()->getContent();
         file_put_contents($filepath, $content);
         die;
     }
-    
+
     protected function assertJsonResponse($response, $statusCode)
     {
         $this->assertEquals($statusCode, $response->getStatusCode(), $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), $response->headers);
         $this->assertJson($response->getContent(), $response->getContent());
     }
-    
+
     protected function getJourney($name)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
@@ -75,7 +79,7 @@ abstract class BaseWebTestCase extends WebTestCase
 
         return $journey;
     }
-    
+
     protected function getUser($name)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
@@ -90,7 +94,7 @@ abstract class BaseWebTestCase extends WebTestCase
 
         return $user;
     }
-    
+
     protected function getEvent($name)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
@@ -105,7 +109,7 @@ abstract class BaseWebTestCase extends WebTestCase
 
         return $event;
     }
-    
+
     protected function getAsset($name)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
@@ -120,7 +124,7 @@ abstract class BaseWebTestCase extends WebTestCase
 
         return $asset;
     }
-    
+
     protected function getAssetCategory($name)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
@@ -135,9 +139,9 @@ abstract class BaseWebTestCase extends WebTestCase
 
         return $assetCategory;
     }
-    
-    protected function updateSearchIndex() 
-    {   
+
+    protected function updateSearchIndex()
+    {
         $kernel = $this->getContainer()->get('kernel');
         $application = new Application($kernel);
         $application->setAutoExit(false);
@@ -153,6 +157,19 @@ abstract class BaseWebTestCase extends WebTestCase
 
         $content = $output->fetch();
 
-        return new Response($content);        
+        return new Response($content);
+    }
+
+    protected function getMapboxAPIMock()
+    {
+        $mock = new MockHandler([
+            new GuzzleResponse(200, [], file_get_contents(__DIR__.'/../DataFixtures/Mapbox/reverse_geocode.json')),
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new GuzzleClient(['handler' => $handler]);
+        $mapbox = new MapboxAPI($client, 'token');
+
+        return $mapbox;
     }
 }

@@ -1,0 +1,158 @@
+{
+    "type": "FeatureCollection",
+    "query": [
+        13.221316,
+        52.489695
+    ],
+    "features": [
+        {
+            "id": "place.9603",
+            "type": "Feature",
+            "text": "Berlin",
+            "place_name": "Berlin, Berlin, Germany",
+            "relevance": 1,
+            "properties": {
+            },
+            "bbox": [
+                13.088304,
+                52.338079,
+                13.760909,
+                52.675323
+            ],
+            "center": [
+                13.4049,
+                52.52
+            ],
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    13.4049,
+                    52.52
+                ]
+            },
+            "context": [
+                {
+                    "id": "postcode.7276",
+                    "text": "14193"
+                },
+                {
+                    "id": "region.19999799996200520",
+                    "text": "Berlin",
+                    "short_code": "DE-BE",
+                    "wikidata": "Q64"
+                },
+                {
+                    "id": "country.3143934170456390",
+                    "text": "Germany",
+                    "wikidata": "Q183",
+                    "short_code": "de"
+                }
+            ]
+        },
+        {
+            "id": "postcode.7276",
+            "type": "Feature",
+            "text": "14193",
+            "place_name": "14193, Berlin, Germany",
+            "relevance": 1,
+            "properties": {
+            },
+            "bbox": [
+                13.177505,
+                52.438486,
+                13.2998961,
+                52.5050431
+            ],
+            "center": [
+                13.230844,
+                52.472867
+            ],
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    13.230844,
+                    52.472867
+                ]
+            },
+            "context": [
+                {
+                    "id": "region.19999799996200520",
+                    "text": "Berlin",
+                    "short_code": "DE-BE",
+                    "wikidata": "Q64"
+                },
+                {
+                    "id": "country.3143934170456390",
+                    "text": "Germany",
+                    "wikidata": "Q183",
+                    "short_code": "de"
+                }
+            ]
+        },
+        {
+            "id": "region.19999799996200520",
+            "type": "Feature",
+            "text": "Berlin",
+            "place_name": "Berlin, Germany",
+            "relevance": 1,
+            "properties": {
+                "short_code": "DE-BE",
+                "wikidata": "Q64"
+            },
+            "bbox": [
+                13.0883329999998,
+                52.3382419999998,
+                13.7604694999998,
+                52.6749169999999
+            ],
+            "center": [
+                13.393236,
+                52.504043
+            ],
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    13.393236,
+                    52.504043
+                ]
+            },
+            "context": [
+                {
+                    "id": "country.3143934170456390",
+                    "text": "Germany",
+                    "wikidata": "Q183",
+                    "short_code": "de"
+                }
+            ]
+        },
+        {
+            "id": "country.3143934170456390",
+            "type": "Feature",
+            "text": "Germany",
+            "place_name": "Germany",
+            "relevance": 1,
+            "properties": {
+                "wikidata": "Q183",
+                "short_code": "de"
+            },
+            "bbox": [
+                5.866002975,
+                47.270461259,
+                15.041428463,
+                55.151372911
+            ],
+            "center": [
+                10.018343,
+                51.133481
+            ],
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    10.018343,
+                    51.133481
+                ]
+            }
+        }
+    ],
+    "attribution": "NOTICE: © 2016 Mapbox and its suppliers. All rights reserved. Use of this data is subject to the Mapbox Terms of Service (https://www.mapbox.com/about/maps/). This response and the information it contains may not be retained."
+}
