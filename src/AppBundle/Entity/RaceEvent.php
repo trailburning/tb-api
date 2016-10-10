@@ -89,7 +89,7 @@ class RaceEvent
      * @ORM\OneToMany(targetEntity="Race", mappedBy="raceEvent", cascade={"persist", "remove"})
      * @SWG\Property()
      * @Serializer\Expose
-     * @ORM\OrderBy({"date" = "ASC"})
+     * @ORM\OrderBy({"distance" = "ASC"})
      */
     private $races;
     
