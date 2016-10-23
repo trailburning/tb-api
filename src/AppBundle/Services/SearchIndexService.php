@@ -151,6 +151,7 @@ class SearchIndexService
             'races' => [],
             'type' => [],
             'category' => [],
+            'attributes' => $raceEvent->getAttributesArray(),
         ];
 
         if ($raceEvent->getStartDate() !== null) {

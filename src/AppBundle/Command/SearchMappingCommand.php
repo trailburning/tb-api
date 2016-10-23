@@ -242,6 +242,10 @@ class SearchMappingCommand extends ContainerAwareCommand
                                 ],
                             ],
                         ],
+                        'attributes' => [
+                            'type' => 'string',
+                            'analyzer' => 'simple',
+                        ],
                     ],
                 ],
             ],
