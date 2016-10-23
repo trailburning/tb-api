@@ -225,3 +225,18 @@ services:
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\Region
+    app.repository.race_event_attribute:
+        class: AppBundle\Repository\RaceEventAttributeRepository
+        arguments:
+            - AppBundle\Entity\RaceEventAttribute
+        factory:
+            - '@doctrine.orm.entity_manager'
+            - getRepository
+    app.handler.race_event_attribute:
+        class: AppBundle\Handler\RaceEventAttributeHandler
+        arguments:
+            - '@app.repository.race_event'
+            - '@app.repository.race_event_attribute'
+            - '@app.services.response_builder'
+            - '@form.factory'
+            - '@router'

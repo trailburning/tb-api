@@ -117,7 +117,7 @@ class MediaAttribute
      * @param Media $media
      * @return self
      */
-    public function setmedia(Media $media)
+    public function setMedia(Media $media)
     {
         $this->media = $media;
     

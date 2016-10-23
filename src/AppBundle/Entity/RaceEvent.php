@@ -115,6 +115,15 @@ class RaceEvent
      * @ORM\JoinTable(name="api_race_event_region")
      */
     private $regions;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="RaceEventAttribute", inversedBy="raceEvents")
+     * @ORM\JoinTable(name="api_race_event_race_event_attribute")
+     * @SWG\Property()
+     * @Serializer\Expose
+     */
+    private $attributes;
+    
 
     /**
      * ################################################################################################################.
@@ -128,6 +137,7 @@ class RaceEvent
         $this->oid = str_replace('.', '', uniqid(null, true));
         $this->races = new ArrayCollection();
         $this->regions = new ArrayCollection();
+        $this->attributes = new ArrayCollection();
     }
 
     /**
@@ -398,6 +408,77 @@ class RaceEvent
      */
     public function removeRegion(Region $region) {
         $this->regions->removeElement($region);
-        $comment->removeRaceEvent($this);
+        $region->removeRaceEvent($this);
     }
+    
+    /**
+     * @param RaceEventAttribute $attribute
+     * @return self
+     */
+    public function addAttribute(RaceEventAttribute $attribute)
+    {
+        $attribute->addRaceEvent($this);
+        $this->attributes->add($attribute);
+
+        return $this;
+    }
+
+    /**
+     * @param RaceEventAttribute $attribute
+     */
+    public function removeAttribute(RaceEventAttribute $attribute)
+    {
+        $this->attributes->removeElement($attribute);
+        $attribute->removeRaceEvent($this);
+    }
+    
+    public function clearAttributes() 
+    {
+        $this->attributes = new ArrayCollection();
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     * @SWG\Property(property="attributes")
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+    
+    /**
+     * @param array $attributes
+     * @return self
+     */
+    public function setAttributes(array $attributes)
+    {
+        $this->attributes = new ArrayCollection();
+        
+        foreach ($attributes as $attribute) {
+            $this->addAttribute($attribute);
+        }
+
+        return $this;
+    }
+    
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("attributes")
+     * @SWG\Property(property="attributes")
+     * @return array
+     */
+    public function getAttributesArray() 
+    {
+        if (count($this->getAttributes()) === 0) {
+            return null;
+        }
+        
+        $attributes = [];
+        foreach ($this->getAttributes() as $attribute) {
+            $attributes[] = $attribute->getName();
+        }
+        
+        return $attributes;
+    }
+    
 }

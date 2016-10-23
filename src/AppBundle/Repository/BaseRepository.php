@@ -57,4 +57,9 @@ class BaseRepository extends EntityRepository
         
         return $alias;
     }
+    
+    public function refresh($entity) 
+    {
+        $this->getEntityManager()->refresh($entity);
+    }
 }
