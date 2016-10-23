@@ -7,6 +7,7 @@ use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
+use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 
 /**
  * RaceEvent.
@@ -124,6 +125,15 @@ class RaceEvent
      */
     private $attributes;
     
+    /**
+     * @var string
+     *
+     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\RaceEventType")
+     * @ORM\Column(type="RaceEventType", nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     */
+    private $type;
 
     /**
      * ################################################################################################################.
@@ -164,6 +174,22 @@ class RaceEvent
         }
         
         return $startDate;
+    }
+    
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("attributes")
+     * @SWG\Property(property="attributes")
+     * @return array
+     */
+    public function getAttributesArray() 
+    {        
+        $attributes = [];
+        foreach ($this->getAttributes() as $attribute) {
+            $attributes[] = $attribute->getName();
+        }
+        
+        return $attributes;
     }
     
     /**
@@ -462,23 +488,26 @@ class RaceEvent
     }
     
     /**
-     * @Serializer\VirtualProperty()
-     * @Serializer\SerializedName("attributes")
-     * @SWG\Property(property="attributes")
-     * @return array
+     * Set type
+     *
+     * @param string $type
+     * @return Race
      */
-    public function getAttributesArray() 
+    public function setType($type)
     {
-        if (count($this->getAttributes()) === 0) {
-            return null;
-        }
-        
-        $attributes = [];
-        foreach ($this->getAttributes() as $attribute) {
-            $attributes[] = $attribute->getName();
-        }
-        
-        return $attributes;
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string 
+     */
+    public function getType()
+    {
+        return $this->type;
     }
     
 }

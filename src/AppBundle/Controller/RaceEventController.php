@@ -93,6 +93,7 @@ class RaceEventController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(name="email", type="string", in="formData", description="The contact email of the race event"),
      *     @SWG\Parameter(name="coords", type="string", in="formData", description="The GPS coordinates of the race event in the format '(LNG, LAT)'", required="true"),
      *     @SWG\Parameter(name="location", type="string", in="formData", description="The location of the race event, will be determined from 'coords' if 'location' is not set", required=false),
+     *     @SWG\Parameter(name="type", type="string", in="formData", description="The type of the race event (triathlon)"),
      *     @SWG\Response(response=201, description="Successful operation. The Location header contains a link to the new race event.",
      *        @SWG\Header(header="location", type="string", description="Link to the new race event.")),
      *     @SWG\Response(response="400", description="Invalid data."),
@@ -124,6 +125,7 @@ class RaceEventController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(name="email", type="string", in="formData", description="The contact email of the race event"),
      *     @SWG\Parameter(name="coords", type="string", in="formData", description="The GPS coordinates of the race event in the format '(LNG, LAT)'"),
      *     @SWG\Parameter(name="location", type="string", in="formData", description="The location of the race event, will be determined from 'coords' if 'location' is not set", required=false),
+     *     @SWG\Parameter(name="type", type="string", in="formData", description="The type of the race event (triathlon)"), 
      *     @SWG\Response(response=204, description="Successful operation"),
      *     @SWG\Response(response="400", description="Invalid data."),
      * )

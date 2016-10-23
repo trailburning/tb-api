@@ -91,6 +91,7 @@ doctrine:
             RaceCategory:           AppBundle\DBAL\Types\RaceCategory
             RaceDistance:           AppBundle\DBAL\Types\RaceDistance
             RegionType:             AppBundle\DBAL\Types\RegionType
+            RaceEventType:          AppBundle\DBAL\Types\RaceEventType
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
