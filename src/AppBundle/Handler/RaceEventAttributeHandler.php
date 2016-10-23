@@ -67,10 +67,20 @@ class RaceEventAttributeHandler
     }
 
     /**
+     * @return APIResponse
+     */
+    public function handleGetList()
+    {
+        $attributes = $this->raceEventAttributeRepository->findAll();
+
+        return $this->apiResponseBuilder->buildSuccessResponse($attributes, 'raceeventattributes');
+    }
+    
+    /**
      * @param string $raceEventId
      * @return APIResponse
      */
-    public function handleGetList($raceEventId)
+    public function handleGetRaceEventList($raceEventId)
     {
         $raceEvent = $this->raceEventRepository->findOneBy([
             'oid' => $raceEventId,

@@ -17,6 +17,31 @@ use Symfony\Component\HttpFoundation\Request;
     {
         /**
          * @SWG\Get(
+         *     path="/raceevents/attributes",
+         *     summary="Get all race event attributes",
+         *     description="Returns all race event attributes.",
+         *     tags={"Race Event"},
+         *     produces={"application/json"},
+         *     @SWG\Response(
+         *         response=200,
+         *         description="Successful operation",
+         *         @SWG\Schema(ref="#/definitions/RaceEventAttribute")
+         *     )
+         * )
+         *
+         * @Get("/raceevents/attributes")
+         *
+         * @return APIResponse
+         */
+        public function getListAction()
+        {
+            $raceEventAttributeHandler = $this->get('app.handler.race_event_attribute');
+
+            return $raceEventAttributeHandler->handleGetList();
+        }
+        
+        /**
+         * @SWG\Get(
          *     path="/raceevents/{id}/attributes",
          *     summary="Get all attributes of a race event ",
          *     description="Returns all attributes of a race event.",
@@ -42,11 +67,11 @@ use Symfony\Component\HttpFoundation\Request;
          *
          * @return APIResponse
          */
-        public function getListAction($id)
+        public function getRaceEventListAction($id)
         {
             $raceEventAttributeHandler = $this->get('app.handler.race_event_attribute');
 
-            return $raceEventAttributeHandler->handleGetList($id);
+            return $raceEventAttributeHandler->handleGetRaceEventList($id);
         }
 
         /**

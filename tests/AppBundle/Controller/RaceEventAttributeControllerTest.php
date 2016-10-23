@@ -10,6 +10,18 @@ class RaceEventAttributeControllerTest extends BaseWebTestCase
     public function testGetListAction()
     {
         $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\RaceEventAttributeData',
+        ]);
+
+        $client = $this->makeClient();
+        
+        $client->request('GET', '/v2/raceevents/attributes');
+        $this->assertJsonResponse($client->getResponse(), 200);        
+    }
+    
+    public function testGetRaceEventListAction()
+    {
+        $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\RaceEventData',
         ]);
 
