@@ -10,7 +10,7 @@ use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class MediaController extends Controller implements ClassResourceInterface
+class AssetsMediaController extends Controller implements ClassResourceInterface
 {
 
     /**
@@ -209,7 +209,15 @@ class MediaController extends Controller implements ClassResourceInterface
     public function deleteAction($id, $mediaId)
     {
         $mediaService = $this->get('app.media');
+        $assetRepository = $this->get('app.asset.repository');
+        $apiResponseBuilder = $this->get('app.response.builder');
+        $asset = $assetRepository->findOneBy([
+            'oid' => $id,
+        ]);
+        if ($asset === null) {
+            return $apiResponseBuilder->buildNotFoundResponse('Asset not found');
+        }
 
-        return $mediaService->deleteMedia($mediaId, $id);
+        return $mediaService->deleteMedia($mediaId);
     }
 }

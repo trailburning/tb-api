@@ -95,7 +95,6 @@ services:
             - '@media_filesystem'
             - '@app.media.repository'
             - '@app.response.builder'
-            - '@app.asset.repository'
             - '@app.media.analyzer'
             - '@app.mediaAttribute.repository'
     app.s3Client:

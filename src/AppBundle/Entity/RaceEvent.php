@@ -134,6 +134,16 @@ class RaceEvent
      * @Serializer\Expose
      */
     private $type;
+    
+    /**
+     * @var Media[]
+     *
+     * @ORM\OneToMany(targetEntity="Media", mappedBy="raceEvent", cascade={"persist", "remove"})
+     * @SWG\Property(property="media")
+     * @Serializer\Expose
+     * @Serializer\SerializedName("media")
+     */
+    private $medias;
 
     /**
      * ################################################################################################################.
@@ -148,6 +158,7 @@ class RaceEvent
         $this->races = new ArrayCollection();
         $this->regions = new ArrayCollection();
         $this->attributes = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     /**
@@ -340,7 +351,7 @@ class RaceEvent
      */
     public function addRace(Race $race)
     {
-        $race->setAsset($this);
+        $race->setRaceEvent($this);
         $this->races[] = $race;
 
         return $this;
@@ -510,4 +521,31 @@ class RaceEvent
         return $this->type;
     }
     
+    /**
+     * @param Media $medias
+     * @return self
+     */
+    public function addMedia(Media $media)
+    {
+        $media->setRaceEvent($this);
+        $this->medias[] = $media;
+
+        return $this;
+    }
+
+    /**
+     * @param Media $medias
+     */
+    public function removeMedia(Media $media)
+    {
+        $this->medias->removeElement($media);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMedias()
+    {
+        return $this->medias;
+    }    
 }

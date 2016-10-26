@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\AppBundle\BaseWebTestCase;
 
-class MediaControllerTest extends BaseWebTestCase
+class AssetsMediaControllerTest extends BaseWebTestCase
 {
     public function testPostAction()
     {

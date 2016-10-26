@@ -124,6 +124,21 @@ abstract class BaseWebTestCase extends WebTestCase
 
         return $asset;
     }
+    
+    protected function getRaceEvent($name)
+    {
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $raceEventRepository = $em->getRepository('AppBundle:RaceEvent');
+        $raceEvent = $raceEventRepository->findOneBy([
+            'name' => $name,
+        ]);
+
+        if (!$raceEvent) {
+            $this->fail(sprintf('Missing race event with name "%s" in test DB', $name));
+        }
+
+        return $raceEvent;
+    }
 
     protected function getAssetCategory($name)
     {

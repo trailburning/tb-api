@@ -4,9 +4,9 @@ namespace AppBundle\Services;
 
 use AppBundle\DBAL\Types\MIMEType;
 use AppBundle\Entity\Asset;
+use AppBundle\Entity\RaceEvent;
 use AppBundle\Entity\Media;
 use AppBundle\Entity\MediaAttribute;
-use AppBundle\Repository\AssetRepository;
 use AppBundle\Repository\MediaAttributeRepository;
 use AppBundle\Repository\MediaRepository;
 use AppBundle\Services\APIResponseBuilder;
@@ -32,11 +32,6 @@ class MediaService
      * @var APIResponseBuilder
      */
     protected $apiResponseBuilder;
-
-    /**
-     * @var AssetRepository
-     */
-    protected $assetRepository;
 
     /**
      * @var MediaAnalyzer
@@ -66,25 +61,24 @@ class MediaService
         Filesystem $filesystem,
         MediaRepository $mediaRepository,
         APIResponseBuilder $apiResponseBuilder,
-        AssetRepository $assetRepository,
         MediaAnalyzer $mediaAnalyzer,
         MediaAttributeRepository $mediaAttributeRepository)
     {
         $this->filesystem = $filesystem;
         $this->mediaRepository = $mediaRepository;
         $this->apiResponseBuilder = $apiResponseBuilder;
-        $this->assetRepository = $assetRepository;
         $this->mediaAnalyzer = $mediaAnalyzer;
         $this->mediaAttributeRepository = $mediaAttributeRepository;
     }
 
     /**
      * @param array $files
-     * @param Asset $Asset
+     * @param Asset $asset
+     * @param RaceEvent $raceEvent
      *
      * @return APIResponse
      */
-    public function createMedia(array $files, Asset $asset)
+    public function createMedia(array $files, Asset $asset = null, RaceEvent $raceEvent = null)
     {
         $medias = [];
         foreach ($files as $file) {
@@ -97,7 +91,12 @@ class MediaService
             $media = new Media();
             $media->setMimeType($mimeType);
             $media->setPath($path);
-            $media->setAsset($asset);
+            if ($asset !== null) {
+                $media->setAsset($asset);
+            }
+            if ($raceEvent !== null) {
+                $media->setRaceEvent($raceEvent);
+            }
             $media->setAttributes($this->createMediaAttributes($file));
 
             $this->mediaRepository->add($media);
@@ -110,7 +109,7 @@ class MediaService
 
     /**
      * @param array $files
-     * @param Asset $Asset
+     * @param Media $media
      *
      * @return APIResponse
      */
@@ -131,17 +130,14 @@ class MediaService
         return $this->apiResponseBuilder->buildEmptyResponse(204);
     }
 
-    public function deleteMedia($mediaId, $assetId)
+    /**
+     * @param string $id 
+     * @return void
+     */
+    public function deleteMedia($id)
     {
-        $asset = $this->assetRepository->findOneBy([
-            'oid' => $assetId,
-        ]);
-        if ($asset === null) {
-            return $this->apiResponseBuilder->buildNotFoundResponse('Asset not found');
-        }
-
         $media = $this->mediaRepository->findOneBy([
-            'oid' => $mediaId,
+            'oid' => $id,
         ]);
         if ($media === null) {
             return $this->apiResponseBuilder->buildNotFoundResponse('Media not found');

@@ -50,7 +50,12 @@ assets:
     resource: AppBundle\Controller\AssetsController
     prefix: /v2
     
-medias:
+asset_medias:
     type:   rest
-    resource: AppBundle\Controller\MediaController
+    resource: AppBundle\Controller\AssetsMediaController
+    prefix: /v2
+    
+race_event_medias:
+    type:   rest
+    resource: AppBundle\Controller\RaceEventMediaController
     prefix: /v2

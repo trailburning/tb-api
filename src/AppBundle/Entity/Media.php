@@ -57,9 +57,13 @@ class Media
     
     /**
      * @ORM\ManyToOne(targetEntity="Asset", inversedBy="medias")
-     * @ORM\JoinColumn(nullable=false)
      */
     protected $asset;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="RaceEvent", inversedBy="medias")
+     */
+    protected $raceEvent;
     
     /**
      * @var MediaAttribute[]
@@ -181,6 +185,25 @@ class Media
     public function getAsset()
     {
         return $this->asset;
+    }
+
+    /**
+     * @param RaceEvent $asset
+     * @return self
+     */
+    public function setRaceEvent(RaceEvent $raceEvent)
+    {
+        $this->raceEvent = $raceEvent;
+    
+        return $this;
+    }
+
+    /**
+     * @return RaceEvent
+     */
+    public function getRaceEvent()
+    {
+        return $this->raceEvent;
     }
     
     /**
