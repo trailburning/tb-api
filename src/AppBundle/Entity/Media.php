@@ -71,6 +71,33 @@ class Media
      * @ORM\OneToMany(targetEntity="MediaAttribute", mappedBy="media", cascade={"persist", "remove"})
      */
     private $attributes;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     */
+    private $credit;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     */
+    private $creditUrl;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     */
+    private $sharePath;
 
     /**
      * ################################################################################################################
@@ -245,5 +272,65 @@ class Media
         }
 
         return $this;
+    }
+    
+    /**
+     * @param string $sharePath
+     *
+     * @return self
+     */
+    public function setSharePath($sharePath)
+    {
+        $this->sharePath = $sharePath;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSharePath()
+    {
+        return $this->sharePath;
+    }
+    
+    /**
+     * @param string $credit
+     *
+     * @return self
+     */
+    public function setCredit($credit)
+    {
+        $this->credit = $credit;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCredit()
+    {
+        return $this->credit;
+    }
+    
+    /**
+     * @param string $creditUrl
+     *
+     * @return self
+     */
+    public function setCreditUrl($creditUrl)
+    {
+        $this->creditUrl = $creditUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreditUrl()
+    {
+        return $this->creditUrl;
     }
 }

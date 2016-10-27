@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 
 namespace AppBundle\Form\Type;
 
@@ -24,6 +25,8 @@ class MediaUploadType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('credit')
+            ->add('creditUrl')
         ;
     }
 

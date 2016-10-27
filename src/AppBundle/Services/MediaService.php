@@ -12,6 +12,7 @@ use AppBundle\Repository\MediaRepository;
 use AppBundle\Services\APIResponseBuilder;
 use Gaufrette\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Class MediaService.
@@ -42,6 +43,17 @@ class MediaService
      * @var MediaAttributeRepository
      */
     protected $mediaAttributeRepository;
+    
+    /**
+     * @var ImageService
+     */
+    private $imageService;
+    
+    /**
+     * @var KernelInterface
+     */
+    private $kernel;
+    
 
     private $mimeTypeHostMap = [
         MIMEType::JPEG => 'tbmedia2.imgix.net',
@@ -56,19 +68,25 @@ class MediaService
      * @param APIResponseBuilder       $apiResponseBuilder
      * @param MediaAnalyzer            $mediaAnalyzer
      * @param MediaAttributeRepository $mediaAttributeRepository
+     * @param ImageService             $imageService
+     * @param KernelInterface          $kernel
      */
     public function __construct(
         Filesystem $filesystem,
         MediaRepository $mediaRepository,
         APIResponseBuilder $apiResponseBuilder,
         MediaAnalyzer $mediaAnalyzer,
-        MediaAttributeRepository $mediaAttributeRepository)
+        MediaAttributeRepository $mediaAttributeRepository,
+        ImageService $imageService,
+        KernelInterface $kernel)
     {
         $this->filesystem = $filesystem;
         $this->mediaRepository = $mediaRepository;
         $this->apiResponseBuilder = $apiResponseBuilder;
         $this->mediaAnalyzer = $mediaAnalyzer;
         $this->mediaAttributeRepository = $mediaAttributeRepository;
+        $this->imageService = $imageService;
+        $this->kernel = $kernel;
     }
 
     /**
@@ -98,6 +116,7 @@ class MediaService
                 $media->setRaceEvent($raceEvent);
             }
             $media->setAttributes($this->createMediaAttributes($file));
+            $this->createShareImage($media, $filepath);
 
             $this->mediaRepository->add($media);
             $medias[] = $media;
@@ -105,6 +124,18 @@ class MediaService
         $this->mediaRepository->store();
 
         return $this->apiResponseBuilder->buildEmptyResponse(201);
+    }
+    
+    private function createShareImage(Media $media, $filepath)
+    {
+        if ($media->getMimeType() === MIMEType::JPEG) {
+            $pathParts = pathinfo($filepath);
+            $shareFilepath = sprintf('%s/%s_share.%s', $pathParts['dirname'], $pathParts['filename'], $pathParts['extension']);
+            $watermarkFilepath = $this->kernel->locateResource('@AppBundle/Resources/watermark/share_1200x630.png');
+            $this->imageService->createShareImage($filepath, $shareFilepath, $watermarkFilepath, $this->filesystem);
+            $sharePath = $this->getAbsoluteFilepath($shareFilepath, $media->getMimeType());
+            $media->setSharePath($sharePath);
+        }
     }
 
     /**
@@ -123,6 +154,7 @@ class MediaService
 
         $this->mediaAttributeRepository->deleteByMedia($media);
         $media->setAttributes($this->createMediaAttributes($file));
+        $this->createShareImage($media, $filepath);
 
         $this->mediaRepository->add($media);
         $this->mediaRepository->store();

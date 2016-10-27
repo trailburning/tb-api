@@ -35,6 +35,8 @@ class RaceEventMediaController extends Controller implements ClassResourceInterf
      *         required=true,
      *         type="file"
      *     ),
+     *     @SWG\Parameter(name="credit", type="string", in="formData", description="Credit text"),
+     *     @SWG\Parameter(name="creditUrl", type="string", in="formData", description="Credit URL"),
      *     @SWG\Response(
      *         response=201,
      *         description="Successful operation"
@@ -114,6 +116,8 @@ class RaceEventMediaController extends Controller implements ClassResourceInterf
      *         required=true,
      *         type="file"
      *     ),
+     *     @SWG\Parameter(name="credit", type="string", in="formData", description="Credit text"),
+     *     @SWG\Parameter(name="creditUrl", type="string", in="formData", description="Credit URL"),
      *     @SWG\Response(
      *         response=204,
      *         description="Successful operation"

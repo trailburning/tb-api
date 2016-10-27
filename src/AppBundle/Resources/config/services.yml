@@ -97,6 +97,8 @@ services:
             - '@app.response.builder'
             - '@app.media.analyzer'
             - '@app.mediaAttribute.repository'
+            - '@app.image'
+            - '@kernel'
     app.s3Client:
         class: Aws\S3\S3Client
         factory_class: Aws\S3\S3Client
@@ -239,3 +241,7 @@ services:
             - '@app.services.response_builder'
             - '@form.factory'
             - '@router'
+    app.image:
+        class: AppBundle\Services\ImageService
+        arguments:
+            - '@media_filesystem'
