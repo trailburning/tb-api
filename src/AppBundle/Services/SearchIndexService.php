@@ -149,7 +149,7 @@ class SearchIndexService
             'coords' => $raceEvent->getCoordsAsArray(),
             'location' => $raceEvent->getLocation(),
             'races' => [],
-            'type' => [],
+            'type' => $raceEvent->getType(),
             'category' => [],
             'attributes' => $raceEvent->getAttributesArray(),
         ];
@@ -164,21 +164,14 @@ class SearchIndexService
                 'id' => $race->getOid(),
                 'name' => $race->getName(),
                 'date' => $race->getDateAsString(),
-                'type' => $race->getType(),
                 'category' => $race->getCategory(),
                 'distance' => $race->getDistance(),
             ];
-            if ($race->getType() !== null) {
-                $doc['type'][] = $race->getType();
-            }
             if ($race->getCategory() !== null) {
                 $doc['category'][] = $race->getCategory();
             }
         }
-
-        if (count($doc['type']) > 1) {
-            $doc['type'] = array_values(array_unique($doc['type']));
-        }
+        
         if (count($doc['category']) > 1) {
             $doc['category'] = array_values(array_unique($doc['category']));
         }

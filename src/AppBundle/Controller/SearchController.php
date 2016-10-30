@@ -63,7 +63,7 @@ class SearchController extends Controller implements ClassResourceInterface
      *         type="integer",
      *     ),
      *     @SWG\Parameter(
-     *         description="Filter the search results by type. Valid options are: 'road'.",
+     *         description="Filter the search results by type. Valid options are: 'road_run', 'trail_run'.",
      *         in="query",
      *         name="type",
      *         type="string",

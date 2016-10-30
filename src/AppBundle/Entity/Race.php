@@ -55,16 +55,6 @@ class Race
     private $date;
 
     /**
-     * @var string
-     *
-     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\RaceType")
-     * @ORM\Column(type="RaceType", nullable=true)
-     * @SWG\Property()
-     * @Serializer\Expose
-     */
-    private $type;
-
-    /**
      * @var integer
      *
      * @ORM\Column(type="integer", nullable=true)
@@ -188,29 +178,6 @@ class Race
     public function getDate()
     {
         return $this->date;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     * @return Race
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string 
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**

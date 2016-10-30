@@ -66,7 +66,9 @@ class SearchService
             'body' => $searchQuery->toArray(),
         ];
 
-        return $this->client->search($params);
+        $result = $this->client->search($params);
+
+        return $result;
     }
     
     private function handleSearchParameterQ(BoolQuery $boolQuery, Search $search) : BoolQuery
@@ -147,9 +149,9 @@ class SearchService
     private function handleSearchParameterType(BoolQuery $boolQuery, Search $search) : BoolQuery
     {
         if ($search->getType() !== null) {
-            $queryType = new MatchQuery('races.type', $search->getType());
+            $queryType = new MatchQuery('type', $search->getType());
             $nestedType = new NestedQuery('races', $queryType);
-            $boolQuery->add($nestedType, BoolQuery::FILTER);
+            $boolQuery->add($queryType, BoolQuery::FILTER);
         }
     
         return $boolQuery;

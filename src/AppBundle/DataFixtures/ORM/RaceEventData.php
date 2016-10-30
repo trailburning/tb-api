@@ -25,6 +25,7 @@ class RaceEventData extends AbstractFixture implements FixtureInterface, Depende
         $raceEvent->setWebsite('http://www.trailburning.com');
         $raceEvent->setCoords(new Point(7.7491, 46.0207, 4326));
         $raceEvent->setLocation('Zermatt, Switzerland');
+        $raceEvent->setType('road_run');
         $raceEvent->setAttributes([
             $this->getReference('RaceEventAttribute-1'),
             $this->getReference('RaceEventAttribute-2'),
@@ -44,6 +45,7 @@ class RaceEventData extends AbstractFixture implements FixtureInterface, Depende
         $raceEvent->setWebsite('http://www.trailburning.com');
         $raceEvent->setCoords(new Point(13.221316, 52.489695, 4326));
         $raceEvent->setLocation('Berlin, Berlin, Germany');
+        $raceEvent->setType('road_run');
         $raceEvent->setAttributes([
             $this->getReference('RaceEventAttribute-1'),
             $this->getReference('RaceEventAttribute-2'),

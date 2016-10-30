@@ -22,7 +22,6 @@ class RaceType extends AbstractType
             ->add('date', DateType::class, [
                 'widget' => 'single_text',
             ])
-            ->add('type')
             ->add('distance', IntegerType::class)
             ->add('category')
             ->add('raceEvent', EntityType::class, [

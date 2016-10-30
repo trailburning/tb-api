@@ -229,10 +229,6 @@ class SearchMappingCommand extends ContainerAwareCommand
                                 'date' => [
                                     'type' => 'date',
                                 ],
-                                'type' => [
-                                    'type' => 'string',
-                                    'index' => 'not_analyzed',
-                                ],
                                 'category' => [
                                     'type' => 'string',
                                     'index' => 'not_analyzed',

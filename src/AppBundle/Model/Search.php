@@ -48,7 +48,7 @@ class Search
 
     /**
      * @var string
-     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\RaceType")
+     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\RaceEventType")
      */
     private $type;
 

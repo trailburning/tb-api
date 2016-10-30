@@ -10,7 +10,6 @@ use AppBundle\Entity\RaceEvent;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use AppBundle\Services\SearchService;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use AppBundle\DBAL\Types\RaceType;
 use AppBundle\DBAL\Types\RaceCategory;
 use Symfony\Component\Form\FormFactoryInterface;
 use AppBundle\Model\Search;
@@ -83,7 +82,6 @@ class SearchHandler
     private function extractRaceEventHits(array $searchResult): array
     {
         $filter = [
-            'type', 
             'category',
         ];
         $results = [];
