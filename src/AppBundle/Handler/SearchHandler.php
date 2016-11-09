@@ -83,6 +83,7 @@ class SearchHandler
     {
         $filter = [
             'category',
+            'attributes_id',
         ];
         $results = [];
         if (isset($searchResult['hits']['hits'])) {

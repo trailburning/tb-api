@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * MediaAttribute.
@@ -36,6 +37,14 @@ class RaceEventAttribute
      * @Serializer\Expose 
      */
     private $name;
+    
+    /**
+     * @var string
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
+    protected $slug;
 
     /**
      * @var RaceEvents[]
@@ -119,5 +128,25 @@ class RaceEventAttribute
     public function getRaceEvents()
     {
         return $this->raceEvents;
+    }
+    
+    /**
+     * @param string $slug
+     *
+     * @return self
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 }

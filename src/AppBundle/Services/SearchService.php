@@ -56,6 +56,7 @@ class SearchService
         $this->handleSearchParameterCoords($boolQuery, $search);
         $this->handleSearchParameterType($boolQuery, $search);
         $this->handleSearchParameterCategory($boolQuery, $search);
+        $this->handleSearchParameterAttributes($boolQuery, $search);
         $this->handleSearchSort($searchQuery, $search);
 
         $searchQuery->addQuery($boolQuery);
@@ -163,6 +164,16 @@ class SearchService
             $queryCategory = new MatchQuery('races.category', $search->getCategory());
             $nestedCategory = new NestedQuery('races', $queryCategory);
             $boolQuery->add($nestedCategory, BoolQuery::FILTER);
+        }
+    
+        return $boolQuery;
+    }
+    
+    private function handleSearchParameterAttributes(BoolQuery $boolQuery, Search $search) : BoolQuery
+    {
+        if (count($search->getAttributes()) > 0) {
+            $query = new MatchQuery('attributes_id', $search->getAttributes());
+            $boolQuery->add($query, BoolQuery::FILTER);
         }
     
         return $boolQuery;

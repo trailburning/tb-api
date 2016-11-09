@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use AppBundle\Form\DataTransformer\GeometryPointTransformer;
+use AppBundle\Form\DataTransformer\AttributesTransformer;
 
 class SearchType extends AbstractType
 {
@@ -37,6 +38,9 @@ class SearchType extends AbstractType
             ->add('sort')
             ->add('limit')
             ->add('offset')
+            ->add($builder
+                ->create('attributes')
+                ->addModelTransformer(new AttributesTransformer()))
         ;
     }
 

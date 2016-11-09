@@ -2,7 +2,6 @@
 
 namespace AppBundle\Handler;
 
-use Exception;
 use AppBundle\Model\APIResponse;
 use AppBundle\Services\APIResponseBuilder;
 use AppBundle\Repository\RaceEventRepository;
@@ -12,8 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use AppBundle\Entity\RaceEvent;
 use AppBundle\Entity\RaceEventAttribute;
 use AppBundle\Services\SearchIndexService;
-use AppBundle\Services\MapboxAPI;
-use AppBundle\Repository\RegionRepository;
 
 /**
  * RaceEvent handler.
@@ -24,7 +21,7 @@ class RaceEventAttributeHandler
      * @var RaceEventRepository
      */
     private $raceEventRepository;
-    
+
     /**
      * @var RaceEventAttributeRepository
      */
@@ -44,26 +41,34 @@ class RaceEventAttributeHandler
      * @var Router
      */
     private $router;
+    
+    /**
+     * @var SearchIndexService
+     */
+    private $searchIndexService;
 
     /**
-     * @param RaceEventRepository  $raceEventRepository
-     * @param RaceEventAttributeRepository  $raceEventAttributeRepository
-     * @param APIResponseBuilder   $apiResponseBuilder
-     * @param FormFactoryInterface $formFactory
-     * @param Router               $router
+     * @param RaceEventRepository          $raceEventRepository
+     * @param RaceEventAttributeRepository $raceEventAttributeRepository
+     * @param APIResponseBuilder           $apiResponseBuilder
+     * @param FormFactoryInterface         $formFactory
+     * @param Router                       $router
+     * @param SearchIndexService           $searchIndexService
      */
     public function __construct(
         RaceEventRepository $raceEventRepository,
         RaceEventAttributeRepository $raceEventAttributeRepository,
         APIResponseBuilder $apiResponseBuilder,
         FormFactoryInterface $formFactory,
-        Router $router
+        Router $router,
+        SearchIndexService $searchIndexService
     ) {
         $this->raceEventRepository = $raceEventRepository;
         $this->raceEventAttributeRepository = $raceEventAttributeRepository;
         $this->apiResponseBuilder = $apiResponseBuilder;
         $this->formFactory = $formFactory;
         $this->router = $router;
+        $this->searchIndexService = $searchIndexService;
     }
 
     /**
@@ -75,9 +80,10 @@ class RaceEventAttributeHandler
 
         return $this->apiResponseBuilder->buildSuccessResponse($attributes, 'raceeventattributes');
     }
-    
+
     /**
      * @param string $raceEventId
+     *
      * @return APIResponse
      */
     public function handleGetRaceEventList($raceEventId)
@@ -108,7 +114,7 @@ class RaceEventAttributeHandler
         if ($raceEvent === null) {
             return $this->apiResponseBuilder->buildNotFoundResponse('RaceEvent not found');
         }
-        
+
         $raceEventAttribute = $this->raceEventAttributeRepository->findOneBy([
             'id' => $raceEventAttributeId,
         ]);
@@ -117,8 +123,17 @@ class RaceEventAttributeHandler
         }
 
         $raceEvent->addAttribute($raceEventAttribute);
-        $this->raceEventRepository->add($raceEvent);
-        $this->raceEventRepository->store();
+        
+        $this->raceEventRepository->beginnTransaction();
+        try {
+            $this->raceEventRepository->add($raceEvent);
+            $this->raceEventRepository->store();
+            $this->searchIndexService->updateRaceEvent($raceEvent);
+            $this->raceEventRepository->commit();
+        } catch (Exception $e) {
+            $this->raceEventRepository->rollback();
+            throw $e;
+        }
 
         return $this->apiResponseBuilder->buildEmptyResponse(204);
     }
@@ -136,7 +151,7 @@ class RaceEventAttributeHandler
         if ($raceEvent === null) {
             return $this->apiResponseBuilder->buildNotFoundResponse('RaceEvent not found');
         }
-        
+
         $raceEventAttribute = $this->raceEventAttributeRepository->findOneBy([
             'id' => $raceEventAttributeId,
         ]);
@@ -145,8 +160,17 @@ class RaceEventAttributeHandler
         }
 
         $raceEvent->removeAttribute($raceEventAttribute);
-        $this->raceEventRepository->add($raceEvent);
-        $this->raceEventRepository->store();
+        
+        $this->raceEventRepository->beginnTransaction();
+        try {
+            $this->raceEventRepository->add($raceEvent);
+            $this->raceEventRepository->store();
+            $this->searchIndexService->updateRaceEvent($raceEvent);
+            $this->raceEventRepository->commit();
+        } catch (Exception $e) {
+            $this->raceEventRepository->rollback();
+            throw $e;
+        }
 
         return $this->apiResponseBuilder->buildEmptyResponse(204);
     }

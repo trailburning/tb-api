@@ -79,6 +79,13 @@ class Search
      * @var int
      */
     private $offset = 0;
+    
+    /**
+     * @var array
+     */
+    private $attributes;
+    
+    
 
     /**
      * ################################################################################################################.
@@ -419,6 +426,30 @@ class Search
     public function setOffset($offset)
     {
         $this->offset = $offset;
+
+        return $this;
+    }
+    
+    /**
+     * Get the value of Attributes
+     *
+     * @return int
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * Set the value of Attributes
+     *
+     * @param int attributes
+     *
+     * @return self
+     */
+    public function setAttributes($attributes)
+    {
+        $this->attributes = $attributes;
 
         return $this;
     }

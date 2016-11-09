@@ -41,6 +41,7 @@ class RaceEventAttributeControllerTest extends BaseWebTestCase
         $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\RaceEventData',
         ]);
+        $this->updateSearchIndex();
 
         $client = $this->makeClient();
         
@@ -93,6 +94,7 @@ class RaceEventAttributeControllerTest extends BaseWebTestCase
         $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\RaceEventData',
         ]);
+        $this->updateSearchIndex();
 
         $client = $this->makeClient();
         $raceEventRepository = $this->getContainer()->get('app.repository.race_event');

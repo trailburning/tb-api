@@ -75,6 +75,12 @@ class SearchController extends Controller implements ClassResourceInterface
      *         type="string",
      *     ),
      *     @SWG\Parameter(
+     *         description="Filter the search results by attribute ID, separate multiple attributes with comma.",
+     *         in="query",
+     *         name="attributes",
+     *         type="string",
+     *     ),
+     *     @SWG\Parameter(
      *         description="Sort the search results. Valid options are: 'relevance', 'distance' and 'date'.",
      *         in="query",
      *         name="sort",

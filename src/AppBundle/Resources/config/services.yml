@@ -241,6 +241,7 @@ services:
             - '@app.services.response_builder'
             - '@form.factory'
             - '@router'
+            - '@app.services.searchIndex'
     app.image:
         class: AppBundle\Services\ImageService
         arguments:

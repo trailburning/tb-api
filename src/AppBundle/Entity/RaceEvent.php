@@ -204,6 +204,19 @@ class RaceEvent
     }
     
     /**
+     * @return array
+     */
+    public function getAttributesSlugArray() 
+    {        
+        $attributes = [];
+        foreach ($this->getAttributes() as $attribute) {
+            $attributes[] = $attribute->getSlug();
+        }
+        
+        return $attributes;
+    }
+    
+    /**
      * ################################################################################################################.
      *
      *                                         Getters and Setters

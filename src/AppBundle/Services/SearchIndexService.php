@@ -152,6 +152,7 @@ class SearchIndexService
             'type' => $raceEvent->getType(),
             'category' => [],
             'attributes' => $raceEvent->getAttributesArray(),
+            'attributes_slug' => $raceEvent->getAttributesSlugArray(),
         ];
 
         if ($raceEvent->getStartDate() !== null) {
