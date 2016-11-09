@@ -20,13 +20,13 @@ class AttributesTransformer implements DataTransformerInterface
      */
     public function transform($attributes)
     {
-        if (null === $attributes) {
-            return;
+        if (count($attributes) === 0) {
+            return '';
         }
+        
+        $attributes = implode(",", $attributes);
 
-        $attributeArray = explode('.', $attributes);
-
-        return $attributeArray;
+        return $attributes;
     }
 
     /**
@@ -38,12 +38,12 @@ class AttributesTransformer implements DataTransformerInterface
      */
     public function reverseTransform($attributes)
     {
-        if (count($attributes) === 0) {
-            return '';
+        if (null === $attributes) {
+            return;
         }
-        
-        $attributes = implode(",", $attributes);
 
-        return $attributes;
+        $attributeArray = explode(',', $attributes);
+
+        return $attributeArray;
     }
 }

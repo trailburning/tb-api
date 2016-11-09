@@ -66,7 +66,7 @@ class SearchService
             'type' => 'race_event',
             'body' => $searchQuery->toArray(),
         ];
-
+        
         $result = $this->client->search($params);
 
         return $result;
@@ -151,7 +151,6 @@ class SearchService
     {
         if ($search->getType() !== null) {
             $queryType = new MatchQuery('type', $search->getType());
-            $nestedType = new NestedQuery('races', $queryType);
             $boolQuery->add($queryType, BoolQuery::FILTER);
         }
     
@@ -172,7 +171,7 @@ class SearchService
     private function handleSearchParameterAttributes(BoolQuery $boolQuery, Search $search) : BoolQuery
     {
         if (count($search->getAttributes()) > 0) {
-            $query = new MatchQuery('attributes_id', $search->getAttributes());
+            $query = new MatchQuery('attributes_slug', $search->getAttributes());
             $boolQuery->add($query, BoolQuery::FILTER);
         }
     
