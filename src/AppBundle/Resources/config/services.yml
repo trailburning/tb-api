@@ -89,16 +89,6 @@ services:
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\RoutePoint
-    app.media:
-        class: AppBundle\Services\MediaService
-        arguments:
-            - '@media_filesystem'
-            - '@app.media.repository'
-            - '@app.response.builder'
-            - '@app.media.analyzer'
-            - '@app.mediaAttribute.repository'
-            - '@app.image'
-            - '@kernel'
     
     app.media.assets:
         class: AppBundle\Services\MediaService

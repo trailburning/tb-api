@@ -83,7 +83,8 @@ class MediaService
         MediaAnalyzer $mediaAnalyzer,
         MediaAttributeRepository $mediaAttributeRepository,
         ImageService $imageService,
-        KernelInterface $kernel)
+        KernelInterface $kernel,
+        $directory)
     {
         $this->filesystem = $filesystem;
         $this->mediaRepository = $mediaRepository;
@@ -92,6 +93,7 @@ class MediaService
         $this->mediaAttributeRepository = $mediaAttributeRepository;
         $this->imageService = $imageService;
         $this->kernel = $kernel;
+        $this->directory = $directory;
     }
 
     /**
