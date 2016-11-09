@@ -54,6 +54,11 @@ class MediaService
      */
     private $kernel;
     
+    /**
+     * @var $directory
+     */
+    private $directory;
+    
 
     private $mimeTypeHostMap = [
         MIMEType::JPEG => 'tbmedia2.imgix.net',
@@ -214,10 +219,9 @@ class MediaService
      */
     protected function generateRelativeFilepath(File $file)
     {
-        $directory = '25zero';
         $filename = str_replace('.', '', uniqid(null, true));
         $extension = $file->getClientOriginalExtension();
-        $filepath = sprintf('%s/%s.%s', $directory, $filename, $extension);
+        $filepath = sprintf('%s/%s.%s', $this->directory, $filename, $extension);
 
         return $filepath;
     }

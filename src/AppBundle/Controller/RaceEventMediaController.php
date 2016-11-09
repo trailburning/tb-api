@@ -59,7 +59,7 @@ class RaceEventMediaController extends Controller implements ClassResourceInterf
      */
     public function postAction(Request $request, $id)
     {
-        $mediaService = $this->get('app.media');
+        $mediaService = $this->get('app.media.raceevents');
         $raceEventRepository = $this->get('app.repository.race_event');
         $apiResponseBuilder = $this->get('app.response.builder');
 
@@ -141,7 +141,7 @@ class RaceEventMediaController extends Controller implements ClassResourceInterf
      */
     public function putAction(Request $request, $id, $mediaId)
     {
-        $mediaService = $this->get('app.media');
+        $mediaService = $this->get('app.media.raceevents');
         $raceEventRepository = $this->get('app.repository.race_event');
         $mediaRepository = $this->get('app.media.repository');
         $apiResponseBuilder = $this->get('app.response.builder');
@@ -212,7 +212,7 @@ class RaceEventMediaController extends Controller implements ClassResourceInterf
      */
     public function deleteAction($id, $mediaId)
     {
-        $mediaService = $this->get('app.media');
+        $mediaService = $this->get('app.media.raceevents');
         $raceEventRepository = $this->get('app.repository.race_event');
         $apiResponseBuilder = $this->get('app.response.builder');
         $raceEvent = $raceEventRepository->findOneBy([

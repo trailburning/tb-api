@@ -99,6 +99,31 @@ services:
             - '@app.mediaAttribute.repository'
             - '@app.image'
             - '@kernel'
+    
+    app.media.assets:
+        class: AppBundle\Services\MediaService
+        arguments:
+            - '@media_filesystem'
+            - '@app.media.repository'
+            - '@app.response.builder'
+            - '@app.media.analyzer'
+            - '@app.mediaAttribute.repository'
+            - '@app.image'
+            - '@kernel'
+            - '25zero'
+            
+    app.media.raceevents:
+        class: AppBundle\Services\MediaService
+        arguments:
+            - '@media_filesystem'
+            - '@app.media.repository'
+            - '@app.response.builder'
+            - '@app.media.analyzer'
+            - '@app.mediaAttribute.repository'
+            - '@app.image'
+            - '@kernel'
+            - 'raceevents'
+            
     app.s3Client:
         class: Aws\S3\S3Client
         factory_class: Aws\S3\S3Client

@@ -59,7 +59,7 @@ class AssetsMediaController extends Controller implements ClassResourceInterface
      */
     public function postAction(Request $request, $id)
     {
-        $mediaService = $this->get('app.media');
+        $mediaService = $this->get('app.media.assets');
         $assetRepository = $this->get('app.asset.repository');
         $apiResponseBuilder = $this->get('app.response.builder');
 
@@ -141,7 +141,7 @@ class AssetsMediaController extends Controller implements ClassResourceInterface
      */
     public function putAction(Request $request, $id, $mediaId)
     {
-        $mediaService = $this->get('app.media');
+        $mediaService = $this->get('app.media.assets');
         $assetRepository = $this->get('app.asset.repository');
         $mediaRepository = $this->get('app.media.repository');
         $apiResponseBuilder = $this->get('app.response.builder');
@@ -212,7 +212,7 @@ class AssetsMediaController extends Controller implements ClassResourceInterface
      */
     public function deleteAction($id, $mediaId)
     {
-        $mediaService = $this->get('app.media');
+        $mediaService = $this->get('app.media.assets');
         $assetRepository = $this->get('app.asset.repository');
         $apiResponseBuilder = $this->get('app.response.builder');
         $asset = $assetRepository->findOneBy([
