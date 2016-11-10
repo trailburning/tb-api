@@ -13,7 +13,7 @@ class MediaServiceTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\AssetData',
         ]);
         
-        $mediaService = $this->getContainer()->get('app.media');
+        $mediaService = $this->getContainer()->get('app.media.assets');
         $filesystem = $this->getContainer()->get('debug_filesystem');
         $mediaService->setFilesystem($filesystem);
         $asset = $this->getAsset('Test Asset 1');
@@ -34,7 +34,7 @@ class MediaServiceTest extends BaseWebTestCase
     
     public function testUploadFile()
     {
-        $mediaService = $this->getContainer()->get('app.media');
+        $mediaService = $this->getContainer()->get('app.media.assets');
         $filesystem = $this->getContainer()->get('debug_filesystem');
         $mediaService->setFilesystem($filesystem);
         
@@ -50,7 +50,7 @@ class MediaServiceTest extends BaseWebTestCase
         
     public function testGenerateRelativeFilepath($value='')
     {
-        $mediaService = $this->getContainer()->get('app.media');
+        $mediaService = $this->getContainer()->get('app.media.assets');
         $file = new UploadedFile(
             realpath(__DIR__ . '/../../DataFixtures/Media/test.jpg'),
             'test.jpg'

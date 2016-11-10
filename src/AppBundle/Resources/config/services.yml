@@ -158,7 +158,7 @@ services:
             - '@router'
             - '@app.services.searchIndex'
             - '@app.services.mapbox_api'
-            - '@app.region.repository'
+            - '@app.repository.region'
     app.services.response_builder:
         class: AppBundle\Services\APIResponseBuilder
         arguments:
@@ -235,7 +235,7 @@ services:
             -
                 base_uri: 'https://api.mapbox.com'
                 timeout: 10
-    app.region.repository:
+    app.repository.region:
         class: AppBundle\Repository\RegionRepository
         factory_service: doctrine.orm.entity_manager
         factory_method: getRepository
@@ -261,3 +261,9 @@ services:
         class: AppBundle\Services\ImageService
         arguments:
             - '@media_filesystem'
+    app.handler.summary:
+        class: AppBundle\Handler\SummaryHandler
+        arguments:
+            - '@app.services.response_builder'
+            - '@app.repository.region'
+            - '@app.repository.race_event'

@@ -59,3 +59,4 @@ race_event_medias:
     type:   rest
     resource: AppBundle\Controller\RaceEventMediaController
     prefix: /v2
+    

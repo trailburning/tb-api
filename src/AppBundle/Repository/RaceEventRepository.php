@@ -12,4 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class RaceEventRepository extends BaseRepository
 {
+    /**
+     * @return int
+     */
+    public function getCount()
+    {
+        $qb = $this->getQB();
+        $qb->select('count(r.id)');
+        $count = $qb->getQuery()->getSingleScalarResult();
+
+        return $count;
+    }
 }
