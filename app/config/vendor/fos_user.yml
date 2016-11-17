@@ -2,3 +2,7 @@ fos_user:
     db_driver: orm
     firewall_name: main
     user_class: AppBundle\Entity\User
+    registration:
+        form:
+            type: AppBundle\Form\Type\RegistrationFormType
+            name:  ''

@@ -267,3 +267,10 @@ services:
             - '@app.services.response_builder'
             - '@app.repository.region'
             - '@app.repository.race_event'
+    app.form.registration:
+        class: AppBundle\Form\Type\RegistrationFormType
+        arguments:
+            - 'AppBundle\Entity\User'
+        tags:
+            - { name: form.type, alias: app_user_registration }
+            

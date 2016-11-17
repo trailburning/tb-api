@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
+use AppBundle\DBAL\Types\UserClientType;
 
 /**
  * User
@@ -64,8 +66,7 @@ class User extends BaseUser
     /**
      * @var Point
      *
-     * @ORM\Column(type="point", columnDefinition="GEOMETRY(POINT,4326)")
-     * @Assert\NotBlank()
+     * @ORM\Column(type="point", columnDefinition="GEOMETRY(POINT,4326)", nullable=true)
      */
     private $location; 
     
@@ -244,6 +245,14 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="Journey", mappedBy="user")
      **/
     private $journeys;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="UserClientType", nullable=true)
+     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\UserClientType")
+     */
+    private $client;
 
     /**
      * ################################################################################################################
@@ -252,7 +261,11 @@ class User extends BaseUser
      *
      * ################################################################################################################
      */
-
+    
+    function __construct() {
+        $this->client = UserClientType::RACE_BASE;
+        parent::__construct();
+    }
 
     /**
      * ################################################################################################################
@@ -394,14 +407,6 @@ class User extends BaseUser
      */
     public function setLocation($location)
     {
-        if (is_string($location)) {
-            // check the location Sting format
-            if (!preg_match('/^\(([-\d]+\.[-\d]+), ([-\d]+\.[-\d]+)\)$/', $location, $match)) {
-                throw new \Exception(sprintf('Invalid location string format: %s', $location));
-            }
-            $location = new Point($match[1], $match[2], 4326);
-        }
-        
         $this->location = $location;
 
         return $this;
@@ -798,4 +803,23 @@ class User extends BaseUser
     {
         return $this->journeys;
     }
+    /**
+     * @param string $client
+     * @return self
+     */
+    public function setClient($client)
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    /**
+     * @return string 
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+    
 }
