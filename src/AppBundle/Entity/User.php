@@ -9,12 +9,16 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 use AppBundle\DBAL\Types\UserClientType;
+use Swagger\Annotations as SWG;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * User
  *
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+ * @SWG\Definition(required={"email", "firstName", "lastName", "gender"}, @SWG\Xml(name="User"))
  * @ORM\Table(name="fos_user")
+ * @Serializer\ExclusionPolicy("all")
  */
 class User extends BaseUser
 {
@@ -22,7 +26,7 @@ class User extends BaseUser
     const GENDER_NONE = 0;
     const GENDER_MALE = 1;
     const GENDER_FEMALE = 2;
-    
+
     /**
      * @var integer
      *
@@ -31,7 +35,7 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
-    
+
     /**
      * @var string
      *
@@ -39,19 +43,21 @@ class User extends BaseUser
      * @ORM\Column(type="string", length=50, nullable=true, unique=true)
      */
     protected $name;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $displayName;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank()
+     * @Serializer\Expose
+     * @SWG\Property()
      */
     private $firstName;
 
@@ -60,6 +66,8 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank()
+     * @Serializer\Expose
+     * @SWG\Property()
      */
     private $lastName;
 
@@ -67,16 +75,18 @@ class User extends BaseUser
      * @var Point
      *
      * @ORM\Column(type="point", columnDefinition="GEOMETRY(POINT,4326)", nullable=true)
+     * @Serializer\Expose
+     * @SWG\Property()
      */
-    private $location; 
-    
+    private $location;
+
     /**
      * @var string
      *
      * @ORM\Column(type="text", nullable=true)
      */
     private $about;
-    
+
     /**
      * @var string
      *
@@ -90,49 +100,51 @@ class User extends BaseUser
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $avatar;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $avatarGravatar;
-    
+
     /**
      * @var integer
      *
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $activityUnseenCount;
-    
+
     /**
      * @var datetime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $activityLastViewed;
-    
+
     /**
      * @var integer
      *
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $homepageOrder;
-    
+
     /**
      * @var integer
      *
      * @ORM\Column(type="smallint")
+     * @Serializer\Expose
+     * @SWG\Property()
      */
-    private $gender = 0;    
-    
+    private $gender = 0;
+
     /**
      * @var boolean
      *
      * @ORM\Column(type="boolean", options={"default" = true})
      */
     private $newsletter = true;
-    
+
     /**
      * @var datetime
      *
@@ -140,112 +152,112 @@ class User extends BaseUser
      * @ORM\Column(type="datetime")
      */
     protected $registeredAt;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
      */
     private $oauthService;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
      */
     private $oauthId;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
      */
     private $oauthAccessToken;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $avatarFacebook;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string")
      */
     private $discr = "UserProfile";
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $abstract;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $subtitle;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $headerImage;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $logo;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=100, nullable=true)
      */
-    private $link; 
-    
+    private $link;
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $shareImage;
-    
+
     /**
      * @var boolean
      *
      * @ORM\Column(type="boolean", options={"default" = false}, nullable=true)
      */
     private $isAmbassador = false;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $ambassadorTagline;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $ambassadorLocation;
-    
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Journey", mappedBy="user")
      **/
     private $journeys;
-    
+
     /**
      * @var string
      *
@@ -255,13 +267,52 @@ class User extends BaseUser
     private $client;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Expose
+     * @SWG\Property()
+     */
+    private $socialMedia;
+
+    /**
+     * @var string
+     *
+     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\RaceEventType")
+     * @ORM\Column(type="RaceEventType", nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     */
+    private $raceEventType;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @SWG\Property()
+     */
+    private $raceDistanceMin;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @SWG\Property()
+     */
+    private $raceDistanceMax;
+
+    /**
      * ################################################################################################################
      *
      *                                         User Defined
      *
      * ################################################################################################################
      */
-    
+
     function __construct() {
         $this->client = UserClientType::RACE_BASE;
         parent::__construct();
@@ -277,13 +328,13 @@ class User extends BaseUser
 
     /**
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
     }
-    
+
     /**
      * @param string $about
      * @return User
@@ -296,7 +347,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getAbout()
     {
@@ -315,7 +366,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getSynopsis()
     {
@@ -334,13 +385,13 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getAvatar()
     {
         return $this->avatar;
     }
-    
+
     /**
      * @param string $email
      * @return User
@@ -362,7 +413,7 @@ class User extends BaseUser
 
         return parent::setEmailCanonical($emailCanonical);
     }
-    
+
     /**
      * @param string $name
      * @return User
@@ -375,13 +426,13 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getName()
     {
         return $this->name;
     }
-    
+
     /**
      * @param string $lastName
      * @return self
@@ -394,7 +445,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getLastName()
     {
@@ -413,7 +464,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return point 
+     * @return point
      */
     public function getLocation()
     {
@@ -432,7 +483,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getFirstName()
     {
@@ -451,13 +502,13 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getAvatarGravatar()
     {
         return $this->avatarGravatar;
     }
-    
+
     public function setHomepageOrder($homepageOrder)
     {
         $this->homepageOrder = $homepageOrder;
@@ -466,7 +517,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return integer 
+     * @return integer
      */
     public function getHomepageOrder()
     {
@@ -485,7 +536,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return integer 
+     * @return integer
      */
     public function getGender()
     {
@@ -504,7 +555,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return boolean 
+     * @return boolean
      */
     public function getNewsletter()
     {
@@ -523,70 +574,13 @@ class User extends BaseUser
     }
 
     /**
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getRegisteredAt()
     {
         return $this->registeredAt;
     }
-    
-    /**
-     * @param string $oauthService
-     * @return User
-     */
-    public function setOAuthService($oauthService)
-    {
-        $this->oAuthService = $oauthService;
 
-        return $this;
-    }
-
-    /**
-     * @return string 
-     */
-    public function getOAuthService()
-    {
-        return $this->oAuthService;
-    }
-
-    /**
-     * @param string $oauthId
-     * @return User
-     */
-    public function setOAuthId($oauthId)
-    {
-        $this->oAuthId = $oauthId;
-
-        return $this;
-    }
-
-    /**
-     * @return string 
-     */
-    public function getOAuthId()
-    {
-        return $this->oAuthId;
-    }
-
-    /**
-     * @param string $oauthAccessToken
-     * @return User
-     */
-    public function setOAuthAccessToken($oauthAccessToken)
-    {
-        $this->oAuthAccessToken = $oauthAccessToken;
-
-        return $this;
-    }
-
-    /**
-     * @return string 
-     */
-    public function getOAuthAccessToken()
-    {
-        return $this->oAuthAccessToken;
-    }
-    
     /**
      * @param string $avatarFacebook
      * @return User
@@ -599,13 +593,13 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getAvatarFacebook()
     {
         return $this->avatarFacebook;
     }
-    
+
     /**
      * @param boolean $isAmbassador
      * @return self
@@ -618,7 +612,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return boolean 
+     * @return boolean
      */
     public function getIsAmbassador()
     {
@@ -637,13 +631,13 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getAmbassadorTagline()
     {
         return $this->ambassadorTagline;
     }
-    
+
     /**
      * @param string $ambassadorLocation
      * @return self
@@ -656,13 +650,13 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getAmbassadorLocation()
     {
         return $this->ambassadorLocation;
     }
-    
+
     /**
      * @param string $headerImage
      * @return self
@@ -675,7 +669,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getHeaderImage()
     {
@@ -694,13 +688,13 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getLogo()
     {
         return $this->logo;
     }
-    
+
     /**
      * @param string $displayName
      * @return self
@@ -713,7 +707,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getDisplayName()
     {
@@ -732,7 +726,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getAbstract()
     {
@@ -751,7 +745,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getSubtitle()
     {
@@ -770,13 +764,13 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getLink()
     {
         return $this->link;
     }
-    
+
     /**
      * @param Journey $journeys
      * @return User
@@ -797,7 +791,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getJourneys()
     {
@@ -815,11 +809,304 @@ class User extends BaseUser
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getClient()
     {
         return $this->client;
     }
-    
+
+
+    /**
+     * Set the value of Id
+     *
+     * @param integer id
+     *
+     * @return self
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Activity Unseen Count
+     *
+     * @return integer
+     */
+    public function getActivityUnseenCount()
+    {
+        return $this->activityUnseenCount;
+    }
+
+    /**
+     * Set the value of Activity Unseen Count
+     *
+     * @param integer activityUnseenCount
+     *
+     * @return self
+     */
+    public function setActivityUnseenCount($activityUnseenCount)
+    {
+        $this->activityUnseenCount = $activityUnseenCount;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Activity Last Viewed
+     *
+     * @return datetime
+     */
+    public function getActivityLastViewed()
+    {
+        return $this->activityLastViewed;
+    }
+
+    /**
+     * Set the value of Activity Last Viewed
+     *
+     * @param datetime activityLastViewed
+     *
+     * @return self
+     */
+    public function setActivityLastViewed(datetime $activityLastViewed)
+    {
+        $this->activityLastViewed = $activityLastViewed;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Oauth Service
+     *
+     * @return string
+     */
+    public function getOauthService()
+    {
+        return $this->oauthService;
+    }
+
+    /**
+     * Set the value of Oauth Service
+     *
+     * @param string oauthService
+     *
+     * @return self
+     */
+    public function setOauthService($oauthService)
+    {
+        $this->oauthService = $oauthService;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Oauth Id
+     *
+     * @return string
+     */
+    public function getOauthId()
+    {
+        return $this->oauthId;
+    }
+
+    /**
+     * Set the value of Oauth Id
+     *
+     * @param string oauthId
+     *
+     * @return self
+     */
+    public function setOauthId($oauthId)
+    {
+        $this->oauthId = $oauthId;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Oauth Access Token
+     *
+     * @return string
+     */
+    public function getOauthAccessToken()
+    {
+        return $this->oauthAccessToken;
+    }
+
+    /**
+     * Set the value of Oauth Access Token
+     *
+     * @param string oauthAccessToken
+     *
+     * @return self
+     */
+    public function setOauthAccessToken($oauthAccessToken)
+    {
+        $this->oauthAccessToken = $oauthAccessToken;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Discr
+     *
+     * @return string
+     */
+    public function getDiscr()
+    {
+        return $this->discr;
+    }
+
+    /**
+     * Set the value of Discr
+     *
+     * @param string discr
+     *
+     * @return self
+     */
+    public function setDiscr($discr)
+    {
+        $this->discr = $discr;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Share Image
+     *
+     * @return string
+     */
+    public function getShareImage()
+    {
+        return $this->shareImage;
+    }
+
+    /**
+     * Set the value of Share Image
+     *
+     * @param string shareImage
+     *
+     * @return self
+     */
+    public function setShareImage($shareImage)
+    {
+        $this->shareImage = $shareImage;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of Journeys
+     *
+     * @param mixed journeys
+     *
+     * @return self
+     */
+    public function setJourneys($journeys)
+    {
+        $this->journeys = $journeys;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Social Media
+     *
+     * @return string
+     */
+    public function getSocialMedia()
+    {
+        return $this->socialMedia;
+    }
+
+    /**
+     * Set the value of Social Media
+     *
+     * @param string socialMedia
+     *
+     * @return self
+     */
+    public function setSocialMedia($socialMedia)
+    {
+        $this->socialMedia = $socialMedia;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Race Event Type
+     *
+     * @return string
+     */
+    public function getRaceEventType()
+    {
+        return $this->raceEventType;
+    }
+
+    /**
+     * Set the value of Race Event Type
+     *
+     * @param string raceEventType
+     *
+     * @return self
+     */
+    public function setRaceEventType($raceEventType)
+    {
+        $this->raceEventType = $raceEventType;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Race Distance Min
+     *
+     * @return integer
+     */
+    public function getRaceDistanceMin()
+    {
+        return $this->raceDistanceMin;
+    }
+
+    /**
+     * Set the value of Race Distance Min
+     *
+     * @param integer raceDistanceMin
+     *
+     * @return self
+     */
+    public function setRaceDistanceMin($raceDistanceMin)
+    {
+        $this->raceDistanceMin = $raceDistanceMin;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Race Distance Max
+     *
+     * @return integer
+     */
+    public function getRaceDistanceMax()
+    {
+        return $this->raceDistanceMax;
+    }
+
+    /**
+     * Set the value of Race Distance Max
+     *
+     * @param integer RaceDistanceMax
+     *
+     * @return self
+     */
+    public function setRaceDistanceMax($raceDistanceMax)
+    {
+        $this->raceDistanceMax = $raceDistanceMax;
+
+        return $this;
+    }
+
 }

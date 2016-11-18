@@ -12,6 +12,7 @@ class RegistrationControllerTest extends BaseWebTestCase
         $this->loadFixtures([]);
 
         $client = $this->makeClient();
+        $client->enableProfiler();
         $data = [
             'email' => 'name@mail.com',
             'plainPassword' => [
@@ -22,10 +23,28 @@ class RegistrationControllerTest extends BaseWebTestCase
             'lastName' => 'last',
             'gender' => 1,
             'location' => '(13.221316, 52.489695)',
+            'social_media' => 'http://faceboom.com',
+            'race_event_type' => 'trail_run',
+            'race_distance_max' => 30000,
+            'race_distance_min' => 10000,
         ];
-
-        $client->request('POST', '/v2/register', $data);
+        
+        $client->request('POST', '/v2/user/register', $data);
         $this->assertJsonResponse($client->getResponse(), 201);
+        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+        $this->assertEquals(1, $mailCollector->getMessageCount());
+        $collectedMessages = $mailCollector->getMessages();
+        $message = $collectedMessages[0];
+
+        // Asserting email data
+        $this->assertInstanceOf('Swift_Message', $message);
+        $this->assertEquals('Welcome name@mail.com!', $message->getSubject());
+        $this->assertEquals('hello@racebase.world', key($message->getFrom()));
+        $this->assertEquals('name@mail.com', key($message->getTo()));
+        
+        $user = $this->getUser('name@mail.com');
+        $this->assertFalse($user->isEnabled());
+        $this->assertEquals('race_base', $user->getClient());
     }
 
     public function testPostActionBadRequest()
@@ -33,66 +52,41 @@ class RegistrationControllerTest extends BaseWebTestCase
         $client = $this->makeClient();
         $data = [];
 
-        $client->request('POST', '/v2/register', $data);
+        $client->request('POST', '/v2/user/register', $data);
         $this->assertJsonResponse($client->getResponse(), 400);
     }
-    //
-    // public function testPutAction()
-    // {
-    //     $this->loadFixtures([
-    //         'AppBundle\DataFixtures\ORM\RaceEventData',
-    //     ]);
-    //     $this->getContainer()->set('app.services.mapbox_api', $this->getMapboxAPIMock());
-    //     $this->updateSearchIndex();
-    //
-    //     $client = $this->makeClient();
-    //     $raceEventRepository = $this->getContainer()->get('app.repository.race_event');
-    //     $raceEvent = $raceEventRepository->findAll()[0];
-    //     $data = [
-    //         'name' => 'name',
-    //         'about' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    //         'website' => 'website',
-    //         'coords' => '(13.221316, 52.489695)',
-    //         'type' => 'road_run',
-    //     ];
-    //
-    //     $client->request('PUT', '/v2/raceevents/'.$raceEvent->getOid(), $data);
-    //     $this->assertEquals(204, $client->getResponse()->getStatusCode());
-    // }
-    //
-    // public function testPutActionNotFound()
-    // {
-    //     $this->loadFixtures([
-    //         'AppBundle\DataFixtures\ORM\RaceEventData',
-    //     ]);
-    //
-    //     $client = $this->makeClient();
-    //
-    //     $client->request('PUT', '/v2/raceevents/0', []);
-    //     $this->assertEquals(404, $client->getResponse()->getStatusCode());
-    // }
-    //
-    // public function testDeleteAction()
-    // {
-    //     $this->loadFixtures([
-    //         'AppBundle\DataFixtures\ORM\RaceEventData',
-    //     ]);
-    //     $this->updateSearchIndex();
-    //
-    //     $client = $this->makeClient();
-    //     $raceEventRepository = $this->getContainer()->get('app.repository.race_event');
-    //     $raceEvent = $raceEventRepository->findAll()[0];
-    //
-    //     $client->request('DELETE', '/v2/raceevents/'.$raceEvent->getOid());
-    //     $this->assertEquals(204, $client->getResponse()->getStatusCode());
-    // }
-    //
-    // public function testDeleteActionNotFound()
-    // {
-    //     $client = $this->makeClient();
-    //
-    //     $client->request('DELETE', '/v2/raceevents/0');
-    //     $this->assertJsonResponse($client->getResponse(), 404);
-    // }
+    
+    public function testConfirmInvalidTokenAction()
+    {
+        $this->loadFixtures([]);
+
+        $client = $this->makeClient();
+
+        $client->request('GET', '/v2/user/confirm/invalidtoken');
+        $this->assertJsonResponse($client->getResponse(), 404);
+    }
+    
+    public function testConfirmTokenAction()
+    {
+        $this->loadFixtures([]);
+
+        $client = $this->makeClient();
+        $userManager = $client->getContainer()->get('fos_user.user_manager');
+        $userRepository = $client->getContainer()->get('app.user.repository');
+        $user = $userManager->createUser();
+        $user->setEnabled(false);
+        $user->setEmail('test@test');
+        $user->setPassword('test');
+        $user->setFirstName('first');
+        $user->setLastName('last');
+        $user->setGender(1);
+        $user->setConfirmationToken('testtoken');
+        $userManager->updateUser($user);
+
+        $client->request('GET', '/v2/user/confirm/testtoken');
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $userRepository->refresh($user);
+        $this->assertTrue($user->isEnabled());
+    }
 
 }

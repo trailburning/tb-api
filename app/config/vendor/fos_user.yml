@@ -6,3 +6,8 @@ fos_user:
         form:
             type: AppBundle\Form\Type\RegistrationFormType
             name:  ''
+        confirmation:
+            enabled: true
+    from_email:
+        address: hello@racebase.world
+        sender_name: RaceBase

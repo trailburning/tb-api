@@ -27,6 +27,10 @@ class RegistrationFormType extends BaseRegistrationFormType
             ],
         ]);
         $builder->add('newsletter', 'checkbox');
+        $builder->add('social_media');
+        $builder->add('race_event_type');
+        $builder->add('race_distance_max');
+        $builder->add('race_distance_min');
         
         // remove username, we user email adress as username instead
         $builder->remove('username');

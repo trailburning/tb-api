@@ -85,7 +85,7 @@ abstract class BaseWebTestCase extends WebTestCase
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $userRepository = $em->getRepository('AppBundle:User');
         $user = $userRepository->findOneBy([
-            'name' => $name,
+            'username' => $name,
         ]);
 
         if (!$user) {

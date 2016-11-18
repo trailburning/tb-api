@@ -23,6 +23,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use FOS\UserBundle\Model\UserInterface;
 use Swagger\Annotations as SWG;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Component\HttpFoundation\Response;
 
 class RegistrationController extends Controller
@@ -30,7 +31,7 @@ class RegistrationController extends Controller
     
     /**
      * @SWG\Post(
-     *     path="/register",
+     *     path="/user/register",
      *     summary="",
      *     tags={"User"},
      *     consumes={"application/json","application/x-www-form-urlencoded"},
@@ -42,13 +43,17 @@ class RegistrationController extends Controller
      *     @SWG\Parameter(name="lastName", type="string", in="formData", description="The users last name", required="true"),
      *     @SWG\Parameter(name="gender", type="integer", enum={"0", "1", "2"}, in="formData", description="0 = unspecified, 1 = female, 2 = male", required="true"),
      *     @SWG\Parameter(name="location", type="string", in="formData", description="The location of the race event, will be determined from 'coords' if 'location' is not set", required=false),
+     *     @SWG\Parameter(name="social_media", type="string", in="formData", description="The social media URL' is not set", required=false),
+     *     @SWG\Parameter(name="race_event_type", type="string", in="formData", description="The prefered type of the race event (road_run, trail_run)"),
+     *     @SWG\Parameter(name="race_distance_max", type="integer", in="formData", description="The prefered race distance max value", required=false),
+     *     @SWG\Parameter(name="race_distance_min", type="integer", in="formData", description="The prefered race distance min value", required=false),
      *     @SWG\Response(
-     *         response=200,
-     *         description="successful operation",
+     *         response=201,
+     *         description="user created",
      *     )
      * )
      *
-     * @Post("/register")
+     * @Post("/user/register")
      *
      * @param Request $request
      *
@@ -95,35 +100,43 @@ class RegistrationController extends Controller
     }
 
     /**
-     * Tell the user to check his email provider
-     */
-    public function checkEmailAction()
-    {
-        $email = $this->get('session')->get('fos_user_send_confirmation_email/email');
-        $this->get('session')->remove('fos_user_send_confirmation_email/email');
-        $user = $this->get('fos_user.user_manager')->findUserByEmail($email);
-
-        if (null === $user) {
-            throw new NotFoundHttpException(sprintf('The user with email "%s" does not exist', $email));
-        }
-
-        return $this->render('FOSUserBundle:Registration:checkEmail.html.twig', array(
-            'user' => $user,
-        ));
-    }
-
-    /**
-     * Receive the confirmation token from user email provider, login the user
+     * @SWG\Get(
+     *     path="/user/confirm/{token}",
+     *     summary="",
+     *     tags={"User"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(
+     *         description="The confirmation token",
+     *         in="path",
+     *         name="token",
+     *         required=true,
+     *         type="string",
+     *     ),
+     *     @SWG\Response(
+     *         response=204,
+     *         description="User confirmation su successful",
+     *     ),
+     *     @SWG\Response(
+     *         response=404,
+     *         description="No user found for token",
+     *     )
+     * )
+     *
+     * @Get("/user/confirm/{token}")
+     *
+     * @param Request $request
+     *
+     * @return APIResponse
      */
     public function confirmAction(Request $request, $token)
     {
-        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $apiResponseBuilder = $this->get('app.services.response_builder');
         $userManager = $this->get('fos_user.user_manager');
 
         $user = $userManager->findUserByConfirmationToken($token);
 
         if (null === $user) {
-            throw new NotFoundHttpException(sprintf('The user with confirmation token "%s" does not exist', $token));
+            return $apiResponseBuilder->buildNotFoundResponse(sprintf('The user with confirmation token "%s" does not exist', $token));
         }
 
         /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
@@ -131,51 +144,17 @@ class RegistrationController extends Controller
 
         $user->setConfirmationToken(null);
         $user->setEnabled(true);
-
         $event = new GetResponseUserEvent($user, $request);
         $dispatcher->dispatch(FOSUserEvents::REGISTRATION_CONFIRM, $event);
 
         $userManager->updateUser($user);
 
         if (null === $response = $event->getResponse()) {
-            $url = $this->generateUrl('fos_user_registration_confirmed');
-            $response = new RedirectResponse($url);
+            $response = new Response();
         }
-
+        
         $dispatcher->dispatch(FOSUserEvents::REGISTRATION_CONFIRMED, new FilterUserResponseEvent($user, $request, $response));
 
-        return $response;
-    }
-
-    /**
-     * Tell the user his account is now confirmed
-     */
-    public function confirmedAction()
-    {
-        $user = $this->getUser();
-        if (!is_object($user) || !$user instanceof UserInterface) {
-            throw new AccessDeniedException('This user does not have access to this section.');
-        }
-
-        return $this->render('FOSUserBundle:Registration:confirmed.html.twig', array(
-            'user' => $user,
-            'targetUrl' => $this->getTargetUrlFromSession(),
-        ));
-    }
-
-    private function getTargetUrlFromSession()
-    {
-        // Set the SecurityContext for Symfony <2.6
-        if (interface_exists('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')) {
-            $tokenStorage = $this->get('security.token_storage');
-        } else {
-            $tokenStorage = $this->get('security.context');
-        }
-
-        $key = sprintf('_security.%s.target_path', $tokenStorage->getToken()->getProviderKey());
-
-        if ($this->get('session')->has($key)) {
-            return $this->get('session')->get($key);
-        }
+        return $apiResponseBuilder->buildEmptyResponse(204);
     }
 }
