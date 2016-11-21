@@ -11,3 +11,6 @@ fos_user:
     from_email:
         address: hello@racebase.world
         sender_name: RaceBase
+        
+    service:
+        user_manager: app.security.user_manager

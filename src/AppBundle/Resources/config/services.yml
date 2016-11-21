@@ -274,3 +274,11 @@ services:
         tags:
             - { name: form.type, alias: app_user_registration }
             
+    app.security.user_manager:
+        class:  AppBundle\Security\UserManager
+        arguments:
+            - '@security.encoder_factory'
+            - '@fos_user.util.username_canonicalizer'
+            - '@fos_user.util.email_canonicalizer'
+            - '@fos_user.entity_manager'
+            - '%fos_user.model.user.class%'
