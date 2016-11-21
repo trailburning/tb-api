@@ -19,7 +19,19 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
+            
+        api_login:
+            pattern:  ^/v2/user/login
+            stateless: true
+            anonymous: true
+            form_login:
+                check_path:               /v2/user/login
+                require_previous_session: false
+                username_parameter:       username
+                password_parameter:       password
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+        
         main:
             anonymous: ~
             # activate different ways to authenticate

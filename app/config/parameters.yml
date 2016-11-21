@@ -17,3 +17,7 @@ parameters:
         hosts:
             - 'elasticsearch:9200'
     mapbox_api_token: pk.eyJ1IjoibWFsbGJldXJ5IiwiYSI6IjJfV1MzaE0ifQ.scrjDE31p7wBx7-GemqV3A
+    jwt_private_key_path: '%kernel.root_dir%/../var/jwt/private.pem'
+    jwt_public_key_path: '%kernel.root_dir%/../var/jwt/public.pem'
+    jwt_key_pass_phrase: 'ozt7gnu87&R&mguz6b%D4'
+    jwt_token_ttl: 3600

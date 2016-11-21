@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker-compose -f docker/docker-compose.yml run php php "$@"
+docker-compose -f docker/docker-compose.yml run php php -d memory_limit=1000M /var/www/"$@"

@@ -872,7 +872,7 @@ class User extends BaseUser
      *
      * @return self
      */
-    public function setActivityLastViewed(datetime $activityLastViewed)
+    public function setActivityLastViewed(\DateTime $activityLastViewed)
     {
         $this->activityLastViewed = $activityLastViewed;
 

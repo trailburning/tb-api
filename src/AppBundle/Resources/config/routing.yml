@@ -64,9 +64,15 @@ register:
     type:   rest
     resource: AppBundle\Controller\RegistrationController
     prefix: /v2
+    
+security:
+    type:   rest
+    resource: AppBundle\Controller\SecurityController
+    prefix: /v2
 
 fos_user_registration_confirm:
     path:  /registration/confirm/{token}
     
 fos_user_registration_check_email:
     path:  /registration/check
+

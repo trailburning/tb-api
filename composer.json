@@ -44,7 +44,8 @@
         "backendweb/generator-bundle": "dev-master",
         "elasticsearch/elasticsearch": "^2.1",
         "ongr/elasticsearch-dsl": "^2.0",
-        "guzzlehttp/guzzle": "^6.2"
+        "guzzlehttp/guzzle": "^6.2",
+        "lexik/jwt-authentication-bundle": "^2.0"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^2.7",
