@@ -34,6 +34,10 @@ class SecurityController extends Controller
      *     @SWG\Response(
      *         response=200,
      *         description="Authentification successful",
+     *     ),
+     *     @SWG\Response(
+     *         response=401,
+     *         description="Invalid credentials",
      *     )
      * )
      *

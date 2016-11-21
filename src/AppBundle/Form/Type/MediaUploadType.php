@@ -27,6 +27,7 @@ class MediaUploadType extends AbstractType
             ])
             ->add('credit')
             ->add('creditUrl')
+            ->add('publish')
         ;
     }
 

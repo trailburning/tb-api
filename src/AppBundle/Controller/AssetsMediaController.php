@@ -37,6 +37,7 @@ class AssetsMediaController extends Controller implements ClassResourceInterface
      *     ),
      *     @SWG\Parameter(name="credit", type="string", in="formData", description="Credit text"),
      *     @SWG\Parameter(name="creditUrl", type="string", in="formData", description="Credit URL"),
+     *     @SWG\Parameter(name="publish", type="boolean", in="formData", description="Publish this media media, default value is 'true'"),
      *     @SWG\Response(
      *         response=201,
      *         description="Successful operation"
@@ -118,6 +119,7 @@ class AssetsMediaController extends Controller implements ClassResourceInterface
      *     ),
      *     @SWG\Parameter(name="credit", type="string", in="formData", description="Credit text"),
      *     @SWG\Parameter(name="creditUrl", type="string", in="formData", description="Credit URL"),
+     *     @SWG\Parameter(name="publish", type="boolean", in="formData", description="Publish this media media, default value is 'true'"),
      *     @SWG\Response(
      *         response=204,
      *         description="Successful operation"

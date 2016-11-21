@@ -98,6 +98,15 @@ class Media
      * @Serializer\Expose
      */
     private $sharePath;
+    
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", options={"default" = true})
+     * @SWG\Property()
+     * @Serializer\Expose
+     */
+    private $publish = true;
 
     /**
      * ################################################################################################################
@@ -333,4 +342,29 @@ class Media
     {
         return $this->creditUrl;
     }
+    
+    /**
+     * @param bool $publish
+     *
+     * @return self
+     */
+    public function setPublish($publish)
+    {
+        if ($publish === null) {
+            return $this;
+        }
+        
+        $this->publish = $publish;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublish()
+    {
+        return $this->publish;
+    }
+    
 }
