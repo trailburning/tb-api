@@ -246,6 +246,43 @@ class SearchMappingCommand extends ContainerAwareCommand
                             'type' => 'string',
                             'index' => 'not_analyzed',
                         ],
+                        'media' => [
+                            'type' => 'nested',
+                            'properties' => [
+                                'id' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'path' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'mimeType' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'credit' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'creditUrl' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'sharePath' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'publish' => [
+                                    'type' => 'boolean',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'metadata' => [
+                                    'type' => 'object',
+                                    'dynamic' =>  true,
+                                ],
+                            ],
+                        ]
                     ],
                 ],
             ],

@@ -153,6 +153,7 @@ class SearchIndexService
             'category' => [],
             'attributes' => $raceEvent->getAttributesArray(),
             'attributes_slug' => $raceEvent->getAttributesSlugArray(),
+            'media' => [],
         ];
 
         if ($raceEvent->getStartDate() !== null) {
@@ -171,6 +172,19 @@ class SearchIndexService
             if ($race->getCategory() !== null) {
                 $doc['category'][] = $race->getCategory();
             }
+        }
+        
+        foreach ($raceEvent->getMedias() as $media) {
+            $doc['media'][] = [
+                'id' => $media->getOid(),
+                'path' => $media->getPath(),
+                'mimeType' => $media->getMimeType(),
+                'credit' => $media->getCredit(),
+                'creditUrl' => $media->getCreditUrl(),
+                'sharePath' => $media->getSHarePath(),
+                'publish' => $media->isPublish(),
+                'metadata' => $media->getMetadata(),
+            ];
         }
         
         if (count($doc['category']) > 1) {
