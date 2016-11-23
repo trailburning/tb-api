@@ -70,6 +70,11 @@ security:
     resource: AppBundle\Controller\SecurityController
     prefix: /v2
 
+# profile:
+#     type:   rest
+#     resource: AppBundle\Controller\ProfileController
+#     prefix: /v2
+
 fos_user_registration_confirm:
     path:  /registration/confirm/{token}
     

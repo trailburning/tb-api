@@ -8,6 +8,10 @@ fos_user:
             name:  ''
         confirmation:
             enabled: true
+    profile:
+        form:
+            type: AppBundle\Form\Type\ProfileFormType
+            name:  ''
     from_email:
         address: hello@racebase.world
         sender_name: RaceBase

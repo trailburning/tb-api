@@ -31,9 +31,22 @@ security:
                 password_parameter:       password
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+                
+        api:
+            pattern:   ^/v2/user
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+                    
+    access_control:
+        - { path: ^/v2/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/v2/user/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/v2/user/confirm, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/v2/user, roles: IS_AUTHENTICATED_FULLY }
         
-        main:
-            anonymous: ~
+        # main:
+        #     anonymous: ~
             # activate different ways to authenticate
 
             # http_basic: ~
