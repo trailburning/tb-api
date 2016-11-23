@@ -76,7 +76,7 @@ class RaceEventMediaController extends Controller implements ClassResourceInterf
         $form->handleRequest($request);
 
         if (!$form->isValid()) {
-            return $apiResponseBuilder->buildBadRequestResponse((string)$form->getErrors(true, true));
+            return $apiResponseBuilder->buildFormErrorResponse($form);
         }
 
         $mediaFiles = $form->get('media')->getData();
@@ -166,7 +166,7 @@ class RaceEventMediaController extends Controller implements ClassResourceInterf
         $form->handleRequest($request);
 
         if (!$form->isValid()) {
-            return $apiResponseBuilder->buildBadRequestResponse((string)$form->getErrors(true, true));
+            return $apiResponseBuilder->buildFormErrorResponse($form);
         }
 
         $file = $form->get('media')->getData();

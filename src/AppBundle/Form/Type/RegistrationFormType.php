@@ -26,7 +26,6 @@ class RegistrationFormType extends BaseRegistrationFormType
                 User::GENDER_FEMALE => 'Female',
             ],
         ]);
-        $builder->add('newsletter', 'checkbox');
         $builder->add('social_media');
         $builder->add('race_event_type');
         $builder->add('race_distance_max');

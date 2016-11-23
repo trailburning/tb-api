@@ -56,6 +56,7 @@ class ProfileController extends Controller
     {
         $apiResponseBuilder = $this->get('app.services.response_builder');
         $user = $this->getUser();
+        
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
@@ -71,13 +72,12 @@ class ProfileController extends Controller
 
         $formFactory = $this->get('fos_user.profile.form.factory');
 
-        $form = $formFactory->createForm();
+        $form = $formFactory->createForm(['method' => 'PUT']);
         $form->setData($user);
-
-        $form->handleRequest($request);
+        $form->submit($request->request->all(), false);
 
         if (!$form->isValid()) {
-            return $apiResponseBuilder->buildBadRequestResponse((string) $form->getErrors(true, true));
+            return $apiResponseBuilder->buildFormErrorResponse($form);
         }
 
         $userManager = $this->get('fos_user.user_manager');
@@ -88,8 +88,7 @@ class ProfileController extends Controller
         $userManager->updateUser($user);
 
         if (null === $response = $event->getResponse()) {
-            $url = $this->generateUrl('fos_user_profile_show');
-            $response = new RedirectResponse($url);
+            $response = new Response();
         }
 
         $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_COMPLETED, new FilterUserResponseEvent($user, $request, $response));

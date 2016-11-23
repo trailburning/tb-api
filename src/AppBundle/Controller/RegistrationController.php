@@ -82,7 +82,7 @@ class RegistrationController extends Controller
         $form->handleRequest($request);
         
         if (!$form->isValid()) {
-            return $apiResponseBuilder->buildBadRequestResponse((string)$form->getErrors(true, true));
+            return $apiResponseBuilder->buildFormErrorResponse($form);
         }
 
         $event = new FormEvent($form, $request);

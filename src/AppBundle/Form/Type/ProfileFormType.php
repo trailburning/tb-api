@@ -12,8 +12,7 @@ class ProfileFormType extends BaseProfileFormType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        
-        parent::buildForm($builder, $options);
+        parent::buildUserForm($builder, $options);
 
         // add your custom fields not defined in FOSUserBundle
         $builder->add('firstName');
@@ -27,7 +26,6 @@ class ProfileFormType extends BaseProfileFormType
                 User::GENDER_FEMALE => 'Female',
             ],
         ]);
-        $builder->add('newsletter', 'checkbox');
         $builder->add('social_media');
         $builder->add('race_event_type');
         $builder->add('race_distance_max');
