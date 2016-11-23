@@ -35,9 +35,11 @@ security:
         api:
             pattern:   ^/v2/user
             stateless: true
+            anonymous: true
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
+                    
                     
     access_control:
         - { path: ^/v2/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
