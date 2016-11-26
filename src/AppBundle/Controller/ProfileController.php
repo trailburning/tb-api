@@ -21,6 +21,40 @@ use FOS\RestBundle\Controller\Annotations\Put;
 class ProfileController extends Controller
 {
     /**
+     * @SWG\Get(
+     *     path="/user",
+     *     summary="",
+     *     tags={"User"},
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(name="Authorization", type="string", in="header", description="The authentication token", required=true),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="user created",
+     *         @SWG\Schema(ref="#/definitions/User")
+     *     ),
+     *     @SWG\Response(
+     *         response=401,
+     *         description="Acecss Denied",
+     *     )
+     * )
+     *
+     * @Get("/user")
+     *
+     * @return APIResponse
+     */
+    public function getAction()
+    {
+        $apiResponseBuilder = $this->get('app.services.response_builder');
+        $user = $this->getUser();
+        if (!is_object($user) || !$user instanceof UserInterface) {
+            throw new AccessDeniedException('This user does not have access to this section.');
+        }
+
+        return $apiResponseBuilder->buildSuccessResponse($user, 'user');
+    }
+
+    /**
      * @SWG\Put(
      *     path="/user",
      *     summary="",
@@ -44,7 +78,7 @@ class ProfileController extends Controller
      *         response=401,
      *         description="Acecss Denied",
      *     )
-     * )    
+     * )
      *
      * @Put("/user")
      *
@@ -56,7 +90,7 @@ class ProfileController extends Controller
     {
         $apiResponseBuilder = $this->get('app.services.response_builder');
         $user = $this->getUser();
-        
+
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }

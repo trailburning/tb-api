@@ -6,6 +6,22 @@ use Tests\AppBundle\BaseWebTestCase;
 
 class ProfileControllerTest extends BaseWebTestCase
 {
+    public function testGetAction()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\UserData',
+        ]);
+
+        $client = $this->makeClient();
+        $user = $this->getUser('mattallbeury@trailburning.com');
+        $token = $this->loginUser($user->getEmail(), 'password', $client);
+
+        $client->request('GET', '/v2/user', [], [], [
+            'HTTP_AUTHORIZATION' => 'Bearer '.$token,
+        ]);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
     public function testPutAction()
     {
         $this->loadFixtures([
@@ -27,7 +43,7 @@ class ProfileControllerTest extends BaseWebTestCase
         $token = $this->loginUser($user->getEmail(), 'password', $client);
 
         $client->request('PUT', '/v2/user', $data, [], [
-            'HTTP_AUTHORIZATION' => 'Bearer '. $token,
+            'HTTP_AUTHORIZATION' => 'Bearer '.$token,
         ]);
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
     }
@@ -41,7 +57,6 @@ class ProfileControllerTest extends BaseWebTestCase
         $client = $this->makeClient();
         $data = [];
 
-        $user = $this->getUser('mattallbeury@trailburning.com');
         $client->request('PUT', '/v2/user', $data);
         $this->assertJsonResponse($client->getResponse(), 401);
     }
