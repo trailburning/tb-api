@@ -27,7 +27,7 @@ class RaceEvent
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
+
     /**
      * @var string
      * @ORM\Column(type="string", length=22, unique=true)
@@ -65,7 +65,7 @@ class RaceEvent
      * @Serializer\Expose
      */
     private $website;
-    
+
     /**
      * @var string
      *
@@ -83,7 +83,7 @@ class RaceEvent
      * @Assert\NotBlank()
      */
     private $coords;
-    
+
     /**
      * @var Race[]
      *
@@ -93,7 +93,7 @@ class RaceEvent
      * @ORM\OrderBy({"distance" = "ASC"})
      */
     private $races;
-    
+
     /**
      * @var string
      *
@@ -102,7 +102,7 @@ class RaceEvent
      * @Serializer\Expose
      */
     private $location;
-    
+
     /**
      * @var Region
      *
@@ -110,13 +110,13 @@ class RaceEvent
      * @ORM\JoinColumn(nullable=true)
      */
     private $region;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Region", inversedBy="raceEvents")
      * @ORM\JoinTable(name="api_race_event_region")
      */
     private $regions;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="RaceEventAttribute", inversedBy="raceEvents")
      * @ORM\JoinTable(name="api_race_event_race_event_attribute")
@@ -124,7 +124,7 @@ class RaceEvent
      * @Serializer\Expose
      */
     private $attributes;
-    
+
     /**
      * @var string
      *
@@ -134,7 +134,7 @@ class RaceEvent
      * @Serializer\Expose
      */
     private $type;
-    
+
     /**
      * @var Media[]
      *
@@ -174,8 +174,8 @@ class RaceEvent
             $this->coords->getLatitude(),
         ];
     }
-    
-    public function getStartDate() 
+
+    public function getStartDate()
     {
         $startDate = null;
         foreach ($this->getRaces() as $race) {
@@ -183,39 +183,40 @@ class RaceEvent
                 $startDate = $race->getDate();
             }
         }
-        
+
         return $startDate;
     }
-    
+
     /**
      * @Serializer\VirtualProperty()
      * @Serializer\SerializedName("attributes")
      * @SWG\Property(property="attributes")
+     *
      * @return array
      */
-    public function getAttributesArray() 
-    {        
+    public function getAttributesArray()
+    {
         $attributes = [];
         foreach ($this->getAttributes() as $attribute) {
             $attributes[] = $attribute->getName();
         }
-        
+
         return $attributes;
     }
-    
+
     /**
      * @return array
      */
-    public function getAttributesSlugArray() 
-    {        
+    public function getAttributesSlugArray()
+    {
         $attributes = [];
         foreach ($this->getAttributes() as $attribute) {
             $attributes[] = $attribute->getSlug();
         }
-        
+
         return $attributes;
     }
-    
+
     /**
      * ################################################################################################################.
      *
@@ -233,7 +234,7 @@ class RaceEvent
     {
         return $this->id;
     }
-    
+
     /**
      * @return string
      */
@@ -357,9 +358,10 @@ class RaceEvent
     {
         return $this->coords;
     }
-    
+
     /**
      * @param Race $races
+     *
      * @return self
      */
     public function addRace(Race $race)
@@ -379,13 +381,13 @@ class RaceEvent
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getRaces()
     {
         return $this->races;
     }
-    
+
     /**
      * @param string $location
      *
@@ -405,15 +407,16 @@ class RaceEvent
     {
         return $this->location;
     }
-    
+
     /**
      * @param Region $region
+     *
      * @return self
      */
     public function setRegion(Region $region)
     {
         $this->region = $region;
-    
+
         return $this;
     }
 
@@ -424,7 +427,7 @@ class RaceEvent
     {
         return $this->region;
     }
-    
+
     /**
      * @return ArrayCollection
      */
@@ -434,35 +437,42 @@ class RaceEvent
     }
 
     /**
-     * @param array $regions 
+     * @param array $regions
+     *
      * @return self
      */
-    function setRegions($regions) {
+    public function setRegions($regions)
+    {
         $this->regions = new ArrayCollection($regions);
-        
+
         return $this;
-    }
-    
-    /**
-     * @param Region $region
-     * @return self
-     */
-    public function addRegion(Region $region) {
-        $this->regions->add($region);
-        $regions->addRaceEvent($this);
     }
 
     /**
      * @param Region $region
+     *
      * @return self
      */
-    public function removeRegion(Region $region) {
+    public function addRegion(Region $region)
+    {
+        $this->regions->add($region);
+        $region->addRaceEvent($this);
+    }
+
+    /**
+     * @param Region $region
+     *
+     * @return self
+     */
+    public function removeRegion(Region $region)
+    {
         $this->regions->removeElement($region);
         $region->removeRaceEvent($this);
     }
-    
+
     /**
      * @param RaceEventAttribute $attribute
+     *
      * @return self
      */
     public function addAttribute(RaceEventAttribute $attribute)
@@ -481,40 +491,42 @@ class RaceEvent
         $this->attributes->removeElement($attribute);
         $attribute->removeRaceEvent($this);
     }
-    
-    public function clearAttributes() 
+
+    public function clearAttributes()
     {
         $this->attributes = new ArrayCollection();
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      * @SWG\Property(property="attributes")
      */
     public function getAttributes()
     {
         return $this->attributes;
     }
-    
+
     /**
      * @param array $attributes
+     *
      * @return self
      */
     public function setAttributes(array $attributes)
     {
         $this->attributes = new ArrayCollection();
-        
+
         foreach ($attributes as $attribute) {
             $this->addAttribute($attribute);
         }
 
         return $this;
     }
-    
+
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
+     *
      * @return Race
      */
     public function setType($type)
@@ -525,17 +537,18 @@ class RaceEvent
     }
 
     /**
-     * Get type
+     * Get type.
      *
-     * @return string 
+     * @return string
      */
     public function getType()
     {
         return $this->type;
     }
-    
+
     /**
      * @param Media $medias
+     *
      * @return self
      */
     public function addMedia(Media $media)
@@ -555,10 +568,10 @@ class RaceEvent
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getMedias()
     {
         return $this->medias;
-    }    
+    }
 }

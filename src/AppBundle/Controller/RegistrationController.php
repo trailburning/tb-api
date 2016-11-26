@@ -17,10 +17,6 @@ use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use FOS\UserBundle\Model\UserInterface;
 use Swagger\Annotations as SWG;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Get;
@@ -28,7 +24,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RegistrationController extends Controller
 {
-    
     /**
      * @SWG\Post(
      *     path="/user/register",
@@ -80,7 +75,7 @@ class RegistrationController extends Controller
         $form->setData($user);
 
         $form->handleRequest($request);
-        
+
         if (!$form->isValid()) {
             return $apiResponseBuilder->buildFormErrorResponse($form);
         }
@@ -89,11 +84,11 @@ class RegistrationController extends Controller
         $dispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
 
         $userManager->updateUser($user);
-        
+
         if (null === $response = $event->getResponse()) {
             $response = new Response();
         }
-        
+
         $dispatcher->dispatch(FOSUserEvents::REGISTRATION_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
 
         return $apiResponseBuilder->buildEmptyResponse(201);
@@ -152,7 +147,7 @@ class RegistrationController extends Controller
         if (null === $response = $event->getResponse()) {
             $response = new Response();
         }
-        
+
         $dispatcher->dispatch(FOSUserEvents::REGISTRATION_CONFIRMED, new FilterUserResponseEvent($user, $request, $response));
 
         return $apiResponseBuilder->buildEmptyResponse(204);

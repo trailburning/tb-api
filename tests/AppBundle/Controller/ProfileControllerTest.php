@@ -29,12 +29,10 @@ class ProfileControllerTest extends BaseWebTestCase
         $client->request('PUT', '/v2/user', $data, [], [
             'HTTP_AUTHORIZATION' => 'Bearer '. $token,
         ]);
-        // var_export($client->getResponse());
-        // exit;
-        $this->assertJsonResponse($client->getResponse(), 204);
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
     }
 
-    public function testPostActionAccessDenied()
+    public function testPutActionAccessDenied()
     {
         $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\UserData',

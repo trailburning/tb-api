@@ -79,13 +79,11 @@ class Search
      * @var int
      */
     private $offset = 0;
-    
+
     /**
      * @var array
      */
     private $attributes;
-    
-    
 
     /**
      * ################################################################################################################.
@@ -379,7 +377,7 @@ class Search
     }
 
     /**
-     * Get the value of Limit
+     * Get the value of Limit.
      *
      * @return int
      */
@@ -388,12 +386,12 @@ class Search
         if ($this->limit === null) {
             return 10;
         }
-        
+
         return $this->limit;
     }
 
     /**
-     * Set the value of Limit
+     * Set the value of Limit.
      *
      * @param int limit
      *
@@ -407,7 +405,7 @@ class Search
     }
 
     /**
-     * Get the value of Offset
+     * Get the value of Offset.
      *
      * @return int
      */
@@ -417,7 +415,7 @@ class Search
     }
 
     /**
-     * Set the value of Offset
+     * Set the value of Offset.
      *
      * @param int offset
      *
@@ -429,9 +427,9 @@ class Search
 
         return $this;
     }
-    
+
     /**
-     * Get the value of Attributes
+     * Get the value of Attributes.
      *
      * @return int
      */
@@ -441,7 +439,7 @@ class Search
     }
 
     /**
-     * Set the value of Attributes
+     * Set the value of Attributes.
      *
      * @param int attributes
      *
@@ -453,5 +451,4 @@ class Search
 
         return $this;
     }
-
 }

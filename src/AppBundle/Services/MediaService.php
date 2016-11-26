@@ -9,7 +9,6 @@ use AppBundle\Entity\Media;
 use AppBundle\Entity\MediaAttribute;
 use AppBundle\Repository\MediaAttributeRepository;
 use AppBundle\Repository\MediaRepository;
-use AppBundle\Services\APIResponseBuilder;
 use Gaufrette\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -43,22 +42,21 @@ class MediaService
      * @var MediaAttributeRepository
      */
     protected $mediaAttributeRepository;
-    
+
     /**
      * @var ImageService
      */
     private $imageService;
-    
+
     /**
      * @var KernelInterface
      */
     private $kernel;
-    
+
     /**
-     * @var $directory
+     * @var
      */
     private $directory;
-    
 
     private $mimeTypeHostMap = [
         MIMEType::JPEG => 'tbmedia2.imgix.net',
@@ -97,8 +95,8 @@ class MediaService
     }
 
     /**
-     * @param array $files
-     * @param Asset $asset
+     * @param array     $files
+     * @param Asset     $asset
      * @param RaceEvent $raceEvent
      *
      * @return APIResponse
@@ -132,7 +130,7 @@ class MediaService
 
         return $this->apiResponseBuilder->buildEmptyResponse(201);
     }
-    
+
     private function createShareImage(Media $media, $filepath)
     {
         if ($media->getMimeType() === MIMEType::JPEG) {
@@ -170,8 +168,7 @@ class MediaService
     }
 
     /**
-     * @param string $id 
-     * @return void
+     * @param string $id
      */
     public function deleteMedia($id)
     {
