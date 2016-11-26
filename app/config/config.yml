@@ -11,6 +11,7 @@ imports:
     - { resource: vendor/knp_gaufrette.yml }
     - { resource: vendor/nelmio_cors.yml }
     - { resource: vendor/lexik_jwt_authentication.yml }
+    - { resource: vendor/jms_serializer.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration

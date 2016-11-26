@@ -14,6 +14,7 @@ use Swagger\Annotations as SWG;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Put;
+use AppBundle\Entity\User;
 
 /**
  * Description.
@@ -46,6 +47,7 @@ class ProfileController extends Controller
     public function getAction()
     {
         $apiResponseBuilder = $this->get('app.services.response_builder');
+        /** @var $user AppBundle\Entity\User */
         $user = $this->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');

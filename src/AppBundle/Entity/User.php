@@ -13,7 +13,7 @@ use Swagger\Annotations as SWG;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * User
+ * User.
  *
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  * @SWG\Definition(required={"email", "firstName", "lastName", "gender"}, @SWG\Xml(name="User"))
@@ -22,13 +22,12 @@ use JMS\Serializer\Annotation as Serializer;
  */
 class User extends BaseUser
 {
-
     const GENDER_NONE = 0;
     const GENDER_MALE = 1;
     const GENDER_FEMALE = 2;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -109,7 +108,7 @@ class User extends BaseUser
     private $avatarGravatar;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(type="smallint", nullable=true)
      */
@@ -123,14 +122,14 @@ class User extends BaseUser
     private $activityLastViewed;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $homepageOrder;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(type="smallint")
      * @Serializer\Expose
@@ -139,7 +138,7 @@ class User extends BaseUser
     private $gender = 0;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(type="boolean", options={"default" = true})
      */
@@ -186,7 +185,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string")
      */
-    private $discr = "UserProfile";
+    private $discr = 'UserProfile';
 
     /**
      * @var string
@@ -231,7 +230,7 @@ class User extends BaseUser
     private $shareImage;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(type="boolean", options={"default" = false}, nullable=true)
      */
@@ -286,7 +285,7 @@ class User extends BaseUser
     private $raceEventType;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(type="integer", nullable=true)
      * @SWG\Property()
@@ -296,7 +295,7 @@ class User extends BaseUser
     private $raceDistanceMin;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(type="integer", nullable=true)
      * @SWG\Property()
@@ -306,20 +305,20 @@ class User extends BaseUser
     private $raceDistanceMax;
 
     /**
-     * ################################################################################################################
+     * ################################################################################################################.
      *
      *                                         User Defined
      *
      * ################################################################################################################
      */
-
-    function __construct() {
+    public function __construct()
+    {
         $this->client = UserClientType::RACE_BASE;
         parent::__construct();
     }
 
     /**
-     * ################################################################################################################
+     * ################################################################################################################.
      *
      *                                         Getters and Setters
      *
@@ -327,8 +326,7 @@ class User extends BaseUser
      */
 
     /**
-     *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -337,6 +335,7 @@ class User extends BaseUser
 
     /**
      * @param string $about
+     *
      * @return User
      */
     public function setAbout($about)
@@ -356,6 +355,7 @@ class User extends BaseUser
 
     /**
      * @param string $synopsis
+     *
      * @return User
      */
     public function setSynopsis($synopsis)
@@ -375,6 +375,7 @@ class User extends BaseUser
 
     /**
      * @param string $avatar
+     *
      * @return User
      */
     public function setAvatar($avatar)
@@ -394,6 +395,7 @@ class User extends BaseUser
 
     /**
      * @param string $email
+     *
      * @return User
      */
     public function setEmail($email)
@@ -405,6 +407,7 @@ class User extends BaseUser
 
     /**
      * @param string $emailCanonical
+     *
      * @return User
      */
     public function setEmailCanonical($emailCanonical)
@@ -416,6 +419,7 @@ class User extends BaseUser
 
     /**
      * @param string $name
+     *
      * @return User
      */
     public function setName($name)
@@ -435,6 +439,7 @@ class User extends BaseUser
 
     /**
      * @param string $lastName
+     *
      * @return self
      */
     public function setLastName($lastName)
@@ -454,6 +459,7 @@ class User extends BaseUser
 
     /**
      * @param point $location
+     *
      * @return self
      */
     public function setLocation($location)
@@ -473,6 +479,7 @@ class User extends BaseUser
 
     /**
      * @param string $firstName
+     *
      * @return self
      */
     public function setFirstName($firstName)
@@ -492,6 +499,7 @@ class User extends BaseUser
 
     /**
      * @param string $avatarGravatar
+     *
      * @return User
      */
     public function setAvatarGravatar($avatarGravatar)
@@ -517,7 +525,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getHomepageOrder()
     {
@@ -525,7 +533,8 @@ class User extends BaseUser
     }
 
     /**
-     * @param integer $gender
+     * @param int $gender
+     *
      * @return User
      */
     public function setGender($gender)
@@ -536,7 +545,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getGender()
     {
@@ -544,7 +553,8 @@ class User extends BaseUser
     }
 
     /**
-     * @param boolean $newsletter
+     * @param bool $newsletter
+     *
      * @return User
      */
     public function setNewsletter($newsletter)
@@ -555,7 +565,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getNewsletter()
     {
@@ -564,6 +574,7 @@ class User extends BaseUser
 
     /**
      * @param \DateTime $registeredAt
+     *
      * @return User
      */
     public function setRegisteredAt($registeredAt)
@@ -583,6 +594,7 @@ class User extends BaseUser
 
     /**
      * @param string $avatarFacebook
+     *
      * @return User
      */
     public function setAvatarFacebook($avatarFacebook)
@@ -601,10 +613,11 @@ class User extends BaseUser
     }
 
     /**
-     * @param boolean $isAmbassador
+     * @param bool $isAmbassador
+     *
      * @return self
      */
-    public function setIsAmbassador($isAmbassador)
+    public function setAmbassador($isAmbassador)
     {
         $this->isAmbassador = $isAmbassador;
 
@@ -612,15 +625,16 @@ class User extends BaseUser
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function getIsAmbassador()
+    public function isAmbassador()
     {
         return $this->isAmbassador;
     }
 
     /**
      * @param string $ambassadorTagline
+     *
      * @return self
      */
     public function setAmbassadorTagline($ambassadorTagline)
@@ -640,6 +654,7 @@ class User extends BaseUser
 
     /**
      * @param string $ambassadorLocation
+     *
      * @return self
      */
     public function setAmbassadorLocation($ambassadorLocation)
@@ -659,6 +674,7 @@ class User extends BaseUser
 
     /**
      * @param string $headerImage
+     *
      * @return self
      */
     public function setHeaderImage($headerImage)
@@ -678,6 +694,7 @@ class User extends BaseUser
 
     /**
      * @param string $logo
+     *
      * @return self
      */
     public function setLogo($logo)
@@ -697,6 +714,7 @@ class User extends BaseUser
 
     /**
      * @param string $displayName
+     *
      * @return self
      */
     public function setDisplayName($displayName)
@@ -716,6 +734,7 @@ class User extends BaseUser
 
     /**
      * @param string $abstract
+     *
      * @return self
      */
     public function setAbstract($abstract)
@@ -735,6 +754,7 @@ class User extends BaseUser
 
     /**
      * @param string $subtitle
+     *
      * @return self
      */
     public function setSubtitle($subtitle)
@@ -754,6 +774,7 @@ class User extends BaseUser
 
     /**
      * @param string $link
+     *
      * @return self
      */
     public function setLink($link)
@@ -773,6 +794,7 @@ class User extends BaseUser
 
     /**
      * @param Journey $journeys
+     *
      * @return User
      */
     public function addJourney(Journey $journeys)
@@ -799,6 +821,7 @@ class User extends BaseUser
     }
     /**
      * @param string $client
+     *
      * @return self
      */
     public function setClient($client)
@@ -816,11 +839,10 @@ class User extends BaseUser
         return $this->client;
     }
 
-
     /**
-     * Set the value of Id
+     * Set the value of Id.
      *
-     * @param integer id
+     * @param int id
      *
      * @return self
      */
@@ -832,9 +854,9 @@ class User extends BaseUser
     }
 
     /**
-     * Get the value of Activity Unseen Count
+     * Get the value of Activity Unseen Count.
      *
-     * @return integer
+     * @return int
      */
     public function getActivityUnseenCount()
     {
@@ -842,9 +864,9 @@ class User extends BaseUser
     }
 
     /**
-     * Set the value of Activity Unseen Count
+     * Set the value of Activity Unseen Count.
      *
-     * @param integer activityUnseenCount
+     * @param int activityUnseenCount
      *
      * @return self
      */
@@ -856,7 +878,7 @@ class User extends BaseUser
     }
 
     /**
-     * Get the value of Activity Last Viewed
+     * Get the value of Activity Last Viewed.
      *
      * @return datetime
      */
@@ -866,7 +888,7 @@ class User extends BaseUser
     }
 
     /**
-     * Set the value of Activity Last Viewed
+     * Set the value of Activity Last Viewed.
      *
      * @param datetime activityLastViewed
      *
@@ -880,7 +902,7 @@ class User extends BaseUser
     }
 
     /**
-     * Get the value of Oauth Service
+     * Get the value of Oauth Service.
      *
      * @return string
      */
@@ -890,7 +912,7 @@ class User extends BaseUser
     }
 
     /**
-     * Set the value of Oauth Service
+     * Set the value of Oauth Service.
      *
      * @param string oauthService
      *
@@ -904,7 +926,7 @@ class User extends BaseUser
     }
 
     /**
-     * Get the value of Oauth Id
+     * Get the value of Oauth Id.
      *
      * @return string
      */
@@ -914,7 +936,7 @@ class User extends BaseUser
     }
 
     /**
-     * Set the value of Oauth Id
+     * Set the value of Oauth Id.
      *
      * @param string oauthId
      *
@@ -928,7 +950,7 @@ class User extends BaseUser
     }
 
     /**
-     * Get the value of Oauth Access Token
+     * Get the value of Oauth Access Token.
      *
      * @return string
      */
@@ -938,7 +960,7 @@ class User extends BaseUser
     }
 
     /**
-     * Set the value of Oauth Access Token
+     * Set the value of Oauth Access Token.
      *
      * @param string oauthAccessToken
      *
@@ -952,7 +974,7 @@ class User extends BaseUser
     }
 
     /**
-     * Get the value of Discr
+     * Get the value of Discr.
      *
      * @return string
      */
@@ -962,7 +984,7 @@ class User extends BaseUser
     }
 
     /**
-     * Set the value of Discr
+     * Set the value of Discr.
      *
      * @param string discr
      *
@@ -976,7 +998,7 @@ class User extends BaseUser
     }
 
     /**
-     * Get the value of Share Image
+     * Get the value of Share Image.
      *
      * @return string
      */
@@ -986,7 +1008,7 @@ class User extends BaseUser
     }
 
     /**
-     * Set the value of Share Image
+     * Set the value of Share Image.
      *
      * @param string shareImage
      *
@@ -1000,7 +1022,7 @@ class User extends BaseUser
     }
 
     /**
-     * Set the value of Journeys
+     * Set the value of Journeys.
      *
      * @param mixed journeys
      *
@@ -1014,7 +1036,7 @@ class User extends BaseUser
     }
 
     /**
-     * Get the value of Social Media
+     * Get the value of Social Media.
      *
      * @return string
      */
@@ -1024,7 +1046,7 @@ class User extends BaseUser
     }
 
     /**
-     * Set the value of Social Media
+     * Set the value of Social Media.
      *
      * @param string socialMedia
      *
@@ -1038,7 +1060,7 @@ class User extends BaseUser
     }
 
     /**
-     * Get the value of Race Event Type
+     * Get the value of Race Event Type.
      *
      * @return string
      */
@@ -1048,7 +1070,7 @@ class User extends BaseUser
     }
 
     /**
-     * Set the value of Race Event Type
+     * Set the value of Race Event Type.
      *
      * @param string raceEventType
      *
@@ -1062,9 +1084,9 @@ class User extends BaseUser
     }
 
     /**
-     * Get the value of Race Distance Min
+     * Get the value of Race Distance Min.
      *
-     * @return integer
+     * @return int
      */
     public function getRaceDistanceMin()
     {
@@ -1072,9 +1094,9 @@ class User extends BaseUser
     }
 
     /**
-     * Set the value of Race Distance Min
+     * Set the value of Race Distance Min.
      *
-     * @param integer raceDistanceMin
+     * @param int raceDistanceMin
      *
      * @return self
      */
@@ -1086,9 +1108,9 @@ class User extends BaseUser
     }
 
     /**
-     * Get the value of Race Distance Max
+     * Get the value of Race Distance Max.
      *
-     * @return integer
+     * @return int
      */
     public function getRaceDistanceMax()
     {
@@ -1096,9 +1118,9 @@ class User extends BaseUser
     }
 
     /**
-     * Set the value of Race Distance Max
+     * Set the value of Race Distance Max.
      *
-     * @param integer RaceDistanceMax
+     * @param int RaceDistanceMax
      *
      * @return self
      */
@@ -1108,5 +1130,4 @@ class User extends BaseUser
 
         return $this;
     }
-
 }
