@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AppBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -42,11 +41,11 @@ class SearchMappingCommand extends ContainerAwareCommand
                 break;
         }
     }
-    
+
     protected function populateAutosuggestLocationMapping()
-    {   
+    {
         $indexName = $this->getContainer()->getParameter('autosuggest_index_name');
-        
+
         $params = [
             'index' => $indexName,
             'type' => 'location',
@@ -55,16 +54,16 @@ class SearchMappingCommand extends ContainerAwareCommand
                     'dynamic' => 'strict',
                     'properties' => [
                         'id' => [
-                            'type' => 'string', 
+                            'type' => 'string',
                             'index' => 'not_analyzed',
                         ],
                         'suggest_text' => [
                             'type' => 'string',
                             'term_vector' => 'with_positions_offsets',
                             'copy_to' => [
-                                'suggest_engram_part', 
-                                'suggest_engram_full', 
-                                'suggest_phon'
+                                'suggest_engram_part',
+                                'suggest_engram_full',
+                                'suggest_phon',
                             ],
                         ],
                         'suggest_engram_part' => [
@@ -89,7 +88,7 @@ class SearchMappingCommand extends ContainerAwareCommand
                             'analyzer' => 'phonetic_text',
                         ],
                         'name' => [
-                            'type' => 'string', 
+                            'type' => 'string',
                         ],
                         'coords' => [
                             'type' => 'geo_point',
@@ -98,20 +97,20 @@ class SearchMappingCommand extends ContainerAwareCommand
                             'type' => 'integer',
                         ],
                         'type' => [
-                            'type' => 'string', 
+                            'type' => 'string',
                         ],
                     ],
                 ],
             ],
         ];
-        
+
         $this->client->indices()->putMapping($params);
     }
-    
+
     protected function populateAutosuggestRaceEventMapping()
-    {   
+    {
         $indexName = $this->getContainer()->getParameter('autosuggest_index_name');
-        
+
         $params = [
             'index' => $indexName,
             'type' => 'race_event',
@@ -120,16 +119,16 @@ class SearchMappingCommand extends ContainerAwareCommand
                     'dynamic' => 'strict',
                     'properties' => [
                         'id' => [
-                            'type' => 'string', 
+                            'type' => 'string',
                             'index' => 'not_analyzed',
                         ],
                         'suggest_text' => [
                             'type' => 'string',
                             'term_vector' => 'with_positions_offsets',
                             'copy_to' => [
-                                'suggest_engram_part', 
-                                'suggest_engram_full', 
-                                'suggest_phon'
+                                'suggest_engram_part',
+                                'suggest_engram_full',
+                                'suggest_phon',
                             ],
                         ],
                         'suggest_engram_part' => [
@@ -154,7 +153,7 @@ class SearchMappingCommand extends ContainerAwareCommand
                             'analyzer' => 'phonetic_text',
                         ],
                         'name' => [
-                            'type' => 'string', 
+                            'type' => 'string',
                         ],
                         'oid' => [
                             'type' => 'string',
@@ -163,14 +162,14 @@ class SearchMappingCommand extends ContainerAwareCommand
                 ],
             ],
         ];
-        
+
         $this->client->indices()->putMapping($params);
-    } 
+    }
 
     protected function populateRaceEventMapping()
     {
         $indexName = $this->getContainer()->getParameter('search_index_name');
-        
+
         $params = [
             'index' => $indexName,
             'type' => 'race_event',
@@ -214,6 +213,10 @@ class SearchMappingCommand extends ContainerAwareCommand
                         ],
                         'date' => [
                             'type' => 'date',
+                        ],
+                        'email' => [
+                            'type' => 'string',
+                            'index' => 'not_analyzed',
                         ],
                         'races' => [
                             'type' => 'nested',
@@ -279,10 +282,10 @@ class SearchMappingCommand extends ContainerAwareCommand
                                 ],
                                 'metadata' => [
                                     'type' => 'object',
-                                    'dynamic' =>  true,
+                                    'dynamic' => true,
                                 ],
                             ],
-                        ]
+                        ],
                     ],
                 ],
             ],

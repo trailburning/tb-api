@@ -148,6 +148,7 @@ class SearchIndexService
             'website' => $raceEvent->getWebsite(),
             'coords' => $raceEvent->getCoordsAsArray(),
             'location' => $raceEvent->getLocation(),
+            'email' => $raceEvent->getEmail(),
             'races' => [],
             'type' => $raceEvent->getType(),
             'category' => [],
@@ -160,7 +161,6 @@ class SearchIndexService
             $doc['date'] = $raceEvent->getStartDate()->format('Y-m-d');
         }
 
-        $earliestDate = null;
         foreach ($raceEvent->getRaces() as $race) {
             $doc['races'][] = [
                 'id' => $race->getOid(),
@@ -173,7 +173,7 @@ class SearchIndexService
                 $doc['category'][] = $race->getCategory();
             }
         }
-        
+
         foreach ($raceEvent->getMedias() as $media) {
             $doc['media'][] = [
                 'id' => $media->getOid(),
@@ -186,7 +186,7 @@ class SearchIndexService
                 'metadata' => $media->getMetadata(),
             ];
         }
-        
+
         if (count($doc['category']) > 1) {
             $doc['category'] = array_values(array_unique($doc['category']));
         }
