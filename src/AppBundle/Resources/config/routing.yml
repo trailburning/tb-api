@@ -25,36 +25,36 @@ race_events:
 
 default:
     resource: AppBundle\Controller\DefaultController
-    
+
 swagger:
     path:   /v2/swagger.json
     defaults: { _controller: AppBundle:Swagger:index, _format: json }
-    
+
 status:
     type:   rest
     resource: AppBundle\Controller\StatusController
     prefix: /v2
-    
+
 journeys:
     type:   rest
     resource: AppBundle\Controller\JourneysController
     prefix: /v2
-    
+
 events:
     type:   rest
     resource: AppBundle\Controller\EventsController
     prefix: /v2
-    
+
 assets:
     type:   rest
     resource: AppBundle\Controller\AssetsController
     prefix: /v2
-    
+
 asset_medias:
     type:   rest
     resource: AppBundle\Controller\AssetsMediaController
     prefix: /v2
-    
+
 race_event_medias:
     type:   rest
     resource: AppBundle\Controller\RaceEventMediaController
@@ -64,7 +64,7 @@ register:
     type:   rest
     resource: AppBundle\Controller\RegistrationController
     prefix: /v2
-    
+
 security:
     type:   rest
     resource: AppBundle\Controller\SecurityController
@@ -75,9 +75,19 @@ profile:
     resource: AppBundle\Controller\ProfileController
     prefix: /v2
 
+restting:
+    type:   rest
+    resource: AppBundle\Controller\ResettingController
+    prefix: /v2
+
 fos_user_registration_confirm:
     path:  /registration/confirm/{token}
-    
+
 fos_user_registration_check_email:
     path:  /registration/check
 
+fos_user_resetting_reset:
+    path:  /reset/{token}
+
+fos_user_resetting_request:
+    path:  /reset/request/

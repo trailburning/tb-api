@@ -13,19 +13,16 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use FOS\RestBundle\Controller\Annotations\Post;
 use Swagger\Annotations as SWG;
 
 class SecurityController extends Controller
 {
-    
     /**
      * @SWG\Post(
      *     path="/user/login",
-     *     summary="",
+     *     summary="User login",
+     *     description="Authenticates a user",
      *     tags={"User"},
      *     consumes={"application/json","application/x-www-form-urlencoded"},
      *     produces={"application/json"},
@@ -51,5 +48,4 @@ class SecurityController extends Controller
     {
         throw new \DomainException('You should never see this');
     }
-
 }

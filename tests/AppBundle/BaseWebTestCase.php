@@ -79,14 +79,14 @@ abstract class BaseWebTestCase extends WebTestCase
 
         return $journey;
     }
-    
-    protected function loginUser($username, $password, $client) 
+
+    protected function loginUser($username, $password, $client)
     {
         $data = [
             'username' => $username,
             'password' => $password,
         ];
-        
+
         $client->request('POST', '/v2/user/login', $data);
         if ($client->getResponse()->getStatusCode() !== 200) {
             throw new \Exception('Invalid login credentials');
@@ -94,7 +94,7 @@ abstract class BaseWebTestCase extends WebTestCase
         $responseContent = $client->getResponse()->getContent();
         $responseObj = json_decode($responseContent);
         $token = $responseObj->token;
-        
+
         return $token;
     }
 
@@ -142,7 +142,7 @@ abstract class BaseWebTestCase extends WebTestCase
 
         return $asset;
     }
-    
+
     protected function getRaceEvent($name)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');

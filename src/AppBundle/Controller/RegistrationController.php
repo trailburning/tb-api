@@ -27,7 +27,8 @@ class RegistrationController extends Controller
     /**
      * @SWG\Post(
      *     path="/user/register",
-     *     summary="",
+     *     summary="User registration",
+     *     description="Registers a new user.",
      *     tags={"User"},
      *     consumes={"application/json","application/x-www-form-urlencoded"},
      *     produces={"application/json"},
@@ -97,7 +98,8 @@ class RegistrationController extends Controller
     /**
      * @SWG\Get(
      *     path="/user/confirm/{token}",
-     *     summary="",
+     *     summary="Registration email confirmation",
+     *     description="Confirms the user registration",
      *     tags={"User"},
      *     produces={"application/json"},
      *     @SWG\Parameter(

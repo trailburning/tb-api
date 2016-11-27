@@ -24,7 +24,8 @@ class ProfileController extends Controller
     /**
      * @SWG\Get(
      *     path="/user",
-     *     summary="",
+     *     summary="Return the current user",
+     *     description="Returns the current user.",
      *     tags={"User"},
      *     consumes={"application/json"},
      *     produces={"application/json"},
@@ -59,7 +60,8 @@ class ProfileController extends Controller
     /**
      * @SWG\Put(
      *     path="/user",
-     *     summary="",
+     *     summary="Update the current user",
+     *     description="Updates the current user.",
      *     tags={"User"},
      *     consumes={"application/json","application/x-www-form-urlencoded"},
      *     produces={"application/json"},
@@ -74,7 +76,7 @@ class ProfileController extends Controller
      *     @SWG\Parameter(name="race_distance_min", type="integer", in="formData", description="The prefered race distance min value", required=false),
      *     @SWG\Response(
      *         response=204,
-     *         description="user created",
+     *         description="user updated",
      *     ),
      *     @SWG\Response(
      *         response=401,
