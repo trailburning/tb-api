@@ -98,15 +98,15 @@ class Media
      * @Serializer\Expose
      */
     private $sharePath;
-    
+
     /**
      * @var bool
      *
-     * @ORM\Column(type="boolean", options={"default" = true})
+     * @ORM\Column(type="boolean", options={"default" = false})
      * @SWG\Property()
      * @Serializer\Expose
      */
-    private $publish = true;
+    private $publish = false;
 
     /**
      * ################################################################################################################
@@ -120,7 +120,7 @@ class Media
     {
         $this->oid = str_replace('.', '', uniqid(null, true));
     }
-    
+
     /**
      * @Serializer\VirtualProperty()
      * @Serializer\SerializedName("metadata")
