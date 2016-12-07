@@ -194,7 +194,7 @@ class SearchService
                 $search->setOrder(SearchOrder::ASC);
             }
             $fieldSort = new FieldSort('date', $search->getOrder());
-            // $searchQuery->addSort($fieldSort);
+            $searchQuery->addSort($fieldSort);
         } else {
             if ($search->getOrder() === null) {
                 $search->setOrder(SearchOrder::DESC);
