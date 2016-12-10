@@ -296,3 +296,22 @@ services:
             - 'AppBundle\Entity\User'
         tags:
             - { name: form.type, alias: app_user_resetting }
+
+    app.handler.race_event_media_handler:
+        class: AppBundle\Handler\RaceEventMediaHandler
+        arguments:
+            - '@app.repository.race_event'
+            - '@app.services.response_builder'
+            - '@form.factory'
+            - '@router'
+            - '@app.services.searchindex'
+            - '@app.media.raceevents'
+
+    app.handler.asset_media_handler:
+        class: AppBundle\Handler\AssetMediaHandler
+        arguments:
+            - '@app.asset.repository'
+            - '@app.services.response_builder'
+            - '@form.factory'
+            - '@router'
+            - '@app.media.assets'

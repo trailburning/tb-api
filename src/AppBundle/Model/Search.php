@@ -431,7 +431,7 @@ class Search
     /**
      * Get the value of Attributes.
      *
-     * @return int
+     * @return array
      */
     public function getAttributes()
     {
@@ -441,7 +441,7 @@ class Search
     /**
      * Set the value of Attributes.
      *
-     * @param int attributes
+     * @param array $attributes
      *
      * @return self
      */

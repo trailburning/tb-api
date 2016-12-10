@@ -2,17 +2,16 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\Type\MediaUploadType;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Model\APIResponse;
 
 class RaceEventMediaController extends Controller implements ClassResourceInterface
 {
-
     /**
      * @SWG\Post(
      *     path="/raceevents/{id}/media",
@@ -54,15 +53,16 @@ class RaceEventMediaController extends Controller implements ClassResourceInterf
      *
      * @Post("/raceevents/{id}/media")
      *
-     * @param int $id
+     * @param int     $id
+     * @param Request $request
      *
      * @return APIResponse
      */
     public function postAction(Request $request, $id)
     {
-        $mediaService = $this->get('app.media.raceevents');
         $raceEventRepository = $this->get('app.repository.race_event');
         $apiResponseBuilder = $this->get('app.response.builder');
+        $raceEventMediaHandler = $this->get('app.handler.race_event_media_handler');
 
         $raceEvent = $raceEventRepository->findOneBy([
             'oid' => $id,
@@ -72,20 +72,7 @@ class RaceEventMediaController extends Controller implements ClassResourceInterf
             return $apiResponseBuilder->buildNotFoundResponse('RaceEvent not found');
         }
 
-        $form = $this->createForm(MediaUploadType::class);
-        $form->handleRequest($request);
-
-        if (!$form->isValid()) {
-            return $apiResponseBuilder->buildFormErrorResponse($form);
-        }
-
-        $mediaFiles = $form->get('media')->getData();
-        // FIXME: multi media upload not working because of File validator
-        if (!is_array($mediaFiles)) {
-            $mediaFiles = [$mediaFiles];
-        }
-
-        return $mediaService->createMedia($mediaFiles, null, $raceEvent);
+        return $raceEventMediaHandler->handleCreateOrUpdate($request, $raceEvent);
     }
 
     /**
@@ -114,7 +101,7 @@ class RaceEventMediaController extends Controller implements ClassResourceInterf
      *         description="The media File to upload",
      *         in="formData",
      *         name="media",
-     *         required=true,
+     *         required=false,
      *         type="file"
      *     ),
      *     @SWG\Parameter(name="credit", type="string", in="formData", description="Credit text"),
@@ -136,14 +123,15 @@ class RaceEventMediaController extends Controller implements ClassResourceInterf
      *
      * @Post("/raceevents/{id}/media/{mediaId}")
      *
-     * @param int $id
-     * @param int $mediaId
+     * @param Request $request
+     * @param int     $id
+     * @param int     $mediaId
      *
      * @return APIResponse
      */
     public function putAction(Request $request, $id, $mediaId)
     {
-        $mediaService = $this->get('app.media.raceevents');
+        $raceEventMediaHandler = $this->get('app.handler.race_event_media_handler');
         $raceEventRepository = $this->get('app.repository.race_event');
         $mediaRepository = $this->get('app.media.repository');
         $apiResponseBuilder = $this->get('app.response.builder');
@@ -162,16 +150,7 @@ class RaceEventMediaController extends Controller implements ClassResourceInterf
             return $apiResponseBuilder->buildNotFoundResponse('Media not found');
         }
 
-        $form = $this->createForm(MediaUploadType::class);
-        $form->handleRequest($request);
-
-        if (!$form->isValid()) {
-            return $apiResponseBuilder->buildFormErrorResponse($form);
-        }
-
-        $file = $form->get('media')->getData();
-
-        return $mediaService->updateMedia($file, $media);
+        return $raceEventMediaHandler->handleCreateOrUpdate($request, $raceEvent, $media);
     }
 
     /**

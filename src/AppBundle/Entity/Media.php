@@ -2,10 +2,12 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -26,7 +28,7 @@ class Media
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
+
     /**
      * @var string
      * @ORM\Column(type="string", length=22, unique=true)
@@ -44,7 +46,7 @@ class Media
      * @Serializer\Expose
      */
     private $path;
-    
+
     /**
      * @var string
      *
@@ -54,24 +56,24 @@ class Media
      * @Serializer\Expose
      */
     private $mimeType;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Asset", inversedBy="medias")
      */
     protected $asset;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="RaceEvent", inversedBy="medias")
      */
     protected $raceEvent;
-    
+
     /**
      * @var MediaAttribute[]
      *
      * @ORM\OneToMany(targetEntity="MediaAttribute", mappedBy="media", cascade={"persist", "remove"})
      */
     private $attributes;
-    
+
     /**
      * @var string
      *
@@ -80,7 +82,7 @@ class Media
      * @Serializer\Expose
      */
     private $credit;
-    
+
     /**
      * @var string
      *
@@ -89,7 +91,7 @@ class Media
      * @Serializer\Expose
      */
     private $creditUrl;
-    
+
     /**
      * @var string
      *
@@ -109,54 +111,54 @@ class Media
     private $publish = false;
 
     /**
-     * ################################################################################################################
+     * ################################################################################################################.
      *
      *                                         User Defined
      *
      * ################################################################################################################
      */
-
     public function __construct()
     {
         $this->oid = str_replace('.', '', uniqid(null, true));
+        $this->attributes = new ArrayCollection();
     }
 
     /**
      * @Serializer\VirtualProperty()
      * @Serializer\SerializedName("metadata")
      * @SWG\Property(property="metadata")
+     *
      * @return array
      */
-    public function getMetadata() 
+    public function getMetadata()
     {
         if (count($this->getAttributes()) === 0) {
             return null;
         }
-        
+
         $fields = [];
         foreach ($this->getAttributes() as $attribute) {
             $fields[$attribute->getKey()] = $attribute->getValue();
         }
-        
+
         return $fields;
     }
 
     /**
-     * ################################################################################################################
+     * @return int
+     */
+
+    /**
+     * ################################################################################################################.
      *
      *                                         Getters and Setters
      *
      * ################################################################################################################
      */
-
-    /**
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
-
     /**
      * @return string
      */
@@ -184,15 +186,16 @@ class Media
     {
         return $this->path;
     }
-    
+
     /**
      * @param string $mimeType
+     *
      * @return self
      */
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
-    
+
         return $this;
     }
 
@@ -203,15 +206,16 @@ class Media
     {
         return $this->mimeType;
     }
-    
+
     /**
      * @param Asset $asset
+     *
      * @return self
      */
     public function setAsset(Asset $asset)
     {
         $this->asset = $asset;
-    
+
         return $this;
     }
 
@@ -224,13 +228,14 @@ class Media
     }
 
     /**
-     * @param RaceEvent $asset
-     * @return self
+     * @param RaceEvent $raceEvent
+     *
+     * @return Media
      */
     public function setRaceEvent(RaceEvent $raceEvent)
     {
         $this->raceEvent = $raceEvent;
-    
+
         return $this;
     }
 
@@ -241,9 +246,10 @@ class Media
     {
         return $this->raceEvent;
     }
-    
+
     /**
      * @param MediaAttribute $attribute
+     *
      * @return self
      */
     public function addAttribute(MediaAttribute $attribute)
@@ -259,20 +265,21 @@ class Media
      */
     public function removeAttribute(MediaAttribute $attribute)
     {
-        $this->medias->removeElement($attribute);
+        $this->attributes->removeElement($attribute);
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAttributes()
     {
         return $this->attributes;
     }
-    
+
     /**
-     * @param MediaAttribute $attribute
-     * @return self
+     * @param array $attributes
+     *
+     * @return Media
      */
     public function setAttributes(array $attributes)
     {
@@ -282,7 +289,7 @@ class Media
 
         return $this;
     }
-    
+
     /**
      * @param string $sharePath
      *
@@ -302,7 +309,7 @@ class Media
     {
         return $this->sharePath;
     }
-    
+
     /**
      * @param string $credit
      *
@@ -322,7 +329,7 @@ class Media
     {
         return $this->credit;
     }
-    
+
     /**
      * @param string $creditUrl
      *
@@ -342,7 +349,7 @@ class Media
     {
         return $this->creditUrl;
     }
-    
+
     /**
      * @param bool $publish
      *
@@ -353,7 +360,7 @@ class Media
         if ($publish === null) {
             return $this;
         }
-        
+
         $this->publish = $publish;
 
         return $this;
@@ -366,5 +373,4 @@ class Media
     {
         return $this->publish;
     }
-    
 }

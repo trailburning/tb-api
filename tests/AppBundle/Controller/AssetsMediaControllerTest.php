@@ -1,9 +1,8 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace tests\AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\AppBundle\BaseWebTestCase;
 
 class AssetsMediaControllerTest extends BaseWebTestCase

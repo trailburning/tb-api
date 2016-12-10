@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\Type\MediaUploadType;
+use AppBundle\Model\APIResponse;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AssetsMediaController extends Controller implements ClassResourceInterface
 {
-
     /**
      * @SWG\Post(
      *     path="/assets/{id}/media",
@@ -60,9 +59,9 @@ class AssetsMediaController extends Controller implements ClassResourceInterface
      */
     public function postAction(Request $request, $id)
     {
-        $mediaService = $this->get('app.media.assets');
         $assetRepository = $this->get('app.asset.repository');
         $apiResponseBuilder = $this->get('app.response.builder');
+        $assteMediaHandler = $this->get('app.handler.asset_media_handler');
 
         $asset = $assetRepository->findOneBy([
             'oid' => $id,
@@ -72,20 +71,7 @@ class AssetsMediaController extends Controller implements ClassResourceInterface
             return $apiResponseBuilder->buildNotFoundResponse('Asset not found');
         }
 
-        $form = $this->createForm(MediaUploadType::class);
-        $form->handleRequest($request);
-
-        if (!$form->isValid()) {
-            return $apiResponseBuilder->buildFormErrorResponse($form);
-        }
-
-        $mediaFiles = $form->get('media')->getData();
-        // FIXME: multi media upload not working because of File validator
-        if (!is_array($mediaFiles)) {
-            $mediaFiles = [$mediaFiles];
-        }
-
-        return $mediaService->createMedia($mediaFiles, $asset);
+        return $assteMediaHandler->handleCreateOrUpdate($request, $asset);
     }
 
     /**
@@ -143,7 +129,7 @@ class AssetsMediaController extends Controller implements ClassResourceInterface
      */
     public function putAction(Request $request, $id, $mediaId)
     {
-        $mediaService = $this->get('app.media.assets');
+        $assteMediaHandler = $this->get('app.handler.asset_media_handler');
         $assetRepository = $this->get('app.asset.repository');
         $mediaRepository = $this->get('app.media.repository');
         $apiResponseBuilder = $this->get('app.response.builder');
@@ -162,16 +148,7 @@ class AssetsMediaController extends Controller implements ClassResourceInterface
             return $apiResponseBuilder->buildNotFoundResponse('Media not found');
         }
 
-        $form = $this->createForm(MediaUploadType::class);
-        $form->handleRequest($request);
-
-        if (!$form->isValid()) {
-            return $apiResponseBuilder->buildFormErrorResponse($form);
-        }
-
-        $file = $form->get('media')->getData();
-
-        return $mediaService->updateMedia($file, $media);
+        return $assteMediaHandler->handleCreateOrUpdate($request, $asset, $media);
     }
 
     /**

@@ -3,15 +3,16 @@
 namespace AppBundle\Services;
 
 use AppBundle\DBAL\Types\MIMEType;
-use AppBundle\Entity\Asset;
-use AppBundle\Entity\RaceEvent;
 use AppBundle\Entity\Media;
 use AppBundle\Entity\MediaAttribute;
 use AppBundle\Repository\MediaAttributeRepository;
 use AppBundle\Repository\MediaRepository;
 use Gaufrette\Filesystem;
-use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\KernelInterface;
+use AppBundle\Model\APIResponse;
+use Gaufrette\Adapter\MetadataSupporter;
 
 /**
  * Class MediaService.
@@ -73,6 +74,7 @@ class MediaService
      * @param MediaAttributeRepository $mediaAttributeRepository
      * @param ImageService             $imageService
      * @param KernelInterface          $kernel
+     * @param string                   $directory
      */
     public function __construct(
         Filesystem $filesystem,
@@ -94,43 +96,57 @@ class MediaService
         $this->directory = $directory;
     }
 
-    /**
-     * @param array     $files
-     * @param Asset     $asset
-     * @param RaceEvent $raceEvent
-     *
-     * @return APIResponse
-     */
-    public function createMedia(array $files, Asset $asset = null, RaceEvent $raceEvent = null)
+    public function createOrUpdateMedia(FormInterface $form, Media $media = null)
     {
-        $medias = [];
-        foreach ($files as $file) {
-            $mimeType = $this->mediaAnalyzer->getMIMEType($file);
-            $filepath = $this->uploadFile($file);
-            if ($filepath === false) {
-                return $this->apiResponseBuilder->buildServerErrorResponse();
-            }
-            $path = $this->getAbsoluteFilepath($filepath, $mimeType);
+        if ($media === null) {
             $media = new Media();
-            $media->setMimeType($mimeType);
-            $media->setPath($path);
-            if ($asset !== null) {
-                $media->setAsset($asset);
-            }
-            if ($raceEvent !== null) {
-                $media->setRaceEvent($raceEvent);
-            }
-            $media->setAttributes($this->createMediaAttributes($file));
-            $this->createShareImage($media, $filepath);
-
-            $this->mediaRepository->add($media);
-            $medias[] = $media;
         }
-        $this->mediaRepository->store();
 
-        return $this->apiResponseBuilder->buildEmptyResponse(201);
+        $data = $form->getData();
+        if ($data['media'] !== null) {
+            $media = $this->uploadMedia($data['media'], $media);
+        }
+        if ($data['credit'] !== null) {
+            $media->setCredit($data['credit']);
+        }
+        if ($data['creditUrl'] !== null) {
+            $media->setCreditUrl($data['creditUrl']);
+        }
+        if ($data['publish'] !== null) {
+            $media->setPublish($data['publish']);
+        }
+
+        return $media;
     }
 
+    /**
+     * @param UploadedFile $file
+     * @param Media        $media
+     *
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    public function uploadMedia(UploadedFile $file, Media $media)
+    {
+        $mimeType = $this->mediaAnalyzer->getMIMEType($file);
+        $filepath = $this->uploadFile($file);
+        if ($filepath === false) {
+            throw new \Exception('Unable to upload file');
+        }
+        $path = $this->getAbsoluteFilepath($filepath, $mimeType);
+        $media->setMimeType($mimeType);
+        $media->setPath($path);
+        $media->setAttributes($this->createMediaAttributes($file));
+        $this->createShareImage($media, $filepath);
+
+        return $media;
+    }
+
+    /**
+     * @param Media $media
+     * @param $filepath
+     */
     private function createShareImage(Media $media, $filepath)
     {
         if ($media->getMimeType() === MIMEType::JPEG) {
@@ -144,31 +160,9 @@ class MediaService
     }
 
     /**
-     * @param array $files
-     * @param Media $media
+     * @param string $id
      *
      * @return APIResponse
-     */
-    public function updateMedia(File $file, Media $media)
-    {
-        $mimeType = $this->mediaAnalyzer->getMIMEType($file);
-        $filepath = $this->uploadFile($file);
-        $path = $this->getAbsoluteFilepath($filepath, $mimeType);
-        $media->setMimeType($mimeType);
-        $media->setPath($path);
-
-        $this->mediaAttributeRepository->deleteByMedia($media);
-        $media->setAttributes($this->createMediaAttributes($file));
-        $this->createShareImage($media, $filepath);
-
-        $this->mediaRepository->add($media);
-        $this->mediaRepository->store();
-
-        return $this->apiResponseBuilder->buildEmptyResponse(204);
-    }
-
-    /**
-     * @param string $id
      */
     public function deleteMedia($id)
     {
@@ -189,17 +183,17 @@ class MediaService
      * Upload a Media file to the provided Filesystem
      * Sets the path 45689 filename field.
      *
-     * @param File $file The file to upload
+     * @param UploadedFile $file The file to upload
      *
      * @return mixed the name of the uploaded file, or fals if upload fails
      */
-    public function uploadFile(File $file)
+    public function uploadFile(UploadedFile $file)
     {
         $filepath = $this->generateRelativeFilepath($file);
 
         $adapter = $this->filesystem->getAdapter();
         // Store Metadata to S3 (doesn't work in unit tests when using memory filesystem)
-        if ($adapter instanceof \Gaufrette\Adapter\MetadataSupporter) {
+        if ($adapter instanceof MetadataSupporter) {
             $adapter->setMetadata($filepath, array('ContentType' => 'image/jpeg', 'ACL' => 'public-read'));
         }
 
@@ -212,11 +206,11 @@ class MediaService
     }
 
     /**
-     * @param File $file
+     * @param UploadedFile $file
      *
      * @return string
      */
-    protected function generateRelativeFilepath(File $file)
+    protected function generateRelativeFilepath(UploadedFile $file)
     {
         $filename = str_replace('.', '', uniqid(null, true));
         $extension = $file->getClientOriginalExtension();
@@ -226,9 +220,12 @@ class MediaService
     }
 
     /**
-     * @param File $file
+     * @param $filepath
+     * @param $mimeType
      *
      * @return string
+     *
+     * @throws \Exception
      */
     protected function getAbsoluteFilepath($filepath, $mimeType)
     {
@@ -249,11 +246,11 @@ class MediaService
     }
 
     /**
-     * @param File $file
+     * @param UploadedFile $file
      *
      * @return array
      */
-    private function createMediaAttributes(File $file)
+    private function createMediaAttributes(UploadedFile $file)
     {
         $attributes = [];
         $metadata = $this->mediaAnalyzer->readMetadata($file);

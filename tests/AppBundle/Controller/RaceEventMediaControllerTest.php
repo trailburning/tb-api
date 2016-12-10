@@ -1,14 +1,13 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace tests\AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\AppBundle\BaseWebTestCase;
 
 class RaceEventMediaControllerTest extends BaseWebTestCase
 {
-    public function testPostAction()
+    public function testPostActionGreen()
     {
         $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\RaceEventData',
@@ -16,6 +15,7 @@ class RaceEventMediaControllerTest extends BaseWebTestCase
 
         $client = $this->makeClient();
         $raceEvent = $this->getRaceEvent('Engadin Ultraks');
+        $this->createRaceEventInSearch($raceEvent);
 
         $file = new UploadedFile(
             realpath(__DIR__.'/../../DataFixtures/Media/test.jpg'),
@@ -59,36 +59,6 @@ class RaceEventMediaControllerTest extends BaseWebTestCase
         $this->assertJsonResponse($client->getResponse(), 400);
     }
 
-    // FIXME: multi media upload not working because of File validator
-    // public function testPostActionMultipleMedia()
-    // {
-    //     $this->loadFixtures([
-    //         'AppBundle\DataFixtures\ORM\RaceEventData',
-    //     ]);
-    //
-    //     $client = $this->makeClient();
-    //     $raceEvent = $this->getRaceEvent('Engadin Ultraks');
-    //
-    //     $file1 = new UploadedFile(
-    //         realpath(__DIR__ . '/../../DataFixtures/Media/test.jpg'),
-    //         'test.jpg'
-    //     );
-    //
-    //     $file2 = new UploadedFile(
-    //         realpath(__DIR__ . '/../../DataFixtures/Media/test.jpg'),
-    //         'test.jpg'
-    //     );
-    //
-    //     $this->assertEquals(2, count($raceEvent->getMedias()));
-    //
-    //     $client->request('POST', '/v2/raceevents/' . $raceEvent->getOid() . '/media', [], ['media' => [$file1, $file2]]);
-    //     $this->assertEquals(Response::HTTP_CREATED,  $client->getResponse()->getStatusCode());
-    //     $this->assertJsonResponse($client);
-    //
-    //     $this->refreshEntity();
-    //     $this->assertEquals(4, count($raceEvent->getMedias()));
-    // }
-
     public function testPostActionMP4()
     {
         $this->loadFixtures([
@@ -97,6 +67,7 @@ class RaceEventMediaControllerTest extends BaseWebTestCase
 
         $client = $this->makeClient();
         $raceEvent = $this->getRaceEvent('Engadin Ultraks');
+        $this->createRaceEventInSearch($raceEvent);
 
         $file = new UploadedFile(
             realpath(__DIR__.'/../../DataFixtures/Media/test.m4v'),
@@ -115,6 +86,7 @@ class RaceEventMediaControllerTest extends BaseWebTestCase
 
         $client = $this->makeClient();
         $raceEvent = $this->getRaceEvent('Engadin Ultraks');
+        $this->createRaceEventInSearch($raceEvent);
 
         $file = new UploadedFile(
             realpath(__DIR__.'/../../DataFixtures/Media/test.mp3'),
@@ -162,7 +134,7 @@ class RaceEventMediaControllerTest extends BaseWebTestCase
         $this->assertJsonResponse($client->getResponse(), 404);
     }
 
-    public function testPutAction()
+    public function testPutActionGreen()
     {
         $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\RaceEventData',
@@ -170,6 +142,7 @@ class RaceEventMediaControllerTest extends BaseWebTestCase
 
         $client = $this->makeClient();
         $raceEvent = $this->getRaceEvent('Engadin Ultraks');
+        $this->createRaceEventInSearch($raceEvent);
         $media = $raceEvent->getMedias()[0];
 
         $file = new UploadedFile(
@@ -222,6 +195,7 @@ class RaceEventMediaControllerTest extends BaseWebTestCase
 
         $client = $this->makeClient();
         $raceEvent = $this->getRaceEvent('Engadin Ultraks');
+        $this->createRaceEventInSearch($raceEvent);
         $media = $raceEvent->getMedias()[0];
 
         $file = new UploadedFile(
@@ -241,6 +215,7 @@ class RaceEventMediaControllerTest extends BaseWebTestCase
 
         $client = $this->makeClient();
         $raceEvent = $this->getRaceEvent('Engadin Ultraks');
+        $this->createRaceEventInSearch($raceEvent);
         $media = $raceEvent->getMedias()[0];
 
         $file = new UploadedFile(

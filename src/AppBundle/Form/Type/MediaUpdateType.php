@@ -10,15 +10,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class MediaUploadType extends AbstractType
+class MediaUpdateType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('media', FileType::class, [
-                'required' => true,
                 'constraints' => [
-                    new NotBlank(),
                     new File([
                         'mimeTypes' => MIMEType::getChoices(),
                         'maxSize' => '6M',

@@ -2,6 +2,8 @@
 
 namespace tests\AppBundle;
 
+use AppBundle\Entity\RaceEvent;
+use AppBundle\Services\SearchIndexService;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -204,5 +206,11 @@ abstract class BaseWebTestCase extends WebTestCase
         $mapbox = new MapboxAPI($client, 'token');
 
         return $mapbox;
+    }
+
+    protected function createRaceEventInSearch(RaceEvent $raceEvent)
+    {
+        $searchIndexService = $this->getContainer()->get('app.services.searchindex');
+        $searchIndexService ->createRaceEvent($raceEvent);
     }
 }
