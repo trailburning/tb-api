@@ -58,6 +58,8 @@ class RaceEventCompleted
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="completedRaceEvents")
      * @ORM\JoinColumn(nullable=false)
+     * @SWG\Property()
+     * @Serializer\Expose
      */
     private $user;
 

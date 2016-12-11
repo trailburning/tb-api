@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Model\APIResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Swagger\Annotations as SWG;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -108,7 +109,7 @@ class RaceEventController extends Controller implements ClassResourceInterface
     {
         $raceEventHandler = $this->get('app.handler.race_event');
 
-        return $raceEventHandler->handleCreateOrUpdate($request->request->all());;
+        return $raceEventHandler->handleCreateOrUpdate($request->request->all());
     }
 
     /**

@@ -33,6 +33,8 @@ class User extends BaseUser
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Serializer\Expose
+     * @SWG\Property()
      */
     protected $id;
 

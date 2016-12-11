@@ -119,7 +119,7 @@ class RaceEventCompletedController extends Controller implements ClassResourceIn
      *     @SWG\Parameter(
      *         description="ID of the user",
      *         in="path",
-     *         name="id",
+     *         name="userId",
      *         required=true,
      *         type="string",
      *     ),
