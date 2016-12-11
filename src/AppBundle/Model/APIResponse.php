@@ -5,41 +5,53 @@ namespace AppBundle\Model;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
+ * @Serializer\ExclusionPolicy("all")
  */
 class APIResponse
 {
     
     /**
      * @var string
-     * @Serializer\Exclude
      */
     private $statusCode;
 
     /**
      * @var array
+     * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
+     *
      */
     private $body;
 
     /**
      * @var array
+     * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $meta;
 
     /**
      * @var array
+     * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $messages;
 
     /**
      * @var array
-     * @Serializer\Exclude
      */
     private $headers;
+
+    /**
+     * @var array
+     */
+    private $responseGroups;
 
     public function __construct($statusCode = 200)
     {
         $this->setStatusCode($statusCode);
         $this->headers = [];
+        $this->responseGroups = [];
     }
 
     /**
@@ -75,7 +87,8 @@ class APIResponse
     }
 
     /**
-     * @param string $data
+     * @param $body
+     * @param $name
      */
     public function addToBody($body, $name)
     {
@@ -103,15 +116,36 @@ class APIResponse
     }
 
     /**
-     * @param string $message
+     * @param $name
+     * @param $value
      */
     public function addheader($name, $value)
     {
         $this->headers[$name] = $value;
     }
 
+    /**
+     * @return array
+     */
     public function getHeaders()
     {
         return $this->headers;
     }
+
+    /**
+     * @return array
+     */
+    public function getResonseGroups()
+    {
+        return $this->responseGroups;
+    }
+
+    /**
+     * @param string $responseGroup
+     */
+    public function addResponseGroup(string $responseGroup)
+    {
+        $this->responseGroups[] = $responseGroup;
+    }
+
 }

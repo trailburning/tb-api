@@ -6,6 +6,7 @@ use Exception;
 use AppBundle\Model\APIResponse;
 use AppBundle\Services\APIResponseBuilder;
 use AppBundle\Repository\RaceEventRepository;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use AppBundle\Entity\RaceEvent;
@@ -95,7 +96,10 @@ class RaceEventHandler
             return $this->apiResponseBuilder->buildNotFoundResponse('RaceEvent not found.');
         }
 
-        return $this->apiResponseBuilder->buildSuccessResponse($raceEvents, 'raceevents');
+        $response = $this->apiResponseBuilder->buildSuccessResponse($raceEvents, 'raceevents');
+        $response->addResponseGroup('raceEvent');
+
+        return $response;
     }
 
     /**
@@ -121,6 +125,7 @@ class RaceEventHandler
             $raceEvent = new RaceEvent();
         }
 
+        /** @var Form $form */
         $form = $this->formFactory->create('AppBundle\Form\Type\RaceEventType', $raceEvent, ['method' => $method]);
         $clearMissing = ($method !== 'PUT') ? true : false;
         $form->submit($parameters, $clearMissing);
@@ -200,6 +205,7 @@ class RaceEventHandler
      */
     public function handleDelete($id)
     {
+        /** @var RaceEvent $raceEvent */
         $raceEvent = $this->raceEventRepository->findOneBy([
             'oid' => $id,
         ]);

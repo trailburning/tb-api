@@ -34,6 +34,7 @@ class User extends BaseUser
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      * @SWG\Property()
      */
     protected $id;
@@ -43,6 +44,7 @@ class User extends BaseUser
      *
      * @Gedmo\Slug(fields={"firstName", "lastName"}, updatable=false, separator="")
      * @ORM\Column(type="string", length=50, nullable=true, unique=true)
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     protected $name;
 
@@ -60,6 +62,7 @@ class User extends BaseUser
      * @Assert\NotBlank()
      * @Serializer\Expose
      * @SWG\Property()
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $firstName;
 
@@ -70,6 +73,7 @@ class User extends BaseUser
      * @Assert\NotBlank()
      * @Serializer\Expose
      * @SWG\Property()
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $lastName;
 
@@ -77,8 +81,6 @@ class User extends BaseUser
      * @var Point
      *
      * @ORM\Column(type="point", columnDefinition="GEOMETRY(POINT,4326)", nullable=true)
-     * @Serializer\Expose
-     * @SWG\Property()
      */
     private $location;
 
@@ -137,6 +139,7 @@ class User extends BaseUser
      * @ORM\Column(type="smallint")
      * @Serializer\Expose
      * @SWG\Property()
+     * @Serializer\Groups({"user"})
      */
     private $gender = 0;
 
@@ -274,6 +277,7 @@ class User extends BaseUser
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Serializer\Expose
      * @SWG\Property()
+     * @Serializer\Groups({"user"})
      */
     private $socialMedia;
 
@@ -284,6 +288,7 @@ class User extends BaseUser
      * @ORM\Column(type="RaceEventType", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"user"})
      */
     private $raceEventType;
 
@@ -294,6 +299,7 @@ class User extends BaseUser
      * @SWG\Property()
      * @Serializer\Expose
      * @SWG\Property()
+     * @Serializer\Groups({"user"})
      */
     private $raceDistanceMin;
 
@@ -304,6 +310,7 @@ class User extends BaseUser
      * @SWG\Property()
      * @Serializer\Expose
      * @SWG\Property()
+     * @Serializer\Groups({"user"})
      */
     private $raceDistanceMax;
 
@@ -313,6 +320,7 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="RaceEventCompleted", mappedBy="user", cascade={"persist", "remove"})
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"user"})
      */
     private $completedRaceEvents;
 
@@ -328,6 +336,21 @@ class User extends BaseUser
         $this->client = UserClientType::RACE_BASE;
         $this->completedRaceEvents = new ArrayCollection();
         parent::__construct();
+    }
+
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("location")
+     * @Serializer\Groups({"user"})
+     *
+     * @return array
+     */
+    public function getLocationAsArray()
+    {
+        return [
+            $this->location->getLongitude(),
+            $this->location->getLatitude(),
+        ];
     }
 
     /**

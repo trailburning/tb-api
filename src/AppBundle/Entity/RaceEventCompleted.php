@@ -32,6 +32,7 @@ class RaceEventCompleted
      * @ORM\Column(type="integer", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent"})
      * @Assert\Range(min=1,max=5)
      */
     private $rating;
@@ -42,6 +43,7 @@ class RaceEventCompleted
      * @ORM\Column(type="text", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $comment;
 
@@ -50,6 +52,9 @@ class RaceEventCompleted
      *
      * @ORM\ManyToOne(targetEntity="RaceEvent", inversedBy="completed")
      * @ORM\JoinColumn(nullable=false)
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Serializer\Groups({"user"})
      */
     private $raceEvent;
 
@@ -60,6 +65,7 @@ class RaceEventCompleted
      * @ORM\JoinColumn(nullable=false)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $user;
 

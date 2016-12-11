@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Model\APIResponse;
 use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
@@ -14,7 +15,6 @@ use Swagger\Annotations as SWG;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Put;
-use AppBundle\Entity\User;
 
 /**
  * Description.
@@ -48,13 +48,15 @@ class ProfileController extends Controller
     public function getAction()
     {
         $apiResponseBuilder = $this->get('app.services.response_builder');
-        /** @var $user AppBundle\Entity\User */
         $user = $this->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
 
-        return $apiResponseBuilder->buildSuccessResponse($user, 'user');
+        $response = $apiResponseBuilder->buildSuccessResponse($user, 'user');
+        $response->addResponseGroup('user');
+
+        return $response;
     }
 
     /**
@@ -103,10 +105,6 @@ class ProfileController extends Controller
 
         $event = new GetResponseUserEvent($user, $request);
         $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_INITIALIZE, $event);
-
-        if (null !== $event->getResponse()) {
-            return $event->getResponse();
-        }
 
         $formFactory = $this->get('fos_user.profile.form.factory');
 

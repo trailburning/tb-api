@@ -10,6 +10,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Delete;
+use FOS\RestBundle\Controller\Annotations\View;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -44,6 +45,7 @@ class RaceEventController extends Controller implements ClassResourceInterface
      * )
      *
      * @Get("/raceevents/{id}")
+     * @View(serializerGroups={"raceEvent"})
      *
      * @param string $id
      *

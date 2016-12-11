@@ -3,3 +3,4 @@ FOS\UserBundle\Model\User:
     properties:
         email:
             expose: true
+            groups: ['user']

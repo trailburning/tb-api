@@ -35,6 +35,7 @@ class RaceEvent
      * @SWG\Property(property="id")
      * @Serializer\Expose
      * @Serializer\SerializedName("id")
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $oid;
 
@@ -46,6 +47,7 @@ class RaceEvent
      * @Serializer\Expose
      * @Assert\NotBlank()
      * @Assert\Length(max = "255")
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $name;
 
@@ -55,6 +57,7 @@ class RaceEvent
      * @ORM\Column(name="about", type="text", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $about;
 
@@ -64,6 +67,7 @@ class RaceEvent
      * @ORM\Column(name="website", type="string", length=255, nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $website;
 
@@ -73,6 +77,7 @@ class RaceEvent
      * @ORM\Column(name="email", type="string", length=255, nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $email;
 
@@ -82,6 +87,7 @@ class RaceEvent
      * @ORM\Column(name="coords", type="point", columnDefinition="GEOMETRY(POINT,4326)")
      * @SWG\Property(type="Array")
      * @Assert\NotBlank()
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $coords;
 
@@ -92,6 +98,7 @@ class RaceEvent
      * @SWG\Property()
      * @Serializer\Expose
      * @ORM\OrderBy({"distance" = "ASC"})
+     * @Serializer\Groups({"raceEvent"})
      */
     private $races;
 
@@ -101,6 +108,7 @@ class RaceEvent
      * @ORM\Column(name="location", type="text", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $location;
 
@@ -123,6 +131,7 @@ class RaceEvent
      * @ORM\JoinTable(name="api_race_event_race_event_attribute")
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $attributes;
 
@@ -133,6 +142,7 @@ class RaceEvent
      * @ORM\Column(type="RaceEventType", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $type;
 
@@ -142,7 +152,7 @@ class RaceEvent
      * @ORM\OneToMany(targetEntity="Media", mappedBy="raceEvent", cascade={"persist", "remove"})
      * @SWG\Property(property="media")
      * @Serializer\Expose
-     * @Serializer\SerializedName("media")
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $medias;
 
@@ -152,6 +162,7 @@ class RaceEvent
      * @ORM\OneToMany(targetEntity="RaceEventCompleted", mappedBy="raceEvent", cascade={"persist", "remove"})
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent"})
      */
     private $completed;
 
@@ -176,6 +187,7 @@ class RaceEvent
     /**
      * @Serializer\VirtualProperty()
      * @Serializer\SerializedName("coords")
+     * @Serializer\Groups({"raceEvent", "user"})
      *
      * @return array
      */
@@ -364,7 +376,7 @@ class RaceEvent
     }
 
     /**
-     * @return point
+     * @return Point
      */
     public function getCoords()
     {
