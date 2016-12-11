@@ -80,6 +80,11 @@ restting:
     resource: AppBundle\Controller\ResettingController
     prefix: /v2
 
+race_event_completed:
+    type:   rest
+    resource: AppBundle\Controller\RaceEventCompletedController
+    prefix: /v2
+
 fos_user_registration_confirm:
     path:  /registration/confirm/{token}
 

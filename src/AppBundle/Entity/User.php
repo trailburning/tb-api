@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -305,6 +306,15 @@ class User extends BaseUser
     private $raceDistanceMax;
 
     /**
+     * @var RaceEventCompleted[]
+     *
+     * @ORM\OneToMany(targetEntity="RaceEventCompleted", mappedBy="user", cascade={"persist", "remove"})
+     * @SWG\Property()
+     * @Serializer\Expose
+     */
+    private $completedRaceEvents;
+
+    /**
      * ################################################################################################################.
      *
      *                                         User Defined
@@ -314,6 +324,7 @@ class User extends BaseUser
     public function __construct()
     {
         $this->client = UserClientType::RACE_BASE;
+        $this->completedRaceEvents = new ArrayCollection();
         parent::__construct();
     }
 
@@ -1127,6 +1138,25 @@ class User extends BaseUser
     public function setRaceDistanceMax($raceDistanceMax)
     {
         $this->raceDistanceMax = $raceDistanceMax;
+
+        return $this;
+    }
+
+    /**
+     * @return RaceEventCompleted[]
+     */
+    public function getCompletedRaceEvents(): array
+    {
+        return $this->completedRaceEvents;
+    }
+
+    /**
+     * @param RaceEventCompleted[] $completedRaceEvents
+     * @return User
+     */
+    public function setCompletedRaceEvents(array $completedRaceEvents): User
+    {
+        $this->completedRaceEvents = $completedRaceEvents;
 
         return $this;
     }

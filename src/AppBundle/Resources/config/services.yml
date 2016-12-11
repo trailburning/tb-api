@@ -315,3 +315,19 @@ services:
             - '@form.factory'
             - '@router'
             - '@app.media.assets'
+
+    app.handler.race_event_completed:
+        class: AppBundle\Handler\RaceEventCompletedHandler
+        arguments:
+            - '@app.repository.race_event'
+            - '@app.services.response_builder'
+            - '@form.factory'
+            - '@app.user.repository'
+            - '@app.repository.race_event_completed'
+
+    app.repository.race_event_completed:
+            class: AppBundle\Repository\RaceEventCompletedRepository
+            factory_service: doctrine.orm.entity_manager
+            factory_method: getRepository
+            arguments:
+                - AppBundle\Entity\RaceEventCompleted

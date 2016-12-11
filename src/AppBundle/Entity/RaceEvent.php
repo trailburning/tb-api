@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use CrEOF\Spatial\PHP\Types\Geography\Point;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
@@ -146,6 +147,15 @@ class RaceEvent
     private $medias;
 
     /**
+     * @var RaceEventCompleted[]
+     *
+     * @ORM\OneToMany(targetEntity="RaceEventCompleted", mappedBy="raceEvent", cascade={"persist", "remove"})
+     * @SWG\Property()
+     * @Serializer\Expose
+     */
+    private $completed;
+
+    /**
      * ################################################################################################################.
      *
      *                                         User Defined
@@ -159,6 +169,8 @@ class RaceEvent
         $this->regions = new ArrayCollection();
         $this->attributes = new ArrayCollection();
         $this->medias = new ArrayCollection();
+        $this->medias = new ArrayCollection();
+        $this->completed = new ArrayCollection();
     }
 
     /**
@@ -573,5 +585,24 @@ class RaceEvent
     public function getMedias()
     {
         return $this->medias;
+    }
+
+    /**
+     * @return RaceEventCompleted[]
+     */
+    public function getCompleted(): array
+    {
+        return $this->completed;
+    }
+
+    /**
+     * @param RaceEventCompleted[] $completed
+     * @return self
+     */
+    public function setCompleted(array $completed): self
+    {
+        $this->completed = $completed;
+
+        return $this;
     }
 }

@@ -72,6 +72,7 @@ class Region
      * @var RaceEvents[]
      *
      * @ORM\ManyToMany(targetEntity="RaceEvent", mappedBy="regions")
+     * @ORM\JoinTable(name="api_race_event_region")
      */
     private $raceEvents;
 
