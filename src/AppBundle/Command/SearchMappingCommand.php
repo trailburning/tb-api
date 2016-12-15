@@ -36,6 +36,12 @@ class SearchMappingCommand extends ContainerAwareCommand
                 $this->populateAutosuggestRaceEventMapping();
                 $output->writeln(sprintf('Mapping for type "%s" was updated', $type));
                 break;
+            case 'all':
+                $this->populateRaceEventMapping();
+                $this->populateAutosuggestLocationMapping();
+                $this->populateAutosuggestRaceEventMapping();
+                $output->writeln(sprintf('All mappings were updated', $type));
+                break;
             default:
                 $output->writeln(sprintf('<error>Unknown type "%s"</error>', $type));
                 break;
