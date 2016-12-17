@@ -155,6 +155,7 @@ class SearchIndexService
             'attributes' => $raceEvent->getAttributesArray(),
             'attributes_slug' => $raceEvent->getAttributesSlugArray(),
             'media' => [],
+            'completed' => [],
         ];
 
         if ($raceEvent->getStartDate() !== null) {
@@ -181,9 +182,21 @@ class SearchIndexService
                 'mimeType' => $media->getMimeType(),
                 'credit' => $media->getCredit(),
                 'creditUrl' => $media->getCreditUrl(),
-                'sharePath' => $media->getSHarePath(),
+                'sharePath' => $media->getSharePath(),
                 'publish' => $media->isPublish(),
                 'metadata' => $media->getMetadata(),
+            ];
+        }
+
+        foreach ($raceEvent->getCompleted() as $completed) {
+            $doc['completed'][] = [
+                'rating' => $completed->getRating(),
+                'comment' => $completed->getComment(),
+                'user' => [
+                    'id' => $completed->getUser()->getId(),
+                    'first_name' => $completed->getUser()->getFirstName(),
+                    'last_name' => $completed->getUser()->getLastName(),
+                ],
             ];
         }
 

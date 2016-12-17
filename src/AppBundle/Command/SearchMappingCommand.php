@@ -292,6 +292,36 @@ class SearchMappingCommand extends ContainerAwareCommand
                                 ],
                             ],
                         ],
+                        'completed' => [
+                            'type' => 'nested',
+                            'properties' => [
+                                'rating' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'comment' => [
+                                    'type' => 'string',
+                                    'analyzer' => 'standard',
+                                ],
+                                'user' => [
+                                    'type' => 'nested',
+                                    'properties' => [
+                                        'id' => [
+                                            'type' => 'string',
+                                            'index' => 'not_analyzed',
+                                        ],
+                                        'first_name' => [
+                                            'type' => 'string',
+                                            'analyzer' => 'standard',
+                                        ],
+                                        'last_name' => [
+                                            'type' => 'string',
+                                            'analyzer' => 'standard',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],

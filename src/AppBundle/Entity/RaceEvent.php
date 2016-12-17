@@ -605,7 +605,7 @@ class RaceEvent
     /**
      * @return RaceEventCompleted[]
      */
-    public function getCompleted(): array
+    public function getCompleted()
     {
         return $this->completed;
     }
