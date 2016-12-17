@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Model\APIResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Swagger\Annotations as SWG;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -103,7 +104,11 @@ class SearchController extends Controller implements ClassResourceInterface
      *         in="query",
      *         name="offset",
      *         type="string",
-     *     ),    
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
      * )
      *
      * @Get("/search")

@@ -26,6 +26,10 @@ class AutosuggestController extends Controller implements ClassResourceInterface
      *         name="q",
      *         type="string",
      *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
      * )
      *
      * @Get("/autosuggest")

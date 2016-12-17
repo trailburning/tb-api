@@ -130,8 +130,6 @@ class RaceEvent
      * @ORM\ManyToMany(targetEntity="RaceEventAttribute", inversedBy="raceEvents")
      * @ORM\JoinTable(name="api_race_event_race_event_attribute")
      * @SWG\Property()
-     * @Serializer\Expose
-     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $attributes;
 
@@ -215,6 +213,7 @@ class RaceEvent
      * @Serializer\VirtualProperty()
      * @Serializer\SerializedName("attributes")
      * @SWG\Property(property="attributes")
+     * @Serializer\Groups({"raceEvent", "user"})
      *
      * @return array
      */
@@ -384,7 +383,7 @@ class RaceEvent
     }
 
     /**
-     * @param Race $races
+     * @param Race $race
      *
      * @return self
      */
@@ -481,6 +480,8 @@ class RaceEvent
     {
         $this->regions->add($region);
         $region->addRaceEvent($this);
+
+        return $this;
     }
 
     /**
@@ -492,6 +493,8 @@ class RaceEvent
     {
         $this->regions->removeElement($region);
         $region->removeRaceEvent($this);
+
+        return $this;
     }
 
     /**
@@ -551,7 +554,7 @@ class RaceEvent
      *
      * @param string $type
      *
-     * @return Race
+     * @return self
      */
     public function setType($type)
     {
@@ -571,7 +574,7 @@ class RaceEvent
     }
 
     /**
-     * @param Media $medias
+     * @param Media $media
      *
      * @return self
      */
@@ -584,7 +587,7 @@ class RaceEvent
     }
 
     /**
-     * @param Media $medias
+     * @param Media $media
      */
     public function removeMedia(Media $media)
     {
@@ -609,6 +612,7 @@ class RaceEvent
 
     /**
      * @param RaceEventCompleted[] $completed
+     *
      * @return self
      */
     public function setCompleted(array $completed): self

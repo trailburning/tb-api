@@ -26,6 +26,7 @@ class RaceEventAttribute
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent"})
      */
     private $id;
 
@@ -34,7 +35,8 @@ class RaceEventAttribute
      *
      * @ORM\Column(type="string", length=255)
      * @SWG\Property()
-     * @Serializer\Expose 
+     * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent"})
      */
     private $name;
     

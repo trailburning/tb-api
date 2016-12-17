@@ -35,6 +35,7 @@ class Media
      * @SWG\Property(property="id")
      * @Serializer\Expose
      * @Serializer\SerializedName("id")
+     * @Serializer\Groups({"raceEvent"})
      */
     private $oid;
 
@@ -44,6 +45,7 @@ class Media
      * @ORM\Column(type="string", length=255)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent"})
      */
     private $path;
 
@@ -54,6 +56,7 @@ class Media
      * @ORM\Column(type="MIMEType")
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent"})
      */
     private $mimeType;
 
@@ -80,6 +83,7 @@ class Media
      * @ORM\Column(type="string", length=255, nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent"})
      */
     private $credit;
 
@@ -89,6 +93,7 @@ class Media
      * @ORM\Column(type="string", length=255, nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent"})
      */
     private $creditUrl;
 
@@ -98,6 +103,7 @@ class Media
      * @ORM\Column(type="string", length=255, nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent"})
      */
     private $sharePath;
 
@@ -107,6 +113,7 @@ class Media
      * @ORM\Column(type="boolean", options={"default" = false})
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent"})
      */
     private $publish = false;
 
@@ -127,6 +134,7 @@ class Media
      * @Serializer\VirtualProperty()
      * @Serializer\SerializedName("metadata")
      * @SWG\Property(property="metadata")
+     * @Serializer\Groups({"raceEvent"})
      *
      * @return array
      */
