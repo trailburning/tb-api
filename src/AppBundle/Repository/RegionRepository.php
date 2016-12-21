@@ -61,8 +61,11 @@ class RegionRepository extends BaseRepository
     public function getCountryCount()
     {
         $qb = $this->getQB();
-        $qb->select('count(r.id)');
-        $qb->andWhere('r.type = :type')->setParameter('type', RegionType::COUNTRY);
+        $qb
+            ->select('count(distinct r.id)')
+            ->andWhere('r.type = :type')
+            ->setParameter('type', RegionType::COUNTRY);
+
         $count = $qb->getQuery()->getSingleScalarResult();
 
         return $count;
