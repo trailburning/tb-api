@@ -62,7 +62,7 @@ class RegionRepository extends BaseRepository
     {
         $qb = $this->getQB();
         $qb
-            ->select('count(distinct r.id)')
+            ->select('count(distinct r.name)')
             ->andWhere('r.type = :type')
             ->setParameter('type', RegionType::COUNTRY);
 
