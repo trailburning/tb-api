@@ -347,6 +347,10 @@ class User extends BaseUser
      */
     public function getLocationAsArray()
     {
+        if ($this->location === null) {
+            return [];
+        }
+
         return [
             $this->location->getLongitude(),
             $this->location->getLatitude(),
