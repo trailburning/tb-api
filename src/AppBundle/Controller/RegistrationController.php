@@ -11,11 +11,14 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\User;
+use AppBundle\Model\APIResponse;
 use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Swagger\Annotations as SWG;
 use FOS\RestBundle\Controller\Annotations\Post;
@@ -69,7 +72,10 @@ class RegistrationController extends Controller
         $dispatcher->dispatch(FOSUserEvents::REGISTRATION_INITIALIZE, $event);
 
         if (null !== $event->getResponse()) {
-            return $event->getResponse();
+            /** @var APIResponse $response */
+            $response = $event->getResponse();
+
+            return $response;
         }
 
         $form = $formFactory->createForm();
@@ -122,14 +128,16 @@ class RegistrationController extends Controller
      * @Get("/user/confirm/{token}")
      *
      * @param Request $request
+     * @param string $token
      *
-     * @return APIResponse
+     * @return JsonResponse
      */
-    public function confirmAction(Request $request, $token)
+    public function confirmAction(Request $request, string $token)
     {
         $apiResponseBuilder = $this->get('app.services.response_builder');
-        $userManager = $this->get('fos_user.user_manager');
+        $userManager = $this->get('app.security.user_manager');
 
+        /** @var $user User */
         $user = $userManager->findUserByConfirmationToken($token);
 
         if (null === $user) {
@@ -152,6 +160,11 @@ class RegistrationController extends Controller
 
         $dispatcher->dispatch(FOSUserEvents::REGISTRATION_CONFIRMED, new FilterUserResponseEvent($user, $request, $response));
 
-        return $apiResponseBuilder->buildEmptyResponse(204);
+        $jwtManager = $this->container->get('lexik_jwt_authentication.jwt_manager');
+
+        return new JsonResponse(['token' => $jwtManager->create($user)]);
+
+
+//        return $apiResponseBuilder->buildEmptyResponse(204);
     }
 }

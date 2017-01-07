@@ -2,6 +2,8 @@
 
 namespace AppBundle\Tests\Controller;
 
+use AppBundle\Entity\User;
+use Symfony\Bundle\SwiftmailerBundle\DataCollector\MessageDataCollector;
 use Tests\AppBundle\BaseWebTestCase;
 
 class RegistrationControllerTest extends BaseWebTestCase
@@ -23,7 +25,7 @@ class RegistrationControllerTest extends BaseWebTestCase
             'lastName' => 'last',
             'gender' => 1,
             'location' => '(13.221316, 52.489695)',
-            'social_media' => 'http://faceboom.com',
+            'social_media' => 'http://facebook.com',
             'race_event_type' => 'trail_run',
             'race_distance_max' => 30000,
             'race_distance_min' => 10000,
@@ -31,9 +33,12 @@ class RegistrationControllerTest extends BaseWebTestCase
         
         $client->request('POST', '/v2/user/register', $data);
         $this->assertJsonResponse($client->getResponse(), 201);
+
+        /** @var MessageDataCollector$mailCollector */
         $mailCollector = $client->getProfile()->getCollector('swiftmailer');
         $this->assertEquals(1, $mailCollector->getMessageCount());
         $collectedMessages = $mailCollector->getMessages();
+        /** @var \Swift_Message $message */
         $message = $collectedMessages[0];
 
         // Asserting email data
@@ -65,7 +70,7 @@ class RegistrationControllerTest extends BaseWebTestCase
         $client->request('GET', '/v2/user/confirm/invalidtoken');
         $this->assertJsonResponse($client->getResponse(), 404);
     }
-    
+
     public function testConfirmTokenAction()
     {
         $this->loadFixtures([]);
@@ -73,6 +78,7 @@ class RegistrationControllerTest extends BaseWebTestCase
         $client = $this->makeClient();
         $userManager = $client->getContainer()->get('fos_user.user_manager');
         $userRepository = $client->getContainer()->get('app.user.repository');
+        /** @var User $user */
         $user = $userManager->createUser();
         $user->setEnabled(false);
         $user->setEmail('test@test');
@@ -84,9 +90,15 @@ class RegistrationControllerTest extends BaseWebTestCase
         $userManager->updateUser($user);
 
         $client->request('GET', '/v2/user/confirm/testtoken');
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertJsonResponse($client->getResponse(), 200);
+
         $userRepository->refresh($user);
         $this->assertTrue($user->isEnabled());
+
+        $response = $client->getResponse()->getContent();
+        $responseObj = json_decode($response);
+        $this->assertObjectHasAttribute('token', $responseObj);
+
     }
 
 }

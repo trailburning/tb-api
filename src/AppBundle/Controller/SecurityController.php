@@ -12,7 +12,6 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Post;
 use Swagger\Annotations as SWG;
 
@@ -39,12 +38,8 @@ class SecurityController extends Controller
      * )
      *
      * @Post("/user/login")
-     *
-     * @param Request $request
-     *
-     * @return APIResponse
      */
-    public function loginAction(Request $request)
+    public function loginAction()
     {
         throw new \DomainException('You should never see this');
     }
