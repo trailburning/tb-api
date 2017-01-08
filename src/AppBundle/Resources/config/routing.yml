@@ -86,13 +86,17 @@ race_event_completed:
     prefix: /v2
 
 fos_user_registration_confirm:
-    path:  /registration/confirm/{token}
+    host: racebase.world
+    path: /register/confirm/{token}
 
 fos_user_registration_check_email:
-    path:  /registration/check
+    host: racebase.world
+    path: /register/check
 
 fos_user_resetting_reset:
-    path:  /reset/{token}
+    host: racebase.world
+    path: /reset/{token}
 
 fos_user_resetting_request:
-    path:  /reset/request/
+    host: racebase.world
+    path: /reset/request/
