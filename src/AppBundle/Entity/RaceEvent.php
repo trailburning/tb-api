@@ -98,7 +98,7 @@ class RaceEvent
      * @SWG\Property()
      * @Serializer\Expose
      * @ORM\OrderBy({"distance" = "ASC"})
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $races;
 

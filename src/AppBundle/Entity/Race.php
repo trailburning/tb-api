@@ -33,7 +33,7 @@ class Race
      * @SWG\Property(property="id")
      * @Serializer\Expose
      * @Serializer\SerializedName("id")
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $oid;
 
@@ -45,7 +45,7 @@ class Race
      * @Serializer\Expose
      * @Assert\NotBlank()
      * @Assert\Length(max = "255")
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $name;
 
@@ -62,7 +62,7 @@ class Race
      * @ORM\Column(type="integer", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $distance;
 
@@ -73,7 +73,7 @@ class Race
      * @ORM\Column(type="RaceCategory", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $category;
     
@@ -100,7 +100,7 @@ class Race
     /**
      * @Serializer\VirtualProperty()
      * @Serializer\SerializedName("date")
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      *
      * @return string
      */

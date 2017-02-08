@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -35,7 +34,7 @@ class Media
      * @SWG\Property(property="id")
      * @Serializer\Expose
      * @Serializer\SerializedName("id")
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $oid;
 
@@ -45,7 +44,7 @@ class Media
      * @ORM\Column(type="string", length=255)
      * @SWG\Property()
      * @Serializer\Expose
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $path;
 
@@ -56,7 +55,7 @@ class Media
      * @ORM\Column(type="MIMEType")
      * @SWG\Property()
      * @Serializer\Expose
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $mimeType;
 
@@ -83,7 +82,7 @@ class Media
      * @ORM\Column(type="string", length=255, nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $credit;
 
@@ -93,7 +92,7 @@ class Media
      * @ORM\Column(type="string", length=255, nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $creditUrl;
 
@@ -103,7 +102,7 @@ class Media
      * @ORM\Column(type="string", length=255, nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $sharePath;
 
@@ -113,7 +112,7 @@ class Media
      * @ORM\Column(type="boolean", options={"default" = false})
      * @SWG\Property()
      * @Serializer\Expose
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $publish = false;
 
@@ -134,7 +133,7 @@ class Media
      * @Serializer\VirtualProperty()
      * @Serializer\SerializedName("metadata")
      * @SWG\Property(property="metadata")
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      *
      * @return array
      */
