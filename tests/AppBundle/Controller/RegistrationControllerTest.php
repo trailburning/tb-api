@@ -43,7 +43,7 @@ class RegistrationControllerTest extends BaseWebTestCase
 
         // Asserting email data
         $this->assertInstanceOf('Swift_Message', $message);
-        $this->assertEquals('Welcome name@mail.com!', $message->getSubject());
+        $this->assertEquals('Welcome to RaceBase World!', $message->getSubject());
         $this->assertEquals('hello@racebase.world', key($message->getFrom()));
         $this->assertEquals('name@mail.com', key($message->getTo()));
         

@@ -22,6 +22,18 @@ class ProfileControllerTest extends BaseWebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
+    public function testGetByIdAction()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\UserData',
+        ]);
+
+        $client = $this->makeClient();
+        $user = $this->getUser('mattallbeury@trailburning.com');
+        $client->request('GET', '/v2/user/profile/'. $user->getId());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
     public function testPutAction()
     {
         $this->loadFixtures([

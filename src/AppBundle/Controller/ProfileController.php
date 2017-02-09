@@ -60,6 +60,51 @@ class ProfileController extends Controller
     }
 
     /**
+     * @SWG\Get(
+     *     path="/user/profile/{id}",
+     *     summary="Find user by ID",
+     *     description="Returns a single user.",
+     *     tags={"User"},
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(
+     *         description="ID of the user",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         type="int",
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @SWG\Schema(ref="#/definitions/User")
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="User not found"
+     *     ),
+     * )
+     *
+     * @Get("/user/profile/{id}")
+     *
+     * @return APIResponse
+     */
+    public function getByIdAction($id)
+    {
+        $apiResponseBuilder = $this->get('app.services.response_builder');
+        $userRepository = $this->get('app.user.repository');
+        $user = $userRepository->findOneBy(['id' => $id]);
+        if ($user === null) {
+            $apiResponseBuilder->buildNotFoundResponse('User not found');
+        }
+
+        $response = $apiResponseBuilder->buildSuccessResponse($user, 'user');
+        $response->addResponseGroup('user');
+
+        return $response;
+    }
+
+    /**
      * @SWG\Put(
      *     path="/user",
      *     summary="Update the current user",
