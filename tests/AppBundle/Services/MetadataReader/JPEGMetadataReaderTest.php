@@ -32,9 +32,9 @@ class JPEGMetadataReaderTest extends BaseWebTestCase
     {
         $reader = $this->getContainer()->get('app.media.metadata.jpeg');
         $file = new File(realpath(__DIR__ . '/../../../DataFixtures/Media/test_dimensions.jpg'));
-        
+
         $result = $reader->read($file);
-        $this->assertEquals(3456, $result['width']);
-        $this->assertEquals(4608, $result['height']);
+        $this->assertEquals(366, $result['width']);
+        $this->assertEquals(480, $result['height']);
     }
 }
