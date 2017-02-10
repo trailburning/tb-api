@@ -12,6 +12,7 @@ class RegistrationControllerTest extends BaseWebTestCase
     public function testRegisterAction()
     {
         $this->loadFixtures([]);
+        $this->getContainer()->set('app.services.mapbox_api', $this->getMapboxAPIMock());
 
         $client = $this->makeClient();
         $client->enableProfiler();

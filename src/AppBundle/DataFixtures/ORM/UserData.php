@@ -23,6 +23,7 @@ class UserData extends AbstractFixture implements FixtureInterface
         $user->setAvatar('avatar_ma.png');
         $user->setSynopsis('I\'m all over the great outdoors, never happier than hitting the trails - whatever the weather! You name it and I\'m running in it, although not so much into mud, yes Tough Mudder I\'m looking at you!');
         $user->setCoords(new Point(13.257437, 52.508006, 4326));
+        $user->setLocation('Berlin');
         $user->setEnabled(true);
         $user->setNewsletter(false);
 
@@ -39,6 +40,7 @@ class UserData extends AbstractFixture implements FixtureInterface
         $user->setAvatar('avatar_pt.png');
         $user->setSynopsis('It started as an innocent 4km run between work and home about 5 years ago and slowly progressed to road marathons, triathlons, and now trail ultras. My name is Paul and I\'m addicted to running.');
         $user->setCoords(new Point(13.257437, 52.508006, 4326));
+        $user->setLocation('Berlin');
         $user->setEnabled(true);
         $user->setNewsletter(false);
 

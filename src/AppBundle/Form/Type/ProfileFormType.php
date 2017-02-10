@@ -3,6 +3,8 @@
 namespace AppBundle\Form\Type;
 
 use FOS\UserBundle\Form\Type\ProfileFormType as BaseProfileFormType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
 use AppBundle\Form\DataTransformer\GeometryPointTransformer;
@@ -18,8 +20,9 @@ class ProfileFormType extends BaseProfileFormType
         $builder->add('firstName');
         $builder->add('lastName');
         $builder->add($builder->create('coords')->addModelTransformer(new GeometryPointTransformer()));
-        $builder->add('about', 'textarea');
-        $builder->add('gender', 'choice', [
+        $builder->add('location');
+        $builder->add('about', TextareaType::class);
+        $builder->add('gender', ChoiceType::class, [
             'choices' => [
                 User::GENDER_NONE => 'I\'d rather not say',
                 User::GENDER_MALE => 'Male',

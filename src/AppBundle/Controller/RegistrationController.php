@@ -41,7 +41,8 @@ class RegistrationController extends Controller
      *     @SWG\Parameter(name="firstName", type="string", in="formData", description="The users first name", required="true"),
      *     @SWG\Parameter(name="lastName", type="string", in="formData", description="The users last name", required="true"),
      *     @SWG\Parameter(name="gender", type="integer", enum={"0", "1", "2"}, in="formData", description="0 = unspecified, 1 = female, 2 = male", required="true"),
-     *     @SWG\Parameter(name="coord", type="string", in="formData", description="The GPS coordinates of the users location", required=false),
+     *     @SWG\Parameter(name="coords", type="string", in="formData", description="The GPS coordinates of the users location", required=false),
+     *     @SWG\Parameter(name="location", type="string", in="formData", description="The location of user, will be determined from 'coords' if 'location' is not set", required=false),
      *     @SWG\Parameter(name="social_media", type="string", in="formData", description="The social media URL' is not set", required=false),
      *     @SWG\Parameter(name="race_event_type", type="string", in="formData", description="The prefered type of the race event (road_run, trail_run)"),
      *     @SWG\Parameter(name="race_distance_max", type="integer", in="formData", description="The prefered race distance max value", required=false),
@@ -65,6 +66,7 @@ class RegistrationController extends Controller
         $userManager = $this->get('fos_user.user_manager');
         $dispatcher = $this->get('event_dispatcher');
 
+        /** @var User $user*/
         $user = $userManager->createUser();
         $user->setEnabled(true);
 
@@ -85,6 +87,12 @@ class RegistrationController extends Controller
 
         if (!$form->isValid()) {
             return $apiResponseBuilder->buildFormErrorResponse($form);
+        }
+
+        if ($request->request->has('coords') && !$request->request->has('location')) {
+            $mapboxAPI = $this->get('app.services.mapbox_api');
+            $regionFeatures = $mapboxAPI->reverseGeocode($user->getCoords());
+            $user->setLocation($mapboxAPI->getLocationNameFromFeatures($regionFeatures));
         }
 
         $event = new FormEvent($form, $request);

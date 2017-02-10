@@ -39,6 +39,7 @@ class ProfileControllerTest extends BaseWebTestCase
         $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\UserData',
         ]);
+        $this->getContainer()->set('app.services.mapbox_api', $this->getMapboxAPIMock());
 
         $client = $this->makeClient();
         $data = [

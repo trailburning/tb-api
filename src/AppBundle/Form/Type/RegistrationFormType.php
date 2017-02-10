@@ -18,6 +18,7 @@ class RegistrationFormType extends BaseRegistrationFormType
         $builder->add('firstName');
         $builder->add('lastName');
         $builder->add($builder->create('coords')->addModelTransformer(new GeometryPointTransformer()));
+        $builder->add('location');
         $builder->add('about', 'textarea');
         $builder->add('gender', 'choice', [
             'choices' => [

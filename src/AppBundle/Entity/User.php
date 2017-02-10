@@ -88,6 +88,16 @@ class User extends BaseUser
     /**
      * @var string
      *
+     * @ORM\Column(name="location", type="text", nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
+     */
+    private $location;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $about;
@@ -1189,6 +1199,25 @@ class User extends BaseUser
     public function setCompletedRaceEvents(array $completedRaceEvents): User
     {
         $this->completedRaceEvents = $completedRaceEvents;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * @param string|null $location
+     * @return User
+     */
+    public function setLocation($location): User
+    {
+        $this->location = $location;
 
         return $this;
     }
