@@ -17,7 +17,7 @@ class RegistrationFormType extends BaseRegistrationFormType
         // add your custom fields not defined in FOSUserBundle
         $builder->add('firstName');
         $builder->add('lastName');
-        $builder->add($builder->create('location')->addModelTransformer(new GeometryPointTransformer()));
+        $builder->add($builder->create('coords')->addModelTransformer(new GeometryPointTransformer()));
         $builder->add('about', 'textarea');
         $builder->add('gender', 'choice', [
             'choices' => [

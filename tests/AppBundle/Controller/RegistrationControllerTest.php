@@ -24,7 +24,7 @@ class RegistrationControllerTest extends BaseWebTestCase
             'firstName' => 'first',
             'lastName' => 'last',
             'gender' => 1,
-            'location' => '(13.221316, 52.489695)',
+            'coords' => '(13.221316, 52.489695)',
             'social_media' => 'http://facebook.com',
             'race_event_type' => 'trail_run',
             'race_distance_max' => 30000,

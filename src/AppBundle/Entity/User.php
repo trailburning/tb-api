@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
@@ -82,7 +83,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="point", columnDefinition="GEOMETRY(POINT,4326)", nullable=true)
      */
-    private $location;
+    private $coords;
 
     /**
      * @var string
@@ -120,7 +121,7 @@ class User extends BaseUser
     private $activityUnseenCount;
 
     /**
-     * @var datetime
+     * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -340,20 +341,20 @@ class User extends BaseUser
 
     /**
      * @Serializer\VirtualProperty()
-     * @Serializer\SerializedName("location")
+     * @Serializer\SerializedName("coords")
      * @Serializer\Groups({"user"})
      *
      * @return array
      */
-    public function getLocationAsArray()
+    public function getCoordsAsArray()
     {
-        if ($this->location === null) {
+        if ($this->coords === null) {
             return [];
         }
 
         return [
-            $this->location->getLongitude(),
-            $this->location->getLatitude(),
+            $this->coords->getLongitude(),
+            $this->coords->getLatitude(),
         ];
     }
 
@@ -441,8 +442,9 @@ class User extends BaseUser
     public function setEmail($email)
     {
         $this->setUsername($email);
+        parent::setEmail($email);
 
-        return parent::setEmail($email);
+        return $this;
     }
 
     /**
@@ -453,8 +455,9 @@ class User extends BaseUser
     public function setEmailCanonical($emailCanonical)
     {
         $this->setUsernameCanonical($emailCanonical);
+        parent::setEmailCanonical($emailCanonical);
 
-        return parent::setEmailCanonical($emailCanonical);
+        return $this;
     }
 
     /**
@@ -498,13 +501,13 @@ class User extends BaseUser
     }
 
     /**
-     * @param point $location
+     * @param point $coords
      *
      * @return self
      */
-    public function setLocation($location)
+    public function setCoords($coords)
     {
-        $this->location = $location;
+        $this->coords = $coords;
 
         return $this;
     }
@@ -512,9 +515,9 @@ class User extends BaseUser
     /**
      * @return point
      */
-    public function getLocation()
+    public function getCoords()
     {
-        return $this->location;
+        return $this->coords;
     }
 
     /**
@@ -613,7 +616,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param \DateTime $registeredAt
+     * @param DateTime $registeredAt
      *
      * @return User
      */
@@ -625,7 +628,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getRegisteredAt()
     {
@@ -882,7 +885,7 @@ class User extends BaseUser
     /**
      * Set the value of Id.
      *
-     * @param int id
+     * @param int $id
      *
      * @return self
      */
@@ -906,7 +909,7 @@ class User extends BaseUser
     /**
      * Set the value of Activity Unseen Count.
      *
-     * @param int activityUnseenCount
+     * @param int $activityUnseenCount
      *
      * @return self
      */
@@ -930,11 +933,11 @@ class User extends BaseUser
     /**
      * Set the value of Activity Last Viewed.
      *
-     * @param datetime activityLastViewed
+     * @param DateTime $activityLastViewed
      *
      * @return self
      */
-    public function setActivityLastViewed(\DateTime $activityLastViewed)
+    public function setActivityLastViewed(DateTime $activityLastViewed)
     {
         $this->activityLastViewed = $activityLastViewed;
 
@@ -954,7 +957,7 @@ class User extends BaseUser
     /**
      * Set the value of Oauth Service.
      *
-     * @param string oauthService
+     * @param string $oauthService
      *
      * @return self
      */
@@ -978,7 +981,7 @@ class User extends BaseUser
     /**
      * Set the value of Oauth Id.
      *
-     * @param string oauthId
+     * @param string $oauthId
      *
      * @return self
      */
@@ -1002,7 +1005,7 @@ class User extends BaseUser
     /**
      * Set the value of Oauth Access Token.
      *
-     * @param string oauthAccessToken
+     * @param string $oauthAccessToken
      *
      * @return self
      */
@@ -1026,7 +1029,7 @@ class User extends BaseUser
     /**
      * Set the value of Discr.
      *
-     * @param string discr
+     * @param string $discr
      *
      * @return self
      */
@@ -1050,7 +1053,7 @@ class User extends BaseUser
     /**
      * Set the value of Share Image.
      *
-     * @param string shareImage
+     * @param string $shareImage
      *
      * @return self
      */
@@ -1064,7 +1067,7 @@ class User extends BaseUser
     /**
      * Set the value of Journeys.
      *
-     * @param mixed journeys
+     * @param mixed $journeys
      *
      * @return self
      */
@@ -1088,7 +1091,7 @@ class User extends BaseUser
     /**
      * Set the value of Social Media.
      *
-     * @param string socialMedia
+     * @param string $socialMedia
      *
      * @return self
      */
@@ -1112,7 +1115,7 @@ class User extends BaseUser
     /**
      * Set the value of Race Event Type.
      *
-     * @param string raceEventType
+     * @param string $raceEventType
      *
      * @return self
      */
@@ -1136,7 +1139,7 @@ class User extends BaseUser
     /**
      * Set the value of Race Distance Min.
      *
-     * @param int raceDistanceMin
+     * @param int $raceDistanceMin
      *
      * @return self
      */
@@ -1160,7 +1163,7 @@ class User extends BaseUser
     /**
      * Set the value of Race Distance Max.
      *
-     * @param int RaceDistanceMax
+     * @param int $raceDistanceMax
      *
      * @return self
      */
