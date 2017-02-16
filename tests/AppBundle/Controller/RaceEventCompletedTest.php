@@ -20,12 +20,16 @@ class RaceEventCompletedTest extends BaseWebTestCase
         /** @var RaceEvent $raceEvent */
         $raceEvent = $raceEventRepository->findAll()[0];
         $user = $this->getUser('mattallbeury@trailburning.com');
+        $token = $this->loginUser($user->getEmail(), 'password', $client);
+
         $data = [
             'rating' => 5,
             'comment' => 'test comment',
         ];
 
-        $client->request('POST', $this->getRaceEventCompletedUrl($raceEvent->getOid(), $user->getId()), $data);
+        $client->request('POST', $this->getRaceEventCompletedUrl($raceEvent->getOid()), $data, [], [
+            'HTTP_AUTHORIZATION' => 'Bearer '.$token,
+        ]);
         $this->assertJsonResponse($client->getResponse(), 201);
     }
 
@@ -37,13 +41,16 @@ class RaceEventCompletedTest extends BaseWebTestCase
         ]);
         $client = $this->makeClient();
         $user = $this->getUser('mattallbeury@trailburning.com');
+        $token = $this->loginUser($user->getEmail(), 'password', $client);
         $data = [];
 
-        $client->request('POST', $this->getRaceEventCompletedUrl('invalidId', $user->getId()), $data);
+        $client->request('POST', $this->getRaceEventCompletedUrl('invalidId'), $data, [], [
+            'HTTP_AUTHORIZATION' => 'Bearer '.$token,
+        ]);
         $this->assertJsonResponse($client->getResponse(), 404);
     }
 
-    public function testPostActionUserNotFound()
+    public function testPostActionAccessDenied()
     {
         $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\RaceEventData',
@@ -54,8 +61,8 @@ class RaceEventCompletedTest extends BaseWebTestCase
         $raceEvent = $raceEventRepository->findAll()[0];
         $data = [];
 
-        $client->request('POST', $this->getRaceEventCompletedUrl($raceEvent->getOid(), 0), $data);
-        $this->assertJsonResponse($client->getResponse(), 404);
+        $client->request('POST', $this->getRaceEventCompletedUrl($raceEvent->getOid()), $data);
+        $this->assertJsonResponse($client->getResponse(), 401);
     }
 
     public function testPutActionGreen()
@@ -70,6 +77,7 @@ class RaceEventCompletedTest extends BaseWebTestCase
         /** @var RaceEvent $raceEvent */
         $raceEvent = $raceEventRepository->findAll()[0];
         $user = $this->getUser('mattallbeury@trailburning.com');
+        $token = $this->loginUser($user->getEmail(), 'password', $client);
         $raceEventCompletedRepository = $this->getContainer()->get('app.repository.race_event_completed');
         $raceEventCompleted = new RaceEventCompleted();
         $raceEventCompleted->setRaceEvent($raceEvent);
@@ -83,13 +91,29 @@ class RaceEventCompletedTest extends BaseWebTestCase
             'comment' => 'test comment edited',
         ];
 
-        $client->request('PUT', $this->getRaceEventCompletedUrl($raceEvent->getOid(), $user->getId()), $data);
+        $client->request('PUT', $this->getRaceEventCompletedUrl($raceEvent->getOid()), $data, [], [
+            'HTTP_AUTHORIZATION' => 'Bearer '.$token,
+        ]);
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
 
         $raceEventCompletedRepository->refresh($raceEventCompleted);
         $this->assertEquals(5, $raceEventCompleted->getRating());
         $this->assertEquals('test comment edited', $raceEventCompleted->getComment());
+    }
 
+    public function testPutActionAccessDenied()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\RaceEventData',
+        ]);
+        $client = $this->makeClient();
+        $data = [
+            'rating' => 5,
+            'comment' => 'test comment edited',
+        ];
+
+        $client->request('POST', $this->getRaceEventCompletedUrl('someid'), $data);
+        $this->assertJsonResponse($client->getResponse(), 401);
     }
 
     public function testDeleteAction()
@@ -104,6 +128,7 @@ class RaceEventCompletedTest extends BaseWebTestCase
         /** @var RaceEvent $raceEvent */
         $raceEvent = $raceEventRepository->findAll()[0];
         $user = $this->getUser('mattallbeury@trailburning.com');
+        $token = $this->loginUser($user->getEmail(), 'password', $client);
         $raceEventCompletedRepository = $this->getContainer()->get('app.repository.race_event_completed');
         $raceEventCompleted = new RaceEventCompleted();
         $raceEventCompleted->setRaceEvent($raceEvent);
@@ -113,7 +138,9 @@ class RaceEventCompletedTest extends BaseWebTestCase
         $raceEventCompletedRepository->add($raceEventCompleted);
         $raceEventCompletedRepository->store();
 
-        $client->request('DELETE', $this->getRaceEventCompletedUrl($raceEvent->getOid(), $user->getId()));
+        $client->request('DELETE', $this->getRaceEventCompletedUrl($raceEvent->getOid()), [], [], [
+            'HTTP_AUTHORIZATION' => 'Bearer '.$token,
+        ]);
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
     }
 
@@ -125,12 +152,15 @@ class RaceEventCompletedTest extends BaseWebTestCase
         ]);
         $client = $this->makeClient();
         $user = $this->getUser('mattallbeury@trailburning.com');
+        $token = $this->loginUser($user->getEmail(), 'password', $client);
 
-        $client->request('DELETE', $this->getRaceEventCompletedUrl('invalidId', $user->getId()));
+        $client->request('DELETE', $this->getRaceEventCompletedUrl('invalidId'), [], [], [
+            'HTTP_AUTHORIZATION' => 'Bearer '.$token,
+        ]);
         $this->assertJsonResponse($client->getResponse(), 404);
     }
 
-    public function testDeleteActionUserNotFound()
+    public function testDeleteActionAcceddDenied()
     {
         $this->loadFixtures([
             'AppBundle\DataFixtures\ORM\RaceEventData',
@@ -141,8 +171,8 @@ class RaceEventCompletedTest extends BaseWebTestCase
         $raceEvent = $raceEventRepository->findAll()[0];
         $data = [];
 
-        $client->request('DELETE', $this->getRaceEventCompletedUrl($raceEvent->getOid(), 0), $data);
-        $this->assertJsonResponse($client->getResponse(), 404);
+        $client->request('DELETE', $this->getRaceEventCompletedUrl($raceEvent->getOid()), $data);
+        $this->assertJsonResponse($client->getResponse(), 401);
     }
 
     public function testDeleteActionRaceEventCompletedNotFound()
@@ -157,14 +187,17 @@ class RaceEventCompletedTest extends BaseWebTestCase
         /** @var RaceEvent $raceEvent */
         $raceEvent = $raceEventRepository->findAll()[0];
         $user = $this->getUser('mattallbeury@trailburning.com');
+        $token = $this->loginUser($user->getEmail(), 'password', $client);
 
-        $client->request('DELETE', $this->getRaceEventCompletedUrl($raceEvent->getOid(), $user->getId()));
+        $client->request('DELETE', $this->getRaceEventCompletedUrl($raceEvent->getOid()), [], [], [
+            'HTTP_AUTHORIZATION' => 'Bearer '.$token,
+        ]);
         $this->assertJsonResponse($client->getResponse(), 404);
     }
 
-    private function getRaceEventCompletedUrl($raceEventId, $userId)
+    private function getRaceEventCompletedUrl($raceEventId)
     {
-        $url = '/v2/raceevents/'.$raceEventId.'/user/'.$userId.'/completed';
+        $url = '/v2/user/raceevents/'.$raceEventId.'/completed';
 
         return $url;
     }
