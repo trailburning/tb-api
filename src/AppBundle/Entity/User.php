@@ -336,6 +336,26 @@ class User extends BaseUser
     private $completedRaceEvents;
 
     /**
+     * @var RaceEventDoing[]
+     *
+     * @ORM\OneToMany(targetEntity="RaceEventDoing", mappedBy="user", cascade={"persist", "remove"})
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Serializer\Groups({"user"})
+     */
+    private $doingRaceEvents;
+
+    /**
+     * @var RaceEventWishlist[]
+     *
+     * @ORM\OneToMany(targetEntity="RaceEventWishlist", mappedBy="user", cascade={"persist", "remove"})
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Serializer\Groups({"user"})
+     */
+    private $wishlistRaceEvents;
+
+    /**
      * ################################################################################################################.
      *
      *                                         User Defined
@@ -346,6 +366,8 @@ class User extends BaseUser
     {
         $this->client = UserClientType::RACE_BASE;
         $this->completedRaceEvents = new ArrayCollection();
+        $this->doingRaceEvents = new ArrayCollection();
+        $this->wishlistRaceEvents = new ArrayCollection();
         parent::__construct();
     }
 
@@ -1199,6 +1221,44 @@ class User extends BaseUser
     public function setCompletedRaceEvents(array $completedRaceEvents): User
     {
         $this->completedRaceEvents = $completedRaceEvents;
+
+        return $this;
+    }
+
+    /**
+     * @return RaceEventDoing[]
+     */
+    public function getDoingRaceEvents(): array
+    {
+        return $this->doingRaceEvents;
+    }
+
+    /**
+     * @param RaceEventDoing[] $doingRaceEvents
+     * @return User
+     */
+    public function setDoingRaceEvents(array $doingRaceEvents): User
+    {
+        $this->doingRaceEvents = $doingRaceEvents;
+
+        return $this;
+    }
+
+    /**
+     * @return RaceEventWishlist[]
+     */
+    public function getWishlistRaceEvents(): array
+    {
+        return $this->wishlistRaceEvents;
+    }
+
+    /**
+     * @param RaceEventWishlist[] $wishlistRaceEvents
+     * @return User
+     */
+    public function setWishlistRaceEvents(array $wishlistRaceEvents): User
+    {
+        $this->wishlistRaceEvents = $wishlistRaceEvents;
 
         return $this;
     }

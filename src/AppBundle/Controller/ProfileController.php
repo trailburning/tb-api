@@ -50,7 +50,7 @@ class ProfileController extends Controller
         $apiResponseBuilder = $this->get('app.services.response_builder');
         $user = $this->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
-            throw new AccessDeniedException('This user does not have access to this section.');
+            throw new AccessDeniedException();
         }
 
         $response = $apiResponseBuilder->buildSuccessResponse($user, 'user');
@@ -144,7 +144,7 @@ class ProfileController extends Controller
         $user = $this->getUser();
 
         if (!is_object($user) || !$user instanceof UserInterface) {
-            throw new AccessDeniedException('This user does not have access to this section.');
+            throw new AccessDeniedException();
         }
 
         $dispatcher = $this->get('event_dispatcher');

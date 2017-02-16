@@ -85,6 +85,16 @@ race_event_completed:
     resource: AppBundle\Controller\RaceEventCompletedController
     prefix: /v2
 
+race_event_wishlist:
+    type:   rest
+    resource: AppBundle\Controller\RaceEventWishlistController
+    prefix: /v2
+
+race_event_doing:
+    type:   rest
+    resource: AppBundle\Controller\RaceEventDoingController
+    prefix: /v2
+
 fos_user_registration_confirm:
     host: racebase.world
     path: /register/confirm/{token}

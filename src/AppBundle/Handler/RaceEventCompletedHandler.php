@@ -130,7 +130,7 @@ class RaceEventCompletedHandler
 
         $raceEventCompleted = $this->raceEventCompletedRepository->findByRaceEventAndUser($raceEvent, $user);
         if ($raceEventCompleted === null) {
-            return $this->apiResponseBuilder->buildNotFoundResponse('RaceEventCompleted Data nor found');
+            return $this->apiResponseBuilder->buildNotFoundResponse('RaceEventCompleted Data not found');
         }
 
         $this->raceEventCompletedRepository->remove($raceEventCompleted);

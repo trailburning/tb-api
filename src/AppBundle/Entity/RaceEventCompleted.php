@@ -8,9 +8,9 @@ use Swagger\Annotations as SWG;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * RaceEvent.
+ * RaceEventCompleted.
  *
- * @ORM\Table(name="api_race_event_completed",uniqueConstraints={@ORM\UniqueConstraint(name="unique_race_event_user", columns={"race_event_id", "user_id"})})
+ * @ORM\Table(name="api_race_event_wishlist",uniqueConstraints={@ORM\UniqueConstraint(name="unique_race_event_user_completed", columns={"race_event_id", "user_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\RaceEventCompletedRepository")
  * @SWG\Definition(required={"id"}, @SWG\Xml(name="RaceEventCompleted"))
  * @Serializer\ExclusionPolicy("all")
@@ -50,7 +50,7 @@ class RaceEventCompleted
     /**
      * @var RaceEvent
      *
-     * @ORM\ManyToOne(targetEntity="RaceEvent", inversedBy="completed")
+     * @ORM\ManyToOne(targetEntity="RaceEvent", inversedBy="wishlist")
      * @ORM\JoinColumn(nullable=false)
      * @SWG\Property()
      * @Serializer\Expose
@@ -61,7 +61,7 @@ class RaceEventCompleted
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="completedRaceEvents")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="wishlistRaceEvents")
      * @ORM\JoinColumn(nullable=false)
      * @SWG\Property()
      * @Serializer\Expose

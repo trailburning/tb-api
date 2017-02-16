@@ -2,15 +2,10 @@
 
 namespace AppBundle\Handler;
 
-use Exception;
-use DateTime;
 use AppBundle\Model\APIResponse;
 use AppBundle\Services\APIResponseBuilder;
-use AppBundle\Entity\RaceEvent;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use AppBundle\Services\SearchService;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use AppBundle\DBAL\Types\RaceCategory;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
 use AppBundle\Model\Search;
 
@@ -56,6 +51,7 @@ class SearchHandler
      */
     public function handleSearch(array $parameters)
     {
+        /** @var Form $form */
         $form = $this->formFactory->create('AppBundle\Form\Type\SearchType', new Search(), ['method' => 'GET']);
         $form->submit($parameters);
 

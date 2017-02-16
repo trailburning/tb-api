@@ -331,3 +331,35 @@ services:
             factory_method: getRepository
             arguments:
                 - AppBundle\Entity\RaceEventCompleted
+
+    app.handler.race_event_wishlist:
+        class: AppBundle\Handler\RaceEventWishlistHandler
+        arguments:
+            - '@app.repository.race_event'
+            - '@app.services.response_builder'
+            - '@form.factory'
+            - '@app.user.repository'
+            - '@app.repository.race_event_wishlist'
+
+    app.repository.race_event_wishlist:
+            class: AppBundle\Repository\RaceEventWishlistRepository
+            factory_service: doctrine.orm.entity_manager
+            factory_method: getRepository
+            arguments:
+                - AppBundle\Entity\RaceEventWishlist
+
+    app.handler.race_event_doing:
+        class: AppBundle\Handler\RaceEventDoingHandler
+        arguments:
+            - '@app.repository.race_event'
+            - '@app.services.response_builder'
+            - '@form.factory'
+            - '@app.user.repository'
+            - '@app.repository.race_event_doing'
+
+    app.repository.race_event_doing:
+            class: AppBundle\Repository\RaceEventDoingRepository
+            factory_service: doctrine.orm.entity_manager
+            factory_method: getRepository
+            arguments:
+                - AppBundle\Entity\RaceEventDoing

@@ -165,6 +165,26 @@ class RaceEvent
     private $completed;
 
     /**
+     * @var RaceEventWishlist[]
+     *
+     * @ORM\OneToMany(targetEntity="RaceEventWishlist", mappedBy="raceEvent", cascade={"persist", "remove"})
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent"})
+     */
+    private $wishlist;
+
+    /**
+     * @var RaceEventDoing[]
+     *
+     * @ORM\OneToMany(targetEntity="RaceEventDoing", mappedBy="raceEvent", cascade={"persist", "remove"})
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent"})
+     */
+    private $doing;
+
+    /**
      * ################################################################################################################.
      *
      *                                         User Defined
@@ -180,6 +200,8 @@ class RaceEvent
         $this->medias = new ArrayCollection();
         $this->medias = new ArrayCollection();
         $this->completed = new ArrayCollection();
+        $this->wishlist = new ArrayCollection();
+        $this->doing = new ArrayCollection();
     }
 
     /**
@@ -197,6 +219,9 @@ class RaceEvent
         ];
     }
 
+    /**
+     * @return \DateTime|null
+     */
     public function getStartDate()
     {
         $startDate = null;
@@ -404,7 +429,7 @@ class RaceEvent
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Race[]
      */
     public function getRaces()
     {
@@ -618,6 +643,46 @@ class RaceEvent
     public function setCompleted(array $completed): self
     {
         $this->completed = $completed;
+
+        return $this;
+    }
+
+    /**
+     * @return RaceEventWishlist[]
+     */
+    public function getWishlist()
+    {
+        return $this->wishlist;
+    }
+
+    /**
+     * @param RaceEventWishlist[] $wishlist
+     *
+     * @return self
+     */
+    public function setWishlist(array $wishlist): self
+    {
+        $this->wishlist = $wishlist;
+
+        return $this;
+    }
+
+    /**
+     * @return RaceEventDoing[]
+     */
+    public function getDoing()
+    {
+        return $this->doing;
+    }
+
+    /**
+     * @param RaceEventDoing[] $doing
+     *
+     * @return self
+     */
+    public function setDoing(array $doing): self
+    {
+        $this->doing = $doing;
 
         return $this;
     }
