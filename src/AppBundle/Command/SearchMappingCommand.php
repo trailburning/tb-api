@@ -2,6 +2,7 @@
 
 namespace AppBundle\Command;
 
+use Elasticsearch\Client;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -9,6 +10,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SearchMappingCommand extends ContainerAwareCommand
 {
+    /**
+     * @var Client
+     */
+    private $client;
+
     protected function configure()
     {
         $this
@@ -18,6 +24,11 @@ class SearchMappingCommand extends ContainerAwareCommand
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->client = $this->getContainer()->get('vendor.elasticsearch.client');
@@ -222,6 +233,10 @@ class SearchMappingCommand extends ContainerAwareCommand
                         ],
                         'email' => [
                             'type' => 'string',
+                            'index' => 'not_analyzed',
+                        ],
+                        'rating' => [
+                            'type' => 'float',
                             'index' => 'not_analyzed',
                         ],
                         'races' => [

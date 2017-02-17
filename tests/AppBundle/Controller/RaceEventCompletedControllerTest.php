@@ -6,7 +6,7 @@ use AppBundle\Entity\RaceEvent;
 use AppBundle\Entity\RaceEventCompleted;
 use Tests\AppBundle\BaseWebTestCase;
 
-class RaceEventCompletedTest extends BaseWebTestCase
+class RaceEventCompletedControllerTest extends BaseWebTestCase
 {
     public function testPostActionGreen()
     {
@@ -14,11 +14,13 @@ class RaceEventCompletedTest extends BaseWebTestCase
             'AppBundle\DataFixtures\ORM\UserData',
             'AppBundle\DataFixtures\ORM\RaceEventData',
         ]);
+        $this->updateSearchIndex();
 
         $client = $this->makeClient();
         $raceEventRepository = $this->getContainer()->get('app.repository.race_event');
         /** @var RaceEvent $raceEvent */
         $raceEvent = $raceEventRepository->findAll()[0];
+        $this->assertNull($raceEvent->getRating());
         $user = $this->getUser('mattallbeury@trailburning.com');
         $token = $this->loginUser($user->getEmail(), 'password', $client);
 
@@ -30,7 +32,10 @@ class RaceEventCompletedTest extends BaseWebTestCase
         $client->request('POST', $this->getRaceEventCompletedUrl($raceEvent->getOid()), $data, [], [
             'HTTP_AUTHORIZATION' => 'Bearer '.$token,
         ]);
+
         $this->assertJsonResponse($client->getResponse(), 201);
+        $this->refreshEntity($raceEvent);
+        $this->assertEquals(5.0, $raceEvent->getRating());
     }
 
     public function testPostActionRaceEventNotFound()
@@ -76,6 +81,9 @@ class RaceEventCompletedTest extends BaseWebTestCase
         $raceEventRepository = $this->getContainer()->get('app.repository.race_event');
         /** @var RaceEvent $raceEvent */
         $raceEvent = $raceEventRepository->findAll()[0];
+        $raceEvent->setRating(1);
+        $raceEventRepository->add($raceEvent);
+        $raceEventRepository->store();
         $user = $this->getUser('mattallbeury@trailburning.com');
         $token = $this->loginUser($user->getEmail(), 'password', $client);
         $raceEventCompletedRepository = $this->getContainer()->get('app.repository.race_event_completed');
@@ -86,6 +94,7 @@ class RaceEventCompletedTest extends BaseWebTestCase
         $raceEventCompleted->setComment('test comment');
         $raceEventCompletedRepository->add($raceEventCompleted);
         $raceEventCompletedRepository->store();
+        $this->updateSearchIndex();
         $data = [
             'rating' => 5,
             'comment' => 'test comment edited',
@@ -99,6 +108,9 @@ class RaceEventCompletedTest extends BaseWebTestCase
         $raceEventCompletedRepository->refresh($raceEventCompleted);
         $this->assertEquals(5, $raceEventCompleted->getRating());
         $this->assertEquals('test comment edited', $raceEventCompleted->getComment());
+
+        $this->refreshEntity($raceEvent);
+        $this->assertEquals(5.0, $raceEvent->getRating());
     }
 
     public function testPutActionAccessDenied()
@@ -127,6 +139,9 @@ class RaceEventCompletedTest extends BaseWebTestCase
         $raceEventRepository = $this->getContainer()->get('app.repository.race_event');
         /** @var RaceEvent $raceEvent */
         $raceEvent = $raceEventRepository->findAll()[0];
+        $raceEvent->setRating(1);
+        $raceEventRepository->add($raceEvent);
+        $raceEventRepository->store();
         $user = $this->getUser('mattallbeury@trailburning.com');
         $token = $this->loginUser($user->getEmail(), 'password', $client);
         $raceEventCompletedRepository = $this->getContainer()->get('app.repository.race_event_completed');
@@ -137,11 +152,14 @@ class RaceEventCompletedTest extends BaseWebTestCase
         $raceEventCompleted->setComment('test comment');
         $raceEventCompletedRepository->add($raceEventCompleted);
         $raceEventCompletedRepository->store();
+        $this->updateSearchIndex();
 
         $client->request('DELETE', $this->getRaceEventCompletedUrl($raceEvent->getOid()), [], [], [
             'HTTP_AUTHORIZATION' => 'Bearer '.$token,
         ]);
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->refreshEntity($raceEvent);
+        $this->assertNull($raceEvent->getRating());
     }
 
     public function testDeleteActionRaceEventNotFound()

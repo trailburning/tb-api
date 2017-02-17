@@ -4,7 +4,7 @@ namespace AppBundle\Tests\Controller;
 
 use Tests\AppBundle\BaseWebTestCase;
 
-class SecurityControllerTsst extends BaseWebTestCase
+class SecurityControllerTest extends BaseWebTestCase
 {
 
     public function testLoginAction()

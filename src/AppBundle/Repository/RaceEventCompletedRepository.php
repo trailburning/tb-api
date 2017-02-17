@@ -32,4 +32,20 @@ class RaceEventCompletedRepository extends BaseRepository
 
         return $raceEventCompleted;
     }
+
+    /**
+     * @param RaceEvent $raceEvent
+     * @return float|null
+     */
+    public function calculateAvgRatingByRaceEvent(RaceEvent $raceEvent)
+    {
+        $qb = $this->getQB()
+            ->select('avg(r.rating)')
+            ->where('r.raceEvent = :raceEvent')
+            ->setParameter('raceEvent', $raceEvent)
+            ->getQuery();
+        $rating= $qb->getSingleResult()[1];
+
+        return $rating;
+    }
 }

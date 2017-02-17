@@ -41,6 +41,11 @@ class SearchService
         $this->indexName = $indexName;
     }
 
+    /**
+     * @param Search $search
+     *
+     * @return array
+     */
     public function search(Search $search)
     {
         $searchQuery = new SearchQuery();
@@ -72,6 +77,12 @@ class SearchService
         return $result;
     }
 
+    /**
+     * @param BoolQuery $boolQuery
+     * @param Search    $search
+     *
+     * @return BoolQuery
+     */
     private function handleSearchParameterQ(BoolQuery $boolQuery, Search $search) : BoolQuery
     {
         $parameters = [

@@ -9,6 +9,7 @@ use AppBundle\Repository\RaceEventCompletedRepository;
 use AppBundle\Repository\RaceEventRepository;
 use AppBundle\Repository\UserRepository;
 use AppBundle\Services\APIResponseBuilder;
+use AppBundle\Services\SearchIndexService;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
 
@@ -39,18 +40,34 @@ class RaceEventCompletedHandler
      */
     private $raceEventCompletedRepository;
 
+    /**
+     * @var SearchIndexService
+     */
+    private $searchIndexService;
+
+    /**
+     * RaceEventCompletedHandler constructor.
+     * @param RaceEventRepository $raceEventRepository
+     * @param APIResponseBuilder $apiResponseBuilder
+     * @param FormFactoryInterface $formFactory
+     * @param UserRepository $userRepository
+     * @param RaceEventCompletedRepository $raceEventCompletedRepository
+     * @param SearchIndexService $searchIndexService
+     */
     public function __construct(
         RaceEventRepository $raceEventRepository,
         APIResponseBuilder $apiResponseBuilder,
         FormFactoryInterface $formFactory,
         UserRepository $userRepository,
-        RaceEventCompletedRepository $raceEventCompletedRepository
+        RaceEventCompletedRepository $raceEventCompletedRepository,
+        SearchIndexService $searchIndexService
     ) {
         $this->raceEventRepository = $raceEventRepository;
         $this->apiResponseBuilder = $apiResponseBuilder;
         $this->formFactory = $formFactory;
         $this->userRepository = $userRepository;
         $this->raceEventCompletedRepository = $raceEventCompletedRepository;
+        $this->searchIndexService = $searchIndexService;
     }
 
     /**
@@ -98,8 +115,15 @@ class RaceEventCompletedHandler
         }
 
         $raceEventCompleted = $form->getData();
+        $this->raceEventCompletedRepository->beginnTransaction();
         $this->raceEventCompletedRepository->add($raceEventCompleted);
         $this->raceEventCompletedRepository->store();
+        $avgRating = $this->raceEventCompletedRepository->calculateAvgRatingByRaceEvent($raceEvent);
+        $raceEvent->setRating($avgRating);
+        $this->raceEventRepository->add($raceEvent);
+        $this->raceEventRepository->store();
+        $this->raceEventCompletedRepository->commit();
+        $this->searchIndexService->updateRaceEvent($raceEvent);
 
         return $this->apiResponseBuilder->buildEmptyResponse($statusCode);
     }
@@ -133,8 +157,15 @@ class RaceEventCompletedHandler
             return $this->apiResponseBuilder->buildNotFoundResponse('RaceEventCompleted Data not found');
         }
 
+        $this->raceEventCompletedRepository->beginnTransaction();
         $this->raceEventCompletedRepository->remove($raceEventCompleted);
         $this->raceEventCompletedRepository->store();
+        $avgRating = $this->raceEventCompletedRepository->calculateAvgRatingByRaceEvent($raceEvent);
+        $raceEvent->setRating($avgRating);
+        $this->raceEventRepository->add($raceEvent);
+        $this->raceEventRepository->store();
+        $this->raceEventCompletedRepository->commit();
+        $this->searchIndexService->updateRaceEvent($raceEvent);
 
         return $this->apiResponseBuilder->buildEmptyResponse(204);
     }

@@ -159,6 +159,7 @@ class RaceEvent
      *
      * @ORM\OneToMany(targetEntity="RaceEventCompleted", mappedBy="raceEvent", cascade={"persist", "remove"})
      * @SWG\Property()
+     * @ORM\OrderBy({"id" = "DESC"})
      * @Serializer\Expose
      * @Serializer\Groups({"raceEvent"})
      */
@@ -169,6 +170,7 @@ class RaceEvent
      *
      * @ORM\OneToMany(targetEntity="RaceEventWishlist", mappedBy="raceEvent", cascade={"persist", "remove"})
      * @SWG\Property()
+     * @ORM\OrderBy({"id" = "DESC"})
      * @Serializer\Expose
      * @Serializer\Groups({"raceEvent"})
      */
@@ -179,10 +181,21 @@ class RaceEvent
      *
      * @ORM\OneToMany(targetEntity="RaceEventDoing", mappedBy="raceEvent", cascade={"persist", "remove"})
      * @SWG\Property()
+     * @ORM\OrderBy({"id" = "DESC"})
      * @Serializer\Expose
      * @Serializer\Groups({"raceEvent"})
      */
     private $doing;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="rating", type="decimal", precision=2, scale=1, nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
+     */
+    private $rating;
 
     /**
      * ################################################################################################################.
@@ -683,6 +696,25 @@ class RaceEvent
     public function setDoing(array $doing): self
     {
         $this->doing = $doing;
+
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * @param float|null $rating
+     * @return RaceEvent
+     */
+    public function setRating($rating): self
+    {
+        $this->rating = $rating;
 
         return $this;
     }

@@ -324,6 +324,7 @@ services:
             - '@form.factory'
             - '@app.user.repository'
             - '@app.repository.race_event_completed'
+            - '@app.services.searchindex'
 
     app.repository.race_event_completed:
             class: AppBundle\Repository\RaceEventCompletedRepository

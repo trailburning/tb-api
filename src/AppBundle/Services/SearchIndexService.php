@@ -29,6 +29,7 @@ class SearchIndexService
     /**
      * @param Client $client
      * @param string $searchIndexName
+     * @param string $autosuggestIndexName
      */
     public function __construct(Client $client, string $searchIndexName, string $autosuggestIndexName)
     {
@@ -86,17 +87,13 @@ class SearchIndexService
             'id' => $raceEvent->getOid(),
         ];
 
-        try {
-            return $this->client->delete($params);
-        } catch (Missing404Exception $e) {
-            return $e->getMessage();
-        }
+        return $this->client->delete($params);
     }
 
     /**
      * @param RaceEvent $raceEvent
      *
-     * @return array|false
+     * @return array|null
      */
     public function deleteRaceEventAutosuggest(RaceEvent $raceEvent)
     {
@@ -114,7 +111,7 @@ class SearchIndexService
 
         $result = $this->client->search($params);
         if (count($result['hits']['hits']) === 0) {
-            return;
+            return null;
         }
 
         $id = $result['hits']['hits'][0]['_id'];
@@ -156,6 +153,7 @@ class SearchIndexService
             'attributes_slug' => $raceEvent->getAttributesSlugArray(),
             'media' => [],
             'completed' => [],
+            'rating' => $raceEvent->getRating(),
         ];
 
         if ($raceEvent->getStartDate() !== null) {
@@ -190,7 +188,7 @@ class SearchIndexService
 
         foreach ($raceEvent->getCompleted() as $completed) {
             $doc['completed'][] = [
-                'rating' => $completed->getRating(),
+                'rating' => round($completed->getRating(), 2),
                 'comment' => $completed->getComment(),
                 'user' => [
                     'id' => $completed->getUser()->getId(),
