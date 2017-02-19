@@ -11,9 +11,12 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Model\APIResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use FOS\RestBundle\Controller\Annotations\Post;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class SecurityController extends Controller
 {
@@ -42,5 +45,37 @@ class SecurityController extends Controller
     public function loginAction()
     {
         throw new \DomainException('You should never see this');
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/user/connect",
+     *     summary="Facebook connect",
+     *     description="Connects a Facebook user",
+     *     tags={"User"},
+     *     consumes={"application/json","application/x-www-form-urlencoded"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(name="access_token", type="string", in="formData", description="The Facebook access token", required="true"),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Authentification successful",
+     *     ),
+     *     @SWG\Response(
+     *         response=400,
+     *         description="Invalid access_token"
+     *     )
+     * )
+     *
+     * @Post("/user/connect")
+     *
+     * @param Request $request
+     *
+     * @return APIResponse|JsonResponse
+     */
+    public function connectAction(Request $request)
+    {
+        $facebookConnectHnndler = $this->get('app.handler.facebook_connect');
+
+        return $facebookConnectHnndler->handleConnect($request->request->get('access_token'));
     }
 }

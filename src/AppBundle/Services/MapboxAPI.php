@@ -3,6 +3,7 @@
 namespace AppBundle\Services;
 
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use Exception;
 use GuzzleHttp\Client;
 
 /**
@@ -31,8 +32,9 @@ class MapboxAPI
     }
 
     /**
-     * @param Point $point 
-     * @return object|null
+     * @param Point $point
+     * @return array
+     * @throws Exception
      */
     public function reverseGeocode(Point $point) : array
     {
@@ -44,7 +46,7 @@ class MapboxAPI
 
         $response = $this->client->request('GET', $url);
         if ($response->getStatusCode() !== 200) {
-            throw new \Exception(sprintf("Unable to reverse geocode, got status code %s"), $response->getStatusCode());
+            throw new Exception(sprintf("Unable to reverse geocode, got status code %s"), $response->getStatusCode());
         }
 
         $body = (string) $response->getBody();
@@ -54,9 +56,9 @@ class MapboxAPI
         
         return $features;
     }
-    
+
     /**
-     * @param object $response 
+     * @param array $features
      * @return string
      */
     public function getLocationNameFromFeatures(array $features) : string
@@ -91,10 +93,12 @@ class MapboxAPI
         
         return $features;
     }
-    
+
     /**
-     * @param Point $pointA 
-     * @param Point $pointB 
+     * @param float $pointALongitude
+     * @param float $pointALatitude
+     * @param float $pointBLongitude
+     * @param float $pointBLatitude
      * @return int
      */
     public function calculateBoundingBoxRadius(float $pointALongitude, float $pointALatitude, float $pointBLongitude, float $pointBLatitude) : int

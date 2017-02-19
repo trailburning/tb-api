@@ -45,7 +45,8 @@
         "elasticsearch/elasticsearch": "^2.1",
         "ongr/elasticsearch-dsl": "^2.0",
         "guzzlehttp/guzzle": "^6.2",
-        "lexik/jwt-authentication-bundle": "^2.0"
+        "lexik/jwt-authentication-bundle": "^2.0",
+        "facebook/php-sdk-v4": "^5.4"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^2.7",

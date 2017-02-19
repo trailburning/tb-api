@@ -118,6 +118,8 @@ class RaceEventHandler
      * @param string    $method
      *
      * @return APIResponse
+     *
+     * @throws Exception
      */
     public function handleCreateOrUpdate(array $parameters, RaceEvent $raceEvent = null, $method = 'POST')
     {
@@ -180,21 +182,21 @@ class RaceEventHandler
         $regions = [];
         foreach ($regionFeatures as $regionFeature) {
             $bboxRadius = $this->mapboxAPI->calculateBoundingBoxRadius(
-                $regionFeature->bbox[0], 
-                $regionFeature->bbox[1], 
-                $regionFeature->bbox[2], 
+                $regionFeature->bbox[0],
+                $regionFeature->bbox[1],
+                $regionFeature->bbox[2],
                 $regionFeature->bbox[3]
             );
             $region = $this->regionRepository->getOrCreateRegion(
-                $regionFeature->id, 
-                $regionFeature->place_name, 
-                $regionFeature->center[0], 
-                $regionFeature->center[1], 
+                $regionFeature->id,
+                $regionFeature->place_name,
+                $regionFeature->center[0],
+                $regionFeature->center[1],
                 $bboxRadius
             );
             $regions[] = $region;
         }
-        
+
         $raceEvent->setRegions($regions);
     }
 
@@ -202,8 +204,10 @@ class RaceEventHandler
      * @param string $id
      *
      * @return APIResponse
+     *
+     * @throws Exception
      */
-    public function handleDelete($id)
+    public function handleDelete(string $id): APIResponse
     {
         /** @var RaceEvent $raceEvent */
         $raceEvent = $this->raceEventRepository->findOneBy([

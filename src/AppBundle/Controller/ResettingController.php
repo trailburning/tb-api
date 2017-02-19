@@ -2,8 +2,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Model\APIResponse;
+use AppBundle\Services\APIResponseBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Swagger\Annotations as SWG;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\UserBundle\Event\GetResponseUserEvent;
@@ -50,7 +53,7 @@ class ResettingController extends Controller
      */
     public function requestAction(Request $request)
     {
-        /** @var AppBundle\Services\APIResponseBuilder $apiResponseBuilder */
+        /** @var APIResponseBuilder $apiResponseBuilder */
         $apiResponseBuilder = $this->get('app.services.response_builder');
         $user = $this->get('fos_user.user_manager')
             ->findUserByUsernameOrEmail($request->request->get('email'));
@@ -108,7 +111,7 @@ class ResettingController extends Controller
      */
     public function resetAction(Request $request, $token)
     {
-        /** @var AppBundle\Services\APIResponseBuilder $apiResponseBuilder */
+        /** @var APIResponseBuilder $apiResponseBuilder */
         $apiResponseBuilder = $this->get('app.services.response_builder');
         /** @var $formFactory \FOS\UserBundle\Form\Factory\FactoryInterface */
         $formFactory = $this->get('fos_user.resetting.form.factory');
@@ -127,6 +130,7 @@ class ResettingController extends Controller
         $event = new GetResponseUserEvent($user, $request);
         $dispatcher->dispatch(FOSUserEvents::RESETTING_RESET_INITIALIZE, $event);
 
+        /** @var Form $form */
         $form = $formFactory->createForm();
         $form->setData($user);
 

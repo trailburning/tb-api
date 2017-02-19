@@ -364,3 +364,25 @@ services:
             factory_method: getRepository
             arguments:
                 - AppBundle\Entity\RaceEventDoing
+
+    app.facebook_graph_api:
+        class: Facebook\Facebook
+        arguments:
+            -
+                app_id: '%facebook_app_id%'
+                app_secret: '%facebook_app_secret%'
+                default_graph_version: 'v2.8'
+
+    app.handler.facebook_connect:
+        class: AppBundle\Handler\FacebookConnectHandler
+        arguments:
+            - '@app.services.response_builder'
+            - '@app.facebook_graph_api'
+            - '@app.security.user_manager'
+            - '@lexik_jwt_authentication.jwt_manager'
+            - '@app.file_uploader'
+
+    app.file_uploader:
+        class: AppBundle\Services\FileUploader
+        arguments:
+            - '@media_filesystem'

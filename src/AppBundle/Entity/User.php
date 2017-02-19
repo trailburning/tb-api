@@ -1216,6 +1216,7 @@ class User extends BaseUser
 
     /**
      * @param RaceEventCompleted[] $completedRaceEvents
+     *
      * @return User
      */
     public function setCompletedRaceEvents(array $completedRaceEvents): User
@@ -1235,6 +1236,7 @@ class User extends BaseUser
 
     /**
      * @param RaceEventDoing[] $doingRaceEvents
+     *
      * @return User
      */
     public function setDoingRaceEvents(array $doingRaceEvents): User
@@ -1254,6 +1256,7 @@ class User extends BaseUser
 
     /**
      * @param RaceEventWishlist[] $wishlistRaceEvents
+     *
      * @return User
      */
     public function setWishlistRaceEvents(array $wishlistRaceEvents): User
@@ -1273,6 +1276,7 @@ class User extends BaseUser
 
     /**
      * @param string|null $location
+     *
      * @return User
      */
     public function setLocation($location): User

@@ -171,8 +171,5 @@ class RegistrationController extends Controller
         $jwtManager = $this->container->get('lexik_jwt_authentication.jwt_manager');
 
         return new JsonResponse(['token' => $jwtManager->create($user)]);
-
-
-//        return $apiResponseBuilder->buildEmptyResponse(204);
     }
 }

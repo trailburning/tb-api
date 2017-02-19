@@ -87,6 +87,8 @@ class ProfileController extends Controller
      *
      * @Get("/user/profile/{id}")
      *
+     * @param $id
+     * 
      * @return APIResponse
      */
     public function getByIdAction($id)
