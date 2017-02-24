@@ -197,16 +197,18 @@ class FacebookConnectHandler
      */
     protected function getOrCreateUserFromProfile(GraphNode $profile, string $accessToken): User
     {
-        $email = $profile->getField('email', $profile->getField('id').'@facebook.com');
         /** @var User $user */
         $user = $this->userManager->findInAllUserBy([
-            'emailCanonical' => $email,
+            'oauthId' => $profile->getField('id'),
         ]);
         if ($user === null) {
+            $email = $profile->getField('email', $profile->getField('id').'@facebook.com');
             $user = $this->userManager->createUser();
             $user->setEmail($email);
             $user->setPassword(uniqid(null, true));
+            $user->setEnabled(true);
         }
+        $user->setClient('race_base');
         $user->setFirstName($profile->getField('first_name'));
         $user->setLastName($profile->getField('last_name'));
         $user->setGender(USER::GENDER_NONE);

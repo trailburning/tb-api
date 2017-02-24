@@ -21,5 +21,5 @@ parameters:
     jwt_public_key_path: '%kernel.root_dir%/../var/jwt/public.pem'
     jwt_key_pass_phrase: 'ozt7gnu87&R&mguz6b%D4'
     jwt_token_ttl: 30758400
-    facebook_app_id: 1858639234424936
-    facebook_app_secret: ab6db5dec5d0e6e09bb031b3b9c7e967
+    facebook_app_id: 258009961291667
+    facebook_app_secret: 27f4aa6c1058654ea1c2ac286212db9a

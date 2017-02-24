@@ -6,7 +6,7 @@ use AppBundle\Entity\RaceEvent;
 use AppBundle\Entity\RaceEventWishlist;
 use Tests\AppBundle\BaseWebTestCase;
 
-class RaceEventWishlistTest extends BaseWebTestCase
+class RaceEventWishlistControllerTest extends BaseWebTestCase
 {
     public function testPostActionGreen()
     {

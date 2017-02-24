@@ -14,6 +14,7 @@ use Facebook\HttpClients\FacebookHttpClientInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\User\UserChecker;
 use Tests\AppBundle\BaseWebTestCase;
 
 class FacebookConnectHandlerTest extends BaseWebTestCase
@@ -21,21 +22,39 @@ class FacebookConnectHandlerTest extends BaseWebTestCase
     const ACCESS_TOKEN = 'access_token';
     const PICTURE_PATH = 'user/picture.jpg';
 
-    public function testHandleConnect()
+    public function testHandleConnectNewUser()
     {
         $user = new User();
-        $sut = $this->getSut($user);
+        $sut = $this->getSut($user, false);
         $actual = $sut->handleConnect(self::ACCESS_TOKEN);
         $this->assertInstanceOf(JsonResponse::class, $actual);
         $this->assertEquals('http://tbmedia2.imgix.net/'.self::PICTURE_PATH, $user->getAvatarFacebook());
+
+        $this->assertCanAuthenticateUser($user);
     }
 
     public function testHandleConnectExistingUser()
     {
         $user = new User();
-        $sut = $this->getSut($user, true);
+        $user->setEnabled(true);
+        $sut = $this->getSut($user);
         $actual = $sut->handleConnect(self::ACCESS_TOKEN);
         $this->assertInstanceOf(JsonResponse::class, $actual);
+
+        $this->assertCanAuthenticateUser($user);
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Security\Core\Exception\DisabledException
+     */
+    public function testHandleConnectExistingDisabledUserThrowsExceptionOnAuthenticate()
+    {
+        $user = new User();
+        $sut = $this->getSut($user);
+        $actual = $sut->handleConnect(self::ACCESS_TOKEN);
+        $this->assertInstanceOf(JsonResponse::class, $actual);
+
+        $this->assertCanAuthenticateUser($user);
     }
 
     /**
@@ -155,5 +174,15 @@ class FacebookConnectHandlerTest extends BaseWebTestCase
         }
 
         return null;
+    }
+
+    /**
+     * @param User $user
+     */
+    protected function assertCanAuthenticateUser(User $user)
+    {
+        $checker = new UserChecker();
+        $checker->checkPreAuth($user);
+        $this->assertEquals('race_base', $user->getClient());
     }
 }
