@@ -185,7 +185,7 @@ class Journey
             return $this;
         }
         
-        $this->publish = $publish;
+        $this->publish = boolval($publish);
 
         return $this;
     }
