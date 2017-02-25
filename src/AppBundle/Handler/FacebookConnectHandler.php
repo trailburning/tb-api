@@ -79,8 +79,8 @@ class FacebookConnectHandler
             $profile = $this->getProfile('me', $accessToken);
             $picture = $this->getPicture('me', $accessToken);
             $user = $this->getOrCreateUserFromProfile($profile, $accessToken);
-            if ($picture->getField('is_silhouette') === false) {
-                $user = $this->updatePicture($user, $picture);
+            if ($user->getAvatar() === null && $picture->getField('is_silhouette') === false) {
+                $user = $this->updateAvatar($user, $picture);
             }
 
             if ($profile->getField('location')) {
@@ -257,12 +257,12 @@ class FacebookConnectHandler
      *
      * @return User
      */
-    protected function updatePicture(User $user, GraphNode $picture): User
+    protected function updateAvatar(User $user, GraphNode $picture): User
     {
         $file = new UploadedFile($picture->getField('url'), $picture->getField('url'));
         $path = $this->fileUploader->upload($file, 'user');
         $url = 'http://tbmedia2.imgix.net/'.$path;
-        $user->setAvatarFacebook($url);
+        $user->setAvatar($url);
 
         return $user;
     }

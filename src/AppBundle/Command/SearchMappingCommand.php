@@ -333,6 +333,10 @@ class SearchMappingCommand extends ContainerAwareCommand
                                             'type' => 'string',
                                             'analyzer' => 'standard',
                                         ],
+                                        'avatar' => [
+                                            'type' => 'string',
+                                            'index' => 'not_analyzed',
+                                        ],
                                     ],
                                 ],
                             ],

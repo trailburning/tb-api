@@ -187,14 +187,19 @@ class SearchIndexService
         }
 
         foreach ($raceEvent->getCompleted() as $completed) {
+            $user = [
+                'id' => $completed->getUser()->getId(),
+                'first_name' => $completed->getUser()->getFirstName(),
+                'last_name' => $completed->getUser()->getLastName(),
+            ];
+            if ($completed->getUser() !== null) {
+                $user['avatar'] = $completed->getUser();
+            }
+
             $doc['completed'][] = [
                 'rating' => round($completed->getRating(), 2),
                 'comment' => $completed->getComment(),
-                'user' => [
-                    'id' => $completed->getUser()->getId(),
-                    'first_name' => $completed->getUser()->getFirstName(),
-                    'last_name' => $completed->getUser()->getLastName(),
-                ],
+                'user' => $user,
             ];
         }
 

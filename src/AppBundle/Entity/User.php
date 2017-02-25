@@ -113,6 +113,8 @@ class User extends BaseUser
      * @var string
      *
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Serializer\Expose
+     * @SWG\Property()
      */
     private $avatar;
 

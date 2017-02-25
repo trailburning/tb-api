@@ -28,7 +28,7 @@ class FacebookConnectHandlerTest extends BaseWebTestCase
         $sut = $this->getSut($user, false);
         $actual = $sut->handleConnect(self::ACCESS_TOKEN);
         $this->assertInstanceOf(JsonResponse::class, $actual);
-        $this->assertEquals('http://tbmedia2.imgix.net/'.self::PICTURE_PATH, $user->getAvatarFacebook());
+        $this->assertEquals('http://tbmedia2.imgix.net/'.self::PICTURE_PATH, $user->getAvatar());
 
         $this->assertCanAuthenticateUser($user);
     }
@@ -53,6 +53,19 @@ class FacebookConnectHandlerTest extends BaseWebTestCase
         $sut = $this->getSut($user);
         $actual = $sut->handleConnect(self::ACCESS_TOKEN);
         $this->assertInstanceOf(JsonResponse::class, $actual);
+
+        $this->assertCanAuthenticateUser($user);
+    }
+
+    public function testHandleConnectExistingUserDontOverrideAvatar()
+    {
+        $user = new User();
+        $user->setAvatar('old_avatar');
+        $user->setEnabled(true);
+        $sut = $this->getSut($user);
+        $actual = $sut->handleConnect(self::ACCESS_TOKEN);
+        $this->assertInstanceOf(JsonResponse::class, $actual);
+        $this->assertEquals('old_avatar', $user->getAvatar());
 
         $this->assertCanAuthenticateUser($user);
     }
