@@ -241,8 +241,8 @@ class FacebookConnectHandler
         $nodeId = $profile->getField('location')->getField('id');
         $place = $this->getPlace($nodeId, $accessToken);
         $coords = new Point(
-            $place->getField('location')->getField('latitude'),
             $place->getField('location')->getField('longitude'),
+            $place->getField('location')->getField('latitude'),
             4326
         );
         $user->setCoords($coords);
