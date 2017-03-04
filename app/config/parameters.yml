@@ -1,0 +1,27 @@
+# This file is auto-generated during the composer install
+parameters:
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    secret: 8462a91a77a8f8dcf02741349b5eed1ca678f527
+    database_host: postgres
+    database_port: 5432
+    database_name: trailburning
+    database_user: trailburning
+    database_password: trailburning
+    aws_accesskey: AKIAJ2MQ25WCZNHH6UHQ
+    aws_secretkey: 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
+    aws_region: eu-west-1
+    elasticsearch:
+        hosts:
+            - 'elasticsearch:9200'
+    mapbox_api_token: pk.eyJ1IjoibWFsbGJldXJ5IiwiYSI6IjJfV1MzaE0ifQ.scrjDE31p7wBx7-GemqV3A
+    jwt_private_key_path: %kernel.root_dir%/../var/jwt/private.pem   # ssh private key path
+    jwt_public_key_path:  %kernel.root_dir%/../var/jwt/public.pem    # ssh public key path
+    jwt_key_pass_phrase:  ''                                         # ssh key pass phrase
+    jwt_token_ttl: 30758400
+    facebook_app_id: 1858639234424936
+    facebook_app_secret: ab6db5dec5d0e6e09bb031b3b9c7e967
+#    facebook_app_id: 258009961291667
+#    facebook_app_secret: 27f4aa6c1058654ea1c2ac286212db9a
