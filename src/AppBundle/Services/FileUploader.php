@@ -56,12 +56,16 @@ class FileUploader
     /**
      * @param UploadedFile $file
      *
+     * @param null $directory
      * @return string
      */
     protected function generateRelativeFilepath(UploadedFile $file, $directory = null): string
     {
         $filename = str_replace('.', '', uniqid(null, true));
         $extension = $file->getClientOriginalExtension();
+        if (strpos($extension, '?') !== false) {
+            $extension = substr($extension, 0, strpos($extension, '?'));
+        }
         $filepath = $filename.'.'.$extension;
         if ($directory !== null) {
             $filepath = $directory.'/'.$filepath;

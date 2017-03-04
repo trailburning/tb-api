@@ -127,6 +127,7 @@ class FacebookConnectHandler
         $resource = '/'.$nodeId.'/picture';
         $params = [
             'type' => 'large',
+            'redirect' => false,
         ];
         $picture = $this->getGraphNode($resource, $accessToken, $params);
 
@@ -259,7 +260,7 @@ class FacebookConnectHandler
      */
     protected function updateAvatar(User $user, GraphNode $picture): User
     {
-        $file = new UploadedFile($picture->getField('url'), $picture->getField('url'));
+        $file = new UploadedFile($picture->getField('url'), $picture->getField('url'), null, null, UPLOAD_ERR_NO_TMP_DIR);
         $path = $this->fileUploader->upload($file, 'user');
         $url = 'http://tbmedia2.imgix.net/'.$path;
         $user->setAvatar($url);

@@ -114,7 +114,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length=100, nullable=true)
      * @Serializer\Expose
-     * @SWG\Property()
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $avatar;
 
