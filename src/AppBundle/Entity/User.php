@@ -113,6 +113,7 @@ class User extends BaseUser
      * @var string
      *
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @SWG\Property()
      * @Serializer\Expose
      * @Serializer\Groups({"raceEvent", "user"})
      */
