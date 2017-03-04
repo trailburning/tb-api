@@ -6,7 +6,7 @@
 !var/logs/nginx
 var/logs/nginx/*
 !var/logs/nginx/.gitkeep
-/var/config/parameters.yml
+/app/config/parameters.yml
 /phpunit.xml
 /vendor/
 /web/bundles/
