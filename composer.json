@@ -14,7 +14,7 @@
         "psr-4": { "Tests\\": "tests/" }
     },
     "require": {
-        "php": "7.*",
+        "php": "7.0.*",
         "ext-exif": "*",
         "ext-gd": "*",
         "symfony/symfony": "2.8.*",
