@@ -57,7 +57,7 @@ class FacebookConnectHandlerTest extends BaseWebTestCase
         $this->assertCanAuthenticateUser($user);
     }
 
-    public function testHandleConnectExistingUserDontOverrideAvatar()
+    public function testHandleConnectExistingUserOverridesAvatar()
     {
         $user = new User();
         $user->setAvatar('old_avatar');
@@ -65,7 +65,7 @@ class FacebookConnectHandlerTest extends BaseWebTestCase
         $sut = $this->getSut($user);
         $actual = $sut->handleConnect(self::ACCESS_TOKEN);
         $this->assertInstanceOf(JsonResponse::class, $actual);
-        $this->assertEquals('old_avatar', $user->getAvatar());
+        $this->assertEquals('http://tbmedia2.imgix.net/user/picture.jpg', $user->getAvatar());
 
         $this->assertCanAuthenticateUser($user);
     }

@@ -79,7 +79,7 @@ class FacebookConnectHandler
             $profile = $this->getProfile('me', $accessToken);
             $picture = $this->getPicture('me', $accessToken);
             $user = $this->getOrCreateUserFromProfile($profile, $accessToken);
-            if ($user->getAvatar() === null && $picture->getField('is_silhouette') === false) {
+            if ($picture->getField('is_silhouette') === false) {
                 $user = $this->updateAvatar($user, $picture);
             }
 
@@ -198,12 +198,18 @@ class FacebookConnectHandler
      */
     protected function getOrCreateUserFromProfile(GraphNode $profile, string $accessToken): User
     {
+        $email = $profile->getField('email', $profile->getField('id').'@facebook.com');
         /** @var User $user */
         $user = $this->userManager->findInAllUserBy([
             'oauthId' => $profile->getField('id'),
         ]);
         if ($user === null) {
-            $email = $profile->getField('email', $profile->getField('id').'@facebook.com');
+            /** @var User $user */
+            $user = $this->userManager->findInAllUserBy([
+                'emailCanonical' => $email,
+            ]);
+        }
+        if ($user === null) {
             $user = $this->userManager->createUser();
             $user->setEmail($email);
             $user->setPassword(uniqid(null, true));
