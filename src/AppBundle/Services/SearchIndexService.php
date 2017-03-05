@@ -193,7 +193,7 @@ class SearchIndexService
                 'last_name' => $completed->getUser()->getLastName(),
             ];
             if ($completed->getUser() !== null) {
-                $user['avatar'] = $completed->getUser();
+                $user['avatar'] = $completed->getUser()->getAvatar();
             }
 
             $doc['completed'][] = [
