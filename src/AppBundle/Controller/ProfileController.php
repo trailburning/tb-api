@@ -101,7 +101,7 @@ class ProfileController extends Controller
         }
 
         $response = $apiResponseBuilder->buildSuccessResponse($user, 'user');
-        $response->addResponseGroup('user');
+            $response->addResponseGroup('user');
 
         return $response;
     }
@@ -184,5 +184,44 @@ class ProfileController extends Controller
         $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
 
         return $apiResponseBuilder->buildEmptyResponse(204);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/user/latest",
+     *     summary="Return the latest registered users",
+     *     description="Returns the latest registered users with an avatar in descending order.",
+     *     tags={"User"},
+     *     consumes={"application/json"},
+     *     produces={"application/json"},
+     *     @SWG\Parameter(
+     *         description="Limit the results, default is 10",
+     *         in="query",
+     *         name="limit",
+     *         type="string",
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="user created",
+     *         @SWG\Schema(ref="#/definitions/User")
+     *     ),
+     * )
+     *
+     * @Get("/user/latest")
+     *
+     * @param Request $request
+     *
+     * @return APIResponse
+     */
+    public function getLatestAction(Request $request)
+    {
+        $apiResponseBuilder = $this->get('app.services.response_builder');
+        $userRepository = $this->get('app.user.repository');
+        $latestUsers = $userRepository->findLatestActiveWithAvatar($request->get('limit', 10));
+
+        $response = $apiResponseBuilder->buildSuccessResponse($latestUsers, 'user');
+        $response->addResponseGroup('user');
+
+        return $response;
     }
 }

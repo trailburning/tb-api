@@ -48,4 +48,5 @@ security:
         - { path: ^/v2/user/password/request, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/v2/user/profile, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/v2/user/connect, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/v2/user/latest, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/v2/user, roles: IS_AUTHENTICATED_FULLY }

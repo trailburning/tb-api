@@ -73,4 +73,20 @@ class ProfileControllerTest extends BaseWebTestCase
         $client->request('PUT', '/v2/user', $data);
         $this->assertJsonResponse($client->getResponse(), 401);
     }
+
+    public function testGetLatest()
+    {
+        $this->loadFixtures([
+            'AppBundle\DataFixtures\ORM\UserData',
+        ]);
+
+        $client = $this->makeClient();
+        $data = [];
+
+        $client->request('GET', '/v2/user/latest', $data);
+        $this->assertJsonResponse($client->getResponse(), 200);
+        $response = $client->getResponse()->getContent();
+        $json = json_decode($response);
+        $this->assertEquals(2, count($json->body->user));
+    }
 }

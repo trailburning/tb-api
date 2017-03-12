@@ -26,6 +26,7 @@ class UserData extends AbstractFixture implements FixtureInterface
         $user->setLocation('Berlin');
         $user->setEnabled(true);
         $user->setNewsletter(false);
+        $user->setClient('race_base');
 
         $manager->persist($user);
         $manager->flush();
@@ -43,6 +44,7 @@ class UserData extends AbstractFixture implements FixtureInterface
         $user->setLocation('Berlin');
         $user->setEnabled(true);
         $user->setNewsletter(false);
+        $user->setClient('race_base');
 
         $manager->persist($user);
         $manager->flush();
