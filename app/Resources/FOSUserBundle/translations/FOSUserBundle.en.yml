@@ -5,9 +5,20 @@ registration:
         message: |
             Hello, Bonjour, Hallo, Ciao, Hola!
 
-            You are seconds away from activating your account! 
+            You are seconds away from activating your account!
 
-            Please visit %confirmationUrl% and start to Explore, Discover and Race the world! 
+            Please click <a href="%confirmationUrl%">here</a> and start to Explore, Discover and Race the world!
 
-            Happy Running! 
+            Happy Running!
+            The RaceBase World Team
+
+resetting:
+    email:
+        subject: RaceBase World - Reset Password
+        message: |
+            Hello %username%,
+
+            To reset your password please click <a href="%confirmationUrl%">here</a>.
+
+            Happy Running!
             The RaceBase World Team
