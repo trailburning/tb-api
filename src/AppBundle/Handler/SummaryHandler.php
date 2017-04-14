@@ -2,7 +2,8 @@
 
 namespace AppBundle\Handler;
 
-use AppBundle\Response\APIResponse;
+use AppBundle\Model\APIResponse;
+use AppBundle\Repository\UserRepository;
 use AppBundle\Services\APIResponseBuilder;
 use AppBundle\Model\Summary;
 use AppBundle\Repository\RaceEventRepository;
@@ -29,17 +30,21 @@ class SummaryHandler
     private $raceEventRepository;
 
     /**
-     * @param RegionRepository    $regionRepository
-     * @param RaceEventRepository $raceEventRepository
+     * @var UserRepository
      */
+    private $userRepository;
+
+
     public function __construct(
         APIResponseBuilder $apiResponseBuilder,
         RegionRepository $regionRepository,
-        RaceEventRepository $raceEventRepository
+        RaceEventRepository $raceEventRepository,
+        UserRepository $userRepository
     ) {
         $this->apiResponseBuilder = $apiResponseBuilder;
         $this->regionRepository = $regionRepository;
         $this->raceEventRepository = $raceEventRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -50,6 +55,7 @@ class SummaryHandler
         $summary = new Summary();
         $summary->setRaceEventCount($this->raceEventRepository->getCount());
         $summary->setCountryCount($this->regionRepository->getCountryCount());
+        $summary->setUserCount($this->userRepository->getUserCount());
 
         return $this->apiResponseBuilder->buildSuccessResponse($summary, 'summary');
     }

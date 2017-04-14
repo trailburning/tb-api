@@ -267,6 +267,7 @@ services:
             - '@app.services.response_builder'
             - '@app.repository.region'
             - '@app.repository.race_event'
+            - '@app.repository.user'
     app.form.registration:
         class: AppBundle\Form\Type\RegistrationFormType
         arguments:
@@ -386,3 +387,10 @@ services:
         class: AppBundle\Services\FileUploader
         arguments:
             - '@media_filesystem'
+
+    app.repository.user:
+                class: AppBundle\Repository\UserRepository
+                factory_service: doctrine.orm.entity_manager
+                factory_method: getRepository
+                arguments:
+                    - AppBundle\Entity\User
