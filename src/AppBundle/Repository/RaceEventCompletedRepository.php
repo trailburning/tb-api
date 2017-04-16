@@ -24,7 +24,7 @@ class RaceEventCompletedRepository extends BaseRepository
     {
         $qb = $this->getQB()
             ->andWhere('r.raceEvent = :raceEvent')
-            ->andWhere('r.user= :user')
+            ->andWhere('r.user = :user')
             ->setParameter('raceEvent', $raceEvent)
             ->setParameter('user', $user);
 
@@ -35,6 +35,7 @@ class RaceEventCompletedRepository extends BaseRepository
 
     /**
      * @param RaceEvent $raceEvent
+     *
      * @return float|null
      */
     public function calculateAvgRatingByRaceEvent(RaceEvent $raceEvent)
@@ -44,8 +45,18 @@ class RaceEventCompletedRepository extends BaseRepository
             ->where('r.raceEvent = :raceEvent')
             ->setParameter('raceEvent', $raceEvent)
             ->getQuery();
-        $rating= $qb->getSingleResult()[1];
+        $rating = $qb->getSingleResult()[1];
 
         return $rating;
+    }
+
+    public function findCompletedRaceEventsOrderedByDate(User $user)
+    {
+        $qb = $this->getQB()
+            ->andWhere('r.user = :user')
+            ->setParameter('user', $user)
+            ->innerJoin('r.RaceEvent', 're');
+
+        return $qb->getQuery()->getResult();
     }
 }

@@ -339,6 +339,10 @@ class SearchMappingCommand extends ContainerAwareCommand
                                         ],
                                     ],
                                 ],
+                                'timestamp' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
                             ],
                         ],
                     ],

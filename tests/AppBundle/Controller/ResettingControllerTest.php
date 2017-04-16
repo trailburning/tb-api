@@ -26,7 +26,7 @@ class ResettingControllerTest extends BaseWebTestCase
 
         // Asserting email data
         $this->assertInstanceOf('Swift_Message', $message);
-        $this->assertEquals('Reset Password', $message->getSubject());
+        $this->assertEquals('RaceBase World - Reset Password', $message->getSubject());
         $this->assertEquals('hello@racebase.world', key($message->getFrom()));
         $this->assertEquals('mattallbeury@trailburning.com', key($message->getTo()));
 

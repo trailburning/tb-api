@@ -2,10 +2,11 @@
 
 namespace AppBundle\Entity;
 
+use Datetime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
-use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * RaceEventWishlist.
@@ -47,6 +48,17 @@ class RaceEventWishlist
      * @Serializer\Groups({"raceEvent", "user"})
      */
     private $user;
+
+    /**
+     * @var Datetime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime", nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
+     */
+    private $timestamp;
 
     /**
      * ################################################################################################################.
@@ -125,5 +137,13 @@ class RaceEventWishlist
         $this->user = $user;
 
         return $this;
+    }
+
+    /**
+     * @return Datetime
+     */
+    public function getTimestamp(): Datetime
+    {
+        return $this->timestamp;
     }
 }

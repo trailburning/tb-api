@@ -235,12 +235,14 @@ services:
             -
                 base_uri: 'https://api.mapbox.com'
                 timeout: 10
+
     app.repository.region:
         class: AppBundle\Repository\RegionRepository
         factory_service: doctrine.orm.entity_manager
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\Region
+
     app.repository.race_event_attribute:
         class: AppBundle\Repository\RaceEventAttributeRepository
         arguments:
@@ -248,6 +250,7 @@ services:
         factory:
             - '@doctrine.orm.entity_manager'
             - getRepository
+
     app.handler.race_event_attribute:
         class: AppBundle\Handler\RaceEventAttributeHandler
         arguments:
@@ -257,10 +260,12 @@ services:
             - '@form.factory'
             - '@router'
             - '@app.services.searchIndex'
+
     app.image:
         class: AppBundle\Services\ImageService
         arguments:
             - '@media_filesystem'
+
     app.handler.summary:
         class: AppBundle\Handler\SummaryHandler
         arguments:
@@ -268,6 +273,7 @@ services:
             - '@app.repository.region'
             - '@app.repository.race_event'
             - '@app.repository.user'
+
     app.form.registration:
         class: AppBundle\Form\Type\RegistrationFormType
         arguments:
@@ -328,11 +334,11 @@ services:
             - '@app.services.searchindex'
 
     app.repository.race_event_completed:
-            class: AppBundle\Repository\RaceEventCompletedRepository
-            factory_service: doctrine.orm.entity_manager
-            factory_method: getRepository
-            arguments:
-                - AppBundle\Entity\RaceEventCompleted
+        class: AppBundle\Repository\RaceEventCompletedRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\RaceEventCompleted
 
     app.handler.race_event_wishlist:
         class: AppBundle\Handler\RaceEventWishlistHandler
@@ -360,11 +366,11 @@ services:
             - '@app.repository.race_event_doing'
 
     app.repository.race_event_doing:
-            class: AppBundle\Repository\RaceEventDoingRepository
-            factory_service: doctrine.orm.entity_manager
-            factory_method: getRepository
-            arguments:
-                - AppBundle\Entity\RaceEventDoing
+        class: AppBundle\Repository\RaceEventDoingRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\RaceEventDoing
 
     app.facebook_graph_api:
         class: Facebook\Facebook
@@ -389,8 +395,14 @@ services:
             - '@media_filesystem'
 
     app.repository.user:
-                class: AppBundle\Repository\UserRepository
-                factory_service: doctrine.orm.entity_manager
-                factory_method: getRepository
-                arguments:
-                    - AppBundle\Entity\User
+        class: AppBundle\Repository\UserRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\User
+
+    app.handler.profile:
+        class: AppBundle\Handler\ProfileHandler
+        arguments:
+            - '@app.services.response_builder'
+            - '@security.token_storage'

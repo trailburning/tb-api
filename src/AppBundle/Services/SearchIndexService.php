@@ -196,11 +196,17 @@ class SearchIndexService
                 $user['avatar'] = $completed->getUser()->getAvatar();
             }
 
-            $doc['completed'][] = [
+            $completedDoc = [
                 'rating' => round($completed->getRating(), 2),
                 'comment' => $completed->getComment(),
                 'user' => $user,
             ];
+
+            if ($completed->getTimestamp() !== null) {
+                $completedDoc['timestamp'] = $completed->getTimestamp()->format('Y-m-d H:i:s');
+            }
+
+            $doc['completed'][] = $completedDoc;
         }
 
         if (count($doc['category']) > 1) {

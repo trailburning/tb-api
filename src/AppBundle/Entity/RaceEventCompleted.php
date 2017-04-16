@@ -2,10 +2,12 @@
 
 namespace AppBundle\Entity;
 
+use Datetime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * RaceEventCompleted.
@@ -32,7 +34,7 @@ class RaceEventCompleted
      * @ORM\Column(type="integer", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
-     * @Serializer\Groups({"raceEvent"})
+     * @Serializer\Groups({"raceEvent", "user"})
      * @Assert\Range(min=1,max=5)
      */
     private $rating;
@@ -68,6 +70,17 @@ class RaceEventCompleted
      * @Serializer\Groups({"raceEvent", "user"})
      */
     private $user;
+
+    /**
+     * @var Datetime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime", nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
+     */
+    private $timestamp;
 
     /**
      * ################################################################################################################.
@@ -186,5 +199,13 @@ class RaceEventCompleted
         $this->user = $user;
 
         return $this;
+    }
+
+    /**
+     * @return Datetime
+     */
+    public function getTimestamp(): Datetime
+    {
+        return $this->timestamp;
     }
 }

@@ -335,6 +335,7 @@ class User extends BaseUser
      * @SWG\Property()
      * @Serializer\Expose
      * @Serializer\Groups({"user"})
+     * @ORM\OrderBy({"timestamp" = "DESC"})
      */
     private $completedRaceEvents;
 
@@ -345,6 +346,7 @@ class User extends BaseUser
      * @SWG\Property()
      * @Serializer\Expose
      * @Serializer\Groups({"user"})
+     * @ORM\OrderBy({"timestamp" = "DESC"})
      */
     private $doingRaceEvents;
 
@@ -355,6 +357,7 @@ class User extends BaseUser
      * @SWG\Property()
      * @Serializer\Expose
      * @Serializer\Groups({"user"})
+     * @ORM\OrderBy({"timestamp" = "DESC"})
      */
     private $wishlistRaceEvents;
 

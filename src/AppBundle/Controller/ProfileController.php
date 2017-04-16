@@ -47,16 +47,9 @@ class ProfileController extends Controller
      */
     public function getAction()
     {
-        $apiResponseBuilder = $this->get('app.services.response_builder');
-        $user = $this->getUser();
-        if (!is_object($user) || !$user instanceof UserInterface) {
-            throw new AccessDeniedException();
-        }
+        $profileHandler = $this->get('app.handler.profile');
 
-        $response = $apiResponseBuilder->buildSuccessResponse($user, 'user');
-        $response->addResponseGroup('user');
-
-        return $response;
+        return $profileHandler->handleGet();
     }
 
     /**
