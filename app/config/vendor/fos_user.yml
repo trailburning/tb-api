@@ -8,6 +8,7 @@ fos_user:
             name:  ''
         confirmation:
             enabled: true
+            template: Registration/email.twig
     profile:
         form:
             type: AppBundle\Form\Type\ProfileFormType
@@ -16,9 +17,12 @@ fos_user:
         form:
             type: AppBundle\Form\Type\ResettingFormType
             name:  ''
+        email:
+          template: Resetting/email.twig
     from_email:
         address: hello@racebase.world
         sender_name: RaceBase
 
     service:
         user_manager: app.security.user_manager
+        mailer: fos_user.mailer.twig_swift
