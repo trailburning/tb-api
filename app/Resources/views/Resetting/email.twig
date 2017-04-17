@@ -3,18 +3,18 @@
     RaceBase World - Reset Password
 {% endblock %}
 {% block body_text %}
-    Hello %username%,
+    Hello {{ user.username }},
 
-    To reset your password please click %confirmationUrl%
+    To reset your password please click {{ confirmationUrl }}
 
     Happy Running!
     The RaceBase World Team
 {% endblock %}
 {% block body_html %}
-    Hello %username%,
-
-    To reset your password please click <a href="%confirmationUrl%">here</a>.
-
-    Happy Running!
+    Hello {{ user.username }},<br>
+    <br>
+    To reset your password please click <a href="{{ confirmationUrl }}">here</a>.<br>
+    <br>
+    Happy Running!<br>
     The RaceBase World Team
 {% endblock %}
