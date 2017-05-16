@@ -18,7 +18,6 @@ class UserRepository extends BaseRepository
         $qb->andWhere('u.client = :client_id');
         $qb->setParameter('client_id', $clientId);
         $qb->andWhere('u.enabled = true');
-        $qb->andWhere('u.avatar IS NOT NULL');
         $qb->addOrderBy('u.registeredAt', 'DESC');
         $qb->setMaxResults($limit);
         $result = $qb->getQuery()->getResult();
