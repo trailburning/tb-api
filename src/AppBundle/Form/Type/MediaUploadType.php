@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Form\Type;
 
@@ -21,9 +21,13 @@ class MediaUploadType extends AbstractType
                     new NotBlank(),
                     new File([
                         'mimeTypes' => MIMEType::getChoices(),
+                        'maxSize' => '6M',
                     ]),
                 ],
             ])
+            ->add('credit')
+            ->add('creditUrl')
+            ->add('publish')
         ;
     }
 

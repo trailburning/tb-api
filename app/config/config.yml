@@ -10,6 +10,8 @@ imports:
     - { resource: vendor/stof_doctrine_extensions.yml }
     - { resource: vendor/knp_gaufrette.yml }
     - { resource: vendor/nelmio_cors.yml }
+    - { resource: vendor/lexik_jwt_authentication.yml }
+    - { resource: vendor/jms_serializer.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -20,7 +22,7 @@ parameters:
 
 framework:
     #esi:             ~
-    #translator:      { fallbacks: ["%locale%"] }
+    translator:      { fallbacks: ["%locale%"] }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -87,10 +89,11 @@ doctrine:
             # add hstore type from http://github.com/easybiblabs/EasyBib_DoctrineTypes
             hstore:                 EasyBib\Doctrine\Types\Hstore
             MIMEType:               AppBundle\DBAL\Types\MIMEType
-            RaceType:               AppBundle\DBAL\Types\RaceType
             RaceCategory:           AppBundle\DBAL\Types\RaceCategory
             RaceDistance:           AppBundle\DBAL\Types\RaceDistance
             RegionType:             AppBundle\DBAL\Types\RegionType
+            RaceEventType:          AppBundle\DBAL\Types\RaceEventType
+            UserClientType:         AppBundle\DBAL\Types\UserClientType
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"

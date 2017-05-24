@@ -76,7 +76,6 @@ class APIResponseBuilder
         if (!is_array($messages)) {
             $messages = [$messages];
         }
-        
         foreach ($messages as $message) {
             $response->addMessage($message);
         }

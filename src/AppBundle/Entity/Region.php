@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use CrEOF\Spatial\PHP\Types\Geography\Point;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -69,9 +70,10 @@ class Region
     private $coords;
 
     /**
-     * @var RaceEvents[]
+     * @var RaceEvent[]
      *
      * @ORM\ManyToMany(targetEntity="RaceEvent", mappedBy="regions")
+     * @ORM\JoinTable(name="api_race_event_region")
      */
     private $raceEvents;
 

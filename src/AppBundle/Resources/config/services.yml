@@ -89,15 +89,31 @@ services:
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\RoutePoint
-    app.media:
+
+    app.media.assets:
         class: AppBundle\Services\MediaService
         arguments:
             - '@media_filesystem'
             - '@app.media.repository'
             - '@app.response.builder'
-            - '@app.asset.repository'
             - '@app.media.analyzer'
             - '@app.mediaAttribute.repository'
+            - '@app.image'
+            - '@kernel'
+            - '25zero'
+
+    app.media.raceevents:
+        class: AppBundle\Services\MediaService
+        arguments:
+            - '@media_filesystem'
+            - '@app.media.repository'
+            - '@app.response.builder'
+            - '@app.media.analyzer'
+            - '@app.mediaAttribute.repository'
+            - '@app.image'
+            - '@kernel'
+            - 'raceevents'
+
     app.s3Client:
         class: Aws\S3\S3Client
         factory_class: Aws\S3\S3Client
@@ -142,7 +158,7 @@ services:
             - '@router'
             - '@app.services.searchIndex'
             - '@app.services.mapbox_api'
-            - '@app.region.repository'
+            - '@app.repository.region'
     app.services.response_builder:
         class: AppBundle\Services\APIResponseBuilder
         arguments:
@@ -177,36 +193,36 @@ services:
     vendor.elasticsearch.client:
         class: Elasticsearch\Client
         factory: ["@app.factory.elasticsearch.client", create]
-        arguments: 
+        arguments:
             - %elasticsearch%
-            
+
     app.handler.autosuggest:
         class: AppBundle\Handler\AutosuggestHandler
         arguments:
             - '@app.services.response_builder'
             - '@vendor.elasticsearch.client'
             - '%autosuggest_index_name%'
-            
+
     app.handler.search:
         class: AppBundle\Handler\SearchHandler
         arguments:
             - '@app.services.response_builder'
             - '@app.services.search'
             - '@form.factory'
-    
+
     app.services.search:
         class: AppBundle\Services\SearchService
         arguments:
             - '@vendor.elasticsearch.client'
             - '%search_index_name%'
-    
+
     app.services.searchIndex:
         class: AppBundle\Services\SearchIndexService
         arguments:
             - '@vendor.elasticsearch.client'
             - '%search_index_name%'
             - '%autosuggest_index_name%'
-    
+
     app.services.mapbox_api:
         class: AppBundle\Services\MapboxAPI
         arguments:
@@ -215,13 +231,178 @@ services:
 
     vendor.guzzle.mapbox_api_client:
         class: GuzzleHttp\Client
-        arguments: 
+        arguments:
             -
                 base_uri: 'https://api.mapbox.com'
                 timeout: 10
-    app.region.repository:
+
+    app.repository.region:
         class: AppBundle\Repository\RegionRepository
         factory_service: doctrine.orm.entity_manager
         factory_method: getRepository
         arguments:
             - AppBundle\Entity\Region
+
+    app.repository.race_event_attribute:
+        class: AppBundle\Repository\RaceEventAttributeRepository
+        arguments:
+            - AppBundle\Entity\RaceEventAttribute
+        factory:
+            - '@doctrine.orm.entity_manager'
+            - getRepository
+
+    app.handler.race_event_attribute:
+        class: AppBundle\Handler\RaceEventAttributeHandler
+        arguments:
+            - '@app.repository.race_event'
+            - '@app.repository.race_event_attribute'
+            - '@app.services.response_builder'
+            - '@form.factory'
+            - '@router'
+            - '@app.services.searchIndex'
+
+    app.image:
+        class: AppBundle\Services\ImageService
+        arguments:
+            - '@media_filesystem'
+
+    app.handler.summary:
+        class: AppBundle\Handler\SummaryHandler
+        arguments:
+            - '@app.services.response_builder'
+            - '@app.repository.region'
+            - '@app.repository.race_event'
+            - '@app.repository.user'
+
+    app.form.registration:
+        class: AppBundle\Form\Type\RegistrationFormType
+        arguments:
+            - 'AppBundle\Entity\User'
+        tags:
+            - { name: form.type, alias: app_user_registration }
+
+    app.security.user_manager:
+        class:  AppBundle\Security\UserManager
+        arguments:
+            - '@security.encoder_factory'
+            - '@fos_user.util.username_canonicalizer'
+            - '@fos_user.util.email_canonicalizer'
+            - '@fos_user.entity_manager'
+            - '%fos_user.model.user.class%'
+
+    app.form.profile:
+        class: AppBundle\Form\Type\ProfileFormType
+        arguments:
+            - 'AppBundle\Entity\User'
+        tags:
+            - { name: form.type, alias: app_user_profile }
+
+    app.form.resetting:
+        class: AppBundle\Form\Type\ResettingFormType
+        arguments:
+            - 'AppBundle\Entity\User'
+        tags:
+            - { name: form.type, alias: app_user_resetting }
+
+    app.handler.race_event_media_handler:
+        class: AppBundle\Handler\RaceEventMediaHandler
+        arguments:
+            - '@app.repository.race_event'
+            - '@app.services.response_builder'
+            - '@form.factory'
+            - '@router'
+            - '@app.services.searchindex'
+            - '@app.media.raceevents'
+
+    app.handler.asset_media_handler:
+        class: AppBundle\Handler\AssetMediaHandler
+        arguments:
+            - '@app.asset.repository'
+            - '@app.services.response_builder'
+            - '@form.factory'
+            - '@router'
+            - '@app.media.assets'
+
+    app.handler.race_event_completed:
+        class: AppBundle\Handler\RaceEventCompletedHandler
+        arguments:
+            - '@app.repository.race_event'
+            - '@app.services.response_builder'
+            - '@form.factory'
+            - '@app.user.repository'
+            - '@app.repository.race_event_completed'
+            - '@app.services.searchindex'
+
+    app.repository.race_event_completed:
+        class: AppBundle\Repository\RaceEventCompletedRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\RaceEventCompleted
+
+    app.handler.race_event_wishlist:
+        class: AppBundle\Handler\RaceEventWishlistHandler
+        arguments:
+            - '@app.repository.race_event'
+            - '@app.services.response_builder'
+            - '@form.factory'
+            - '@app.user.repository'
+            - '@app.repository.race_event_wishlist'
+
+    app.repository.race_event_wishlist:
+            class: AppBundle\Repository\RaceEventWishlistRepository
+            factory_service: doctrine.orm.entity_manager
+            factory_method: getRepository
+            arguments:
+                - AppBundle\Entity\RaceEventWishlist
+
+    app.handler.race_event_doing:
+        class: AppBundle\Handler\RaceEventDoingHandler
+        arguments:
+            - '@app.repository.race_event'
+            - '@app.services.response_builder'
+            - '@form.factory'
+            - '@app.user.repository'
+            - '@app.repository.race_event_doing'
+
+    app.repository.race_event_doing:
+        class: AppBundle\Repository\RaceEventDoingRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\RaceEventDoing
+
+    app.facebook_graph_api:
+        class: Facebook\Facebook
+        arguments:
+            -
+                app_id: '%facebook_app_id%'
+                app_secret: '%facebook_app_secret%'
+                default_graph_version: 'v2.8'
+
+    app.handler.facebook_connect:
+        class: AppBundle\Handler\FacebookConnectHandler
+        arguments:
+            - '@app.services.response_builder'
+            - '@app.facebook_graph_api'
+            - '@app.security.user_manager'
+            - '@lexik_jwt_authentication.jwt_manager'
+            - '@app.file_uploader'
+
+    app.file_uploader:
+        class: AppBundle\Services\FileUploader
+        arguments:
+            - '@media_filesystem'
+
+    app.repository.user:
+        class: AppBundle\Repository\UserRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+            - AppBundle\Entity\User
+
+    app.handler.profile:
+        class: AppBundle\Handler\ProfileHandler
+        arguments:
+            - '@app.services.response_builder'
+            - '@security.token_storage'

@@ -56,7 +56,6 @@ class RaceControllerTest extends BaseWebTestCase
         $data = [
             'name' => 'name',
             'date' => '2016-05-17',
-            'type' => 'road',
             'category' => 'marathon',
             'distance' => 42000,
         ];
@@ -92,7 +91,6 @@ class RaceControllerTest extends BaseWebTestCase
         $data = [
             'name' => 'name',
             'date' => '2016-05-17',
-            'type' => 'road',
             'category' => 'marathon',
             'distance' => 42000,
         ];

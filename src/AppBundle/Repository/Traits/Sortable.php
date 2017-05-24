@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository\Traits;
 
+use Doctrine\ORM\QueryBuilder;
+
 trait Sortable
 {
     /**

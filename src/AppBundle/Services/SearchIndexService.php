@@ -29,6 +29,7 @@ class SearchIndexService
     /**
      * @param Client $client
      * @param string $searchIndexName
+     * @param string $autosuggestIndexName
      */
     public function __construct(Client $client, string $searchIndexName, string $autosuggestIndexName)
     {
@@ -86,17 +87,13 @@ class SearchIndexService
             'id' => $raceEvent->getOid(),
         ];
 
-        try {
-            return $this->client->delete($params);
-        } catch (Missing404Exception $e) {
-            return $e->getMessage();
-        }
+        return $this->client->delete($params);
     }
 
     /**
      * @param RaceEvent $raceEvent
      *
-     * @return array|false
+     * @return array|null
      */
     public function deleteRaceEventAutosuggest(RaceEvent $raceEvent)
     {
@@ -114,7 +111,7 @@ class SearchIndexService
 
         $result = $this->client->search($params);
         if (count($result['hits']['hits']) === 0) {
-            return;
+            return null;
         }
 
         $id = $result['hits']['hits'][0]['_id'];
@@ -148,36 +145,70 @@ class SearchIndexService
             'website' => $raceEvent->getWebsite(),
             'coords' => $raceEvent->getCoordsAsArray(),
             'location' => $raceEvent->getLocation(),
+            'email' => $raceEvent->getEmail(),
             'races' => [],
-            'type' => [],
+            'type' => $raceEvent->getType(),
             'category' => [],
+            'attributes' => $raceEvent->getAttributesArray(),
+            'attributes_slug' => $raceEvent->getAttributesSlugArray(),
+            'media' => [],
+            'completed' => [],
+            'rating' => $raceEvent->getRating(),
         ];
 
         if ($raceEvent->getStartDate() !== null) {
             $doc['date'] = $raceEvent->getStartDate()->format('Y-m-d');
         }
 
-        $earliestDate = null;
         foreach ($raceEvent->getRaces() as $race) {
             $doc['races'][] = [
                 'id' => $race->getOid(),
                 'name' => $race->getName(),
                 'date' => $race->getDateAsString(),
-                'type' => $race->getType(),
                 'category' => $race->getCategory(),
                 'distance' => $race->getDistance(),
             ];
-            if ($race->getType() !== null) {
-                $doc['type'][] = $race->getType();
-            }
             if ($race->getCategory() !== null) {
                 $doc['category'][] = $race->getCategory();
             }
         }
 
-        if (count($doc['type']) > 1) {
-            $doc['type'] = array_values(array_unique($doc['type']));
+        foreach ($raceEvent->getMedias() as $media) {
+            $doc['media'][] = [
+                'id' => $media->getOid(),
+                'path' => $media->getPath(),
+                'mimeType' => $media->getMimeType(),
+                'credit' => $media->getCredit(),
+                'creditUrl' => $media->getCreditUrl(),
+                'sharePath' => $media->getSharePath(),
+                'publish' => $media->isPublish(),
+                'metadata' => $media->getMetadata(),
+            ];
         }
+
+        foreach ($raceEvent->getCompleted() as $completed) {
+            $user = [
+                'id' => $completed->getUser()->getId(),
+                'first_name' => $completed->getUser()->getFirstName(),
+                'last_name' => $completed->getUser()->getLastName(),
+            ];
+            if ($completed->getUser() !== null) {
+                $user['avatar'] = $completed->getUser()->getAvatar();
+            }
+
+            $completedDoc = [
+                'rating' => round($completed->getRating(), 2),
+                'comment' => $completed->getComment(),
+                'user' => $user,
+            ];
+
+            if ($completed->getTimestamp() !== null) {
+                $completedDoc['timestamp'] = $completed->getTimestamp()->format('Y-m-d H:i:s');
+            }
+
+            $doc['completed'][] = $completedDoc;
+        }
+
         if (count($doc['category']) > 1) {
             $doc['category'] = array_values(array_unique($doc['category']));
         }

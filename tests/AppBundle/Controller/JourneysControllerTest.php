@@ -52,7 +52,7 @@ class JourneysControllerTest extends BaseWebTestCase
         ]);
 
         $client = $this->makeClient();
-        $user = $this->getUser('mattallbeury');
+        $user = $this->getUser('mattallbeury@trailburning.com');
 
         $client->request('GET', '/v2/journeys/user/'.$user->getId());
         $this->assertJsonResponse($client->getResponse(), 200);
@@ -95,7 +95,7 @@ class JourneysControllerTest extends BaseWebTestCase
         ]);
 
         $client = $this->makeClient();
-        $user = $this->getUser('mattallbeury');
+        $user = $this->getUser('mattallbeury@trailburning.com');
         $data = [
             'name' => 'Test 123',
             'about' => 'about',
@@ -124,7 +124,7 @@ class JourneysControllerTest extends BaseWebTestCase
         ]);
 
         $client = $this->makeClient();
-        $user = $this->getUser('mattallbeury');
+        $user = $this->getUser('mattallbeury@trailburning.com');
         $data = '{"name":"Test 123","about":"about","user":'.$user->getId().'}';
         
         $client->request('POST',  '/v2/journeys', [], [], ['CONTENT_TYPE' => 'application/json'], $data);
@@ -141,7 +141,7 @@ class JourneysControllerTest extends BaseWebTestCase
         ]);
 
         $client = $this->makeClient();
-        $user = $this->getUser('mattallbeury');
+        $user = $this->getUser('mattallbeury@trailburning.com');
         $data = [
             'name' => 'Test 123',
         ];

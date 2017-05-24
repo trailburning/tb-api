@@ -5,7 +5,6 @@ namespace AppBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 
@@ -66,7 +65,7 @@ class SearchIndexCommand extends ContainerAwareCommand
                 ->getResult();
         } else {
             $raceEvents = $this->em->createQuery('
-                    SELECT e‚ FROM AppBunde:RaceEvent
+                    SELECT e FROM AppBundle:RaceEvent e
                     WHERE e.id = :id')
                 ->setParameter('id', $id)
                 ->getResult();

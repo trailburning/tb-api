@@ -33,6 +33,7 @@ class Race
      * @SWG\Property(property="id")
      * @Serializer\Expose
      * @Serializer\SerializedName("id")
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $oid;
 
@@ -44,6 +45,7 @@ class Race
      * @Serializer\Expose
      * @Assert\NotBlank()
      * @Assert\Length(max = "255")
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $name;
 
@@ -55,21 +57,12 @@ class Race
     private $date;
 
     /**
-     * @var string
-     *
-     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\RaceType")
-     * @ORM\Column(type="RaceType", nullable=true)
-     * @SWG\Property()
-     * @Serializer\Expose
-     */
-    private $type;
-
-    /**
      * @var integer
      *
      * @ORM\Column(type="integer", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $distance;
 
@@ -80,6 +73,7 @@ class Race
      * @ORM\Column(type="RaceCategory", nullable=true)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $category;
     
@@ -106,8 +100,9 @@ class Race
     /**
      * @Serializer\VirtualProperty()
      * @Serializer\SerializedName("date")
+     * @Serializer\Groups({"raceEvent", "user"})
      *
-     * @return array
+     * @return string
      */
     public function getDateAsString()
     {
@@ -188,29 +183,6 @@ class Race
     public function getDate()
     {
         return $this->date;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     * @return Race
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string 
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**

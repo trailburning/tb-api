@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
@@ -28,7 +27,7 @@ class Asset
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
+
     /**
      * @var string
      * @ORM\Column(type="string", length=22, unique=true)
@@ -58,7 +57,7 @@ class Asset
      * @Assert\NotBlank()
      */
     private $about;
-    
+
     /**
      * @var Media[]
      *
@@ -68,7 +67,7 @@ class Asset
      * @Serializer\SerializedName("media")
      */
     private $medias;
-    
+
     /**
      * @var Event
      *
@@ -77,9 +76,9 @@ class Asset
      * @ORM\JoinColumn(nullable=false)
      */
     private $event;
-    
+
     /**
-     * @var AssetCategory 
+     * @var AssetCategory
      *
      * @ORM\ManyToOne(targetEntity="AssetCategory", inversedBy="assets")
      * @SWG\Property()
@@ -87,13 +86,13 @@ class Asset
      * @Assert\NotBlank()
      */
     private $category;
-    
+
     /**
      * @Gedmo\SortablePosition
      * @ORM\Column(name="position", type="integer")
      */
     private $position;
-    
+
     /**
      * @var string
      *
@@ -105,13 +104,12 @@ class Asset
     private $credit;
 
     /**
-     * ################################################################################################################
+     * ################################################################################################################.
      *
      *                                         User Defined
      *
      * ################################################################################################################
      */
-    
     public function __construct()
     {
         $this->oid = str_replace('.', '', uniqid(null, true));
@@ -119,7 +117,7 @@ class Asset
     }
 
     /**
-     * ################################################################################################################
+     * ################################################################################################################.
      *
      *                                         Getters and Setters
      *
@@ -133,7 +131,7 @@ class Asset
     {
         return $this->id;
     }
-    
+
     /**
      * @return string
      */
@@ -181,15 +179,16 @@ class Asset
     {
         return $this->about;
     }
-    
+
     /**
      * @param string $category
+     *
      * @return self
      */
     public function setCategory($category)
     {
         $this->category = $category;
-    
+
         return $this;
     }
 
@@ -200,9 +199,10 @@ class Asset
     {
         return $this->category;
     }
-    
+
     /**
      * @param Media $medias
+     *
      * @return self
      */
     public function addMedia(Media $media)
@@ -222,21 +222,22 @@ class Asset
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getMedias()
     {
         return $this->medias;
     }
-    
+
     /**
      * @param Event $event
+     *
      * @return self
      */
     public function setEvent(Event $event)
     {
         $this->event = $event;
-    
+
         return $this;
     }
 
@@ -247,7 +248,7 @@ class Asset
     {
         return $this->event;
     }
-    
+
     /**
      * @param int $position
      *
@@ -256,7 +257,7 @@ class Asset
     public function setPosition($position)
     {
         $this->position = $position;
-        
+
         return $this;
     }
 
@@ -267,7 +268,7 @@ class Asset
     {
         return $this->position;
     }
-        
+
     /**
      * @param string $credit
      *
@@ -276,7 +277,7 @@ class Asset
     public function setCredit($credit)
     {
         $this->credit = $credit;
-        
+
         return $this;
     }
 

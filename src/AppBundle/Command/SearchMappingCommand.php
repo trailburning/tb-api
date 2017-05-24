@@ -1,8 +1,8 @@
 <?php
 
-
 namespace AppBundle\Command;
 
+use Elasticsearch\Client;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -10,6 +10,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SearchMappingCommand extends ContainerAwareCommand
 {
+    /**
+     * @var Client
+     */
+    private $client;
+
     protected function configure()
     {
         $this
@@ -19,6 +24,11 @@ class SearchMappingCommand extends ContainerAwareCommand
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->client = $this->getContainer()->get('vendor.elasticsearch.client');
@@ -37,16 +47,22 @@ class SearchMappingCommand extends ContainerAwareCommand
                 $this->populateAutosuggestRaceEventMapping();
                 $output->writeln(sprintf('Mapping for type "%s" was updated', $type));
                 break;
+            case 'all':
+                $this->populateRaceEventMapping();
+                $this->populateAutosuggestLocationMapping();
+                $this->populateAutosuggestRaceEventMapping();
+                $output->writeln(sprintf('All mappings were updated', $type));
+                break;
             default:
                 $output->writeln(sprintf('<error>Unknown type "%s"</error>', $type));
                 break;
         }
     }
-    
+
     protected function populateAutosuggestLocationMapping()
-    {   
+    {
         $indexName = $this->getContainer()->getParameter('autosuggest_index_name');
-        
+
         $params = [
             'index' => $indexName,
             'type' => 'location',
@@ -55,16 +71,16 @@ class SearchMappingCommand extends ContainerAwareCommand
                     'dynamic' => 'strict',
                     'properties' => [
                         'id' => [
-                            'type' => 'string', 
+                            'type' => 'string',
                             'index' => 'not_analyzed',
                         ],
                         'suggest_text' => [
                             'type' => 'string',
                             'term_vector' => 'with_positions_offsets',
                             'copy_to' => [
-                                'suggest_engram_part', 
-                                'suggest_engram_full', 
-                                'suggest_phon'
+                                'suggest_engram_part',
+                                'suggest_engram_full',
+                                'suggest_phon',
                             ],
                         ],
                         'suggest_engram_part' => [
@@ -89,7 +105,7 @@ class SearchMappingCommand extends ContainerAwareCommand
                             'analyzer' => 'phonetic_text',
                         ],
                         'name' => [
-                            'type' => 'string', 
+                            'type' => 'string',
                         ],
                         'coords' => [
                             'type' => 'geo_point',
@@ -98,20 +114,20 @@ class SearchMappingCommand extends ContainerAwareCommand
                             'type' => 'integer',
                         ],
                         'type' => [
-                            'type' => 'string', 
+                            'type' => 'string',
                         ],
                     ],
                 ],
             ],
         ];
-        
+
         $this->client->indices()->putMapping($params);
     }
-    
+
     protected function populateAutosuggestRaceEventMapping()
-    {   
+    {
         $indexName = $this->getContainer()->getParameter('autosuggest_index_name');
-        
+
         $params = [
             'index' => $indexName,
             'type' => 'race_event',
@@ -120,16 +136,16 @@ class SearchMappingCommand extends ContainerAwareCommand
                     'dynamic' => 'strict',
                     'properties' => [
                         'id' => [
-                            'type' => 'string', 
+                            'type' => 'string',
                             'index' => 'not_analyzed',
                         ],
                         'suggest_text' => [
                             'type' => 'string',
                             'term_vector' => 'with_positions_offsets',
                             'copy_to' => [
-                                'suggest_engram_part', 
-                                'suggest_engram_full', 
-                                'suggest_phon'
+                                'suggest_engram_part',
+                                'suggest_engram_full',
+                                'suggest_phon',
                             ],
                         ],
                         'suggest_engram_part' => [
@@ -154,7 +170,7 @@ class SearchMappingCommand extends ContainerAwareCommand
                             'analyzer' => 'phonetic_text',
                         ],
                         'name' => [
-                            'type' => 'string', 
+                            'type' => 'string',
                         ],
                         'oid' => [
                             'type' => 'string',
@@ -163,14 +179,14 @@ class SearchMappingCommand extends ContainerAwareCommand
                 ],
             ],
         ];
-        
+
         $this->client->indices()->putMapping($params);
-    } 
+    }
 
     protected function populateRaceEventMapping()
     {
         $indexName = $this->getContainer()->getParameter('search_index_name');
-        
+
         $params = [
             'index' => $indexName,
             'type' => 'race_event',
@@ -206,7 +222,7 @@ class SearchMappingCommand extends ContainerAwareCommand
                         ],
                         'type' => [
                             'type' => 'string',
-                            'analyzer' => 'simple',
+                            'index' => 'not_analyzed',
                         ],
                         'category' => [
                             'type' => 'string',
@@ -214,6 +230,14 @@ class SearchMappingCommand extends ContainerAwareCommand
                         ],
                         'date' => [
                             'type' => 'date',
+                        ],
+                        'email' => [
+                            'type' => 'string',
+                            'index' => 'not_analyzed',
+                        ],
+                        'rating' => [
+                            'type' => 'float',
+                            'index' => 'not_analyzed',
                         ],
                         'races' => [
                             'type' => 'nested',
@@ -229,16 +253,95 @@ class SearchMappingCommand extends ContainerAwareCommand
                                 'date' => [
                                     'type' => 'date',
                                 ],
-                                'type' => [
-                                    'type' => 'string',
-                                    'index' => 'not_analyzed',
-                                ],
                                 'category' => [
                                     'type' => 'string',
                                     'index' => 'not_analyzed',
                                 ],
                                 'distance' => [
                                     'type' => 'integer',
+                                ],
+                            ],
+                        ],
+                        'attributes' => [
+                            'type' => 'string',
+                            'analyzer' => 'simple',
+                        ],
+                        'attributes_slug' => [
+                            'type' => 'string',
+                            'index' => 'not_analyzed',
+                        ],
+                        'media' => [
+                            'type' => 'nested',
+                            'properties' => [
+                                'id' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'path' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'mimeType' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'credit' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'creditUrl' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'sharePath' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'publish' => [
+                                    'type' => 'boolean',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'metadata' => [
+                                    'type' => 'object',
+                                    'dynamic' => true,
+                                ],
+                            ],
+                        ],
+                        'completed' => [
+                            'type' => 'nested',
+                            'properties' => [
+                                'rating' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
+                                ],
+                                'comment' => [
+                                    'type' => 'string',
+                                    'analyzer' => 'standard',
+                                ],
+                                'user' => [
+                                    'type' => 'nested',
+                                    'properties' => [
+                                        'id' => [
+                                            'type' => 'string',
+                                            'index' => 'not_analyzed',
+                                        ],
+                                        'first_name' => [
+                                            'type' => 'string',
+                                            'analyzer' => 'standard',
+                                        ],
+                                        'last_name' => [
+                                            'type' => 'string',
+                                            'analyzer' => 'standard',
+                                        ],
+                                        'avatar' => [
+                                            'type' => 'string',
+                                            'index' => 'not_analyzed',
+                                        ],
+                                    ],
+                                ],
+                                'timestamp' => [
+                                    'type' => 'string',
+                                    'index' => 'not_analyzed',
                                 ],
                             ],
                         ],

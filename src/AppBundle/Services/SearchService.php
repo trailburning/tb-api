@@ -25,7 +25,7 @@ class SearchService
      * @var Client
      */
     private $client;
-    
+
     /**
      * @var string
      */
@@ -41,6 +41,11 @@ class SearchService
         $this->indexName = $indexName;
     }
 
+    /**
+     * @param Search $search
+     *
+     * @return array
+     */
     public function search(Search $search)
     {
         $searchQuery = new SearchQuery();
@@ -56,6 +61,7 @@ class SearchService
         $this->handleSearchParameterCoords($boolQuery, $search);
         $this->handleSearchParameterType($boolQuery, $search);
         $this->handleSearchParameterCategory($boolQuery, $search);
+        $this->handleSearchParameterAttributes($boolQuery, $search);
         $this->handleSearchSort($searchQuery, $search);
 
         $searchQuery->addQuery($boolQuery);
@@ -66,9 +72,17 @@ class SearchService
             'body' => $searchQuery->toArray(),
         ];
 
-        return $this->client->search($params);
+        $result = $this->client->search($params);
+
+        return $result;
     }
-    
+
+    /**
+     * @param BoolQuery $boolQuery
+     * @param Search    $search
+     *
+     * @return BoolQuery
+     */
     private function handleSearchParameterQ(BoolQuery $boolQuery, Search $search) : BoolQuery
     {
         $parameters = [
@@ -90,10 +104,10 @@ class SearchService
             $nestedRace = new NestedQuery('races', $queryRace);
             $boolQuery->add($nestedRace, BoolQuery::SHOULD);
         }
-        
+
         return $boolQuery;
     }
-    
+
     private function handleSearchParameterDateFromTo(BoolQuery $boolQuery, Search $search) : BoolQuery
     {
         if ($search->getDateFrom() !== null || $search->getDateTo() !== null) {
@@ -108,10 +122,10 @@ class SearchService
             $nestedDate = new NestedQuery('races', $queryDate);
             $boolQuery->add($nestedDate, BoolQuery::FILTER);
         }
-        
+
         return $boolQuery;
     }
-    
+
     private function handleSearchParameterDistanceFromTo(BoolQuery $boolQuery, Search $search) : BoolQuery
     {
         if ($search->getDistanceFrom() !== null || $search->getDistanceTo() !== null) {
@@ -126,10 +140,10 @@ class SearchService
             $nestedDistance = new NestedQuery('races', $queryDistance);
             $boolQuery->add($nestedDistance, BoolQuery::FILTER);
         }
-        
+
         return $boolQuery;
     }
-    
+
     private function handleSearchParameterCoords(BoolQuery $boolQuery, Search $search) : BoolQuery
     {
         if ($search->getCoords() !== null) {
@@ -140,18 +154,17 @@ class SearchService
             $queryLocation = new GeoDistanceQuery('coords', $distanceValue, $search->getCoordsAsAsocArray());
             $boolQuery->add($queryLocation, BoolQuery::FILTER);
         }
-        
+
         return $boolQuery;
     }
-    
+
     private function handleSearchParameterType(BoolQuery $boolQuery, Search $search) : BoolQuery
     {
         if ($search->getType() !== null) {
-            $queryType = new MatchQuery('races.type', $search->getType());
-            $nestedType = new NestedQuery('races', $queryType);
-            $boolQuery->add($nestedType, BoolQuery::FILTER);
+            $queryType = new MatchQuery('type', $search->getType());
+            $boolQuery->add($queryType, BoolQuery::FILTER);
         }
-    
+
         return $boolQuery;
     }
 
@@ -162,7 +175,17 @@ class SearchService
             $nestedCategory = new NestedQuery('races', $queryCategory);
             $boolQuery->add($nestedCategory, BoolQuery::FILTER);
         }
-    
+
+        return $boolQuery;
+    }
+
+    private function handleSearchParameterAttributes(BoolQuery $boolQuery, Search $search) : BoolQuery
+    {
+        if (count($search->getAttributes()) > 0) {
+            $query = new MatchQuery('attributes_slug', $search->getAttributes());
+            $boolQuery->add($query, BoolQuery::FILTER);
+        }
+
         return $boolQuery;
     }
 
@@ -190,7 +213,7 @@ class SearchService
             $fieldSort = new FieldSort('_score', $search->getOrder());
             $searchQuery->addSort($fieldSort);
         }
-    
+
         return $searchQuery;
     }
 

@@ -25,6 +25,7 @@ class RaceEventType extends AbstractType
                 ->create('coords')
                 ->addModelTransformer(new GeometryPointTransformer()))
             ->add('location')
+            ->add('type')
         ;
     }
     

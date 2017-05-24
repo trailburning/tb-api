@@ -2,7 +2,15 @@
 
 namespace tests\AppBundle;
 
+use AppBundle\Entity\Asset;
+use AppBundle\Entity\AssetCategory;
+use AppBundle\Entity\Event;
+use AppBundle\Entity\Journey;
+use AppBundle\Entity\RaceEvent;
+use AppBundle\Entity\User;
+use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Exception;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -17,12 +25,25 @@ use AppBundle\Services\MapboxAPI;
 
 abstract class BaseWebTestCase extends WebTestCase
 {
+    /**
+     * BaseWebTestCase constructor.
+     *
+     * @param null   $name
+     * @param array  $data
+     * @param string $dataName
+     */
     public function __construct($name = null, array $data = array(), $dataName = '')
     {
         date_default_timezone_set('UTC');
         parent::__construct($name, $data, $dataName);
     }
 
+    /**
+     * @param bool  $authentication
+     * @param array $params
+     *
+     * @return Client
+     */
     protected function makeClient($authentication = false, array $params = array())
     {
         $client = parent::makeClient($authentication, $params);
@@ -31,17 +52,35 @@ abstract class BaseWebTestCase extends WebTestCase
         return $client;
     }
 
+    /**
+     * @param array  $classNames
+     * @param null   $omName
+     * @param string $registryName
+     * @param null   $purgeMode
+     *
+     * @return AbstractExecutor|null
+     */
     protected function loadFixtures(array $classNames, $omName = null, $registryName = 'doctrine', $purgeMode = null)
     {
         return parent::loadFixtures($classNames, $omName, $registryName, ORMPurger::PURGE_MODE_TRUNCATE);
     }
 
+    /**
+     * @param object $entity
+     */
     protected function refreshEntity($entity)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $em->refresh($entity);
     }
 
+    /**
+     * @param $obj
+     * @param $methodName
+     * @param array $parameter
+     *
+     * @return mixed
+     */
     protected function callProtectedMethod($obj, $methodName, $parameter = array())
     {
         $method = new \ReflectionMethod($obj, $methodName);
@@ -50,6 +89,9 @@ abstract class BaseWebTestCase extends WebTestCase
         return $method->invokeArgs($obj, $parameter);
     }
 
+    /**
+     * @param Client $client
+     */
     protected function debugClient(Client $client)
     {
         $filepath = $this->getContainer()->get('kernel')->getRootDir().'/../web/debug.html';
@@ -58,13 +100,24 @@ abstract class BaseWebTestCase extends WebTestCase
         die;
     }
 
-    protected function assertJsonResponse($response, $statusCode)
+    /**
+     * @param Response $response
+     * @param int      $statusCode
+     */
+    protected function assertJsonResponse(Response $response, int $statusCode)
     {
         $this->assertEquals($statusCode, $response->getStatusCode(), $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), $response->headers);
         $this->assertJson($response->getContent(), $response->getContent());
     }
 
+    /**
+     * @param $name
+     *
+     * @return Journey
+     *
+     * @throws Exception
+     */
     protected function getJourney($name)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
@@ -74,28 +127,69 @@ abstract class BaseWebTestCase extends WebTestCase
         ]);
 
         if (!$journey) {
-            $this->fail(sprintf('Missing journey with name "%s" in test DB', $name));
+            throw new Exception(sprintf('Missing journey with name "%s" in test DB', $name));
         }
 
         return $journey;
     }
 
-    protected function getUser($name)
+    /**
+     * @param string $username
+     * @param string $password
+     * @param Client $client
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
+    protected function loginUser(string $username, string $password, Client $client): string
+    {
+        $data = [
+            'username' => $username,
+            'password' => $password,
+        ];
+
+        $client->request('POST', '/v2/user/login', $data);
+        if ($client->getResponse()->getStatusCode() !== 200) {
+            throw new Exception('Invalid login credentials');
+        }
+        $responseContent = $client->getResponse()->getContent();
+        $responseObj = json_decode($responseContent);
+        $token = $responseObj->token;
+
+        return $token;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return User
+     *
+     * @throws Exception
+     */
+    protected function getUser(string $name)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $userRepository = $em->getRepository('AppBundle:User');
         $user = $userRepository->findOneBy([
-            'name' => $name,
+            'username' => $name,
         ]);
 
         if (!$user) {
-            $this->fail(sprintf('Missing user with name "%s" in test DB', $name));
+            throw new Exception(sprintf('Missing user with name "%s" in test DB', $name));
         }
 
         return $user;
     }
 
-    protected function getEvent($name)
+    /**
+     * @param string $name
+     *
+     * @return Event
+     *
+     * @throws Exception
+     */
+    protected function getEvent(string $name)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $eventRepository = $em->getRepository('AppBundle:Event');
@@ -104,13 +198,20 @@ abstract class BaseWebTestCase extends WebTestCase
         ]);
 
         if (!$event) {
-            $this->fail(sprintf('Missing event with name "%s" in test DB', $name));
+            throw new Exception(sprintf('Missing event with name "%s" in test DB', $name));
         }
 
         return $event;
     }
 
-    protected function getAsset($name)
+    /**
+     * @param string $name
+     *
+     * @return Asset
+     *
+     * @throws Exception
+     */
+    protected function getAsset(string $name)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $assetRepository = $em->getRepository('AppBundle:Asset');
@@ -119,13 +220,42 @@ abstract class BaseWebTestCase extends WebTestCase
         ]);
 
         if (!$asset) {
-            $this->fail(sprintf('Missing asset with name "%s" in test DB', $name));
+            throw new Exception(sprintf('Missing asset with name "%s" in test DB', $name));
         }
 
         return $asset;
     }
 
-    protected function getAssetCategory($name)
+    /**
+     * @param string $name
+     *
+     * @return RaceEvent
+     *
+     * @throws Exception
+     */
+    protected function getRaceEvent(string $name)
+    {
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $raceEventRepository = $em->getRepository('AppBundle:RaceEvent');
+        $raceEvent = $raceEventRepository->findOneBy([
+            'name' => $name,
+        ]);
+
+        if (!$raceEvent) {
+            throw new Exception(sprintf('Missing race event with name "%s" in test DB', $name));
+        }
+
+        return $raceEvent;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return AssetCategory
+     *
+     * @throws Exception
+     */
+    protected function getAssetCategory(string $name)
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $assetCategoryRepository = $em->getRepository('AppBundle:AssetCategory');
@@ -134,12 +264,15 @@ abstract class BaseWebTestCase extends WebTestCase
         ]);
 
         if (!$assetCategory) {
-            $this->fail(sprintf('Missing asset category with name "%s" in test DB', $name));
+            throw new Exception(sprintf('Missing asset categorywith name "%s" in test DB', $name));
         }
 
         return $assetCategory;
     }
 
+    /**
+     * @return Response
+     */
     protected function updateSearchIndex()
     {
         $kernel = $this->getContainer()->get('kernel');
@@ -160,6 +293,9 @@ abstract class BaseWebTestCase extends WebTestCase
         return new Response($content);
     }
 
+    /**
+     * @return MapboxAPI
+     */
     protected function getMapboxAPIMock()
     {
         $mock = new MockHandler([
@@ -171,5 +307,14 @@ abstract class BaseWebTestCase extends WebTestCase
         $mapbox = new MapboxAPI($client, 'token');
 
         return $mapbox;
+    }
+
+    /**
+     * @param RaceEvent $raceEvent
+     */
+    protected function createRaceEventInSearch(RaceEvent $raceEvent)
+    {
+        $searchIndexService = $this->getContainer()->get('app.services.searchindex');
+        $searchIndexService->createRaceEvent($raceEvent);
     }
 }

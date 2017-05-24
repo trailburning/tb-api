@@ -3,6 +3,7 @@
 namespace AppBundle\Model;
 
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 
@@ -10,18 +11,19 @@ use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
  */
 class Search
 {
+
     /**
      * @var string
      */
     private $q;
 
     /**
-     * @var string
+     * @var DateTime
      */
     private $dateFrom;
 
     /**
-     * @var string
+     * @var DateTime
      */
     private $dateTo;
 
@@ -48,7 +50,7 @@ class Search
 
     /**
      * @var string
-     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\RaceType")
+     * @DoctrineAssert\Enum(entity="AppBundle\DBAL\Types\RaceEventType")
      */
     private $type;
 
@@ -79,6 +81,11 @@ class Search
      * @var int
      */
     private $offset = 0;
+
+    /**
+     * @var array
+     */
+    private $attributes;
 
     /**
      * ################################################################################################################.
@@ -120,9 +127,9 @@ class Search
     /**
      * Set the value of q.
      *
-     * @param string q
+     * @param string
      *
-     * @return self
+     * @return Search
      */
     public function setQ($q)
     {
@@ -134,7 +141,7 @@ class Search
     /**
      * Get the value of Date From.
      *
-     * @return string
+     * @return DateTime|null
      */
     public function getDateFrom()
     {
@@ -144,9 +151,9 @@ class Search
     /**
      * Set the value of Date From.
      *
-     * @param string dateFrom
+     * @param DateTime|null $dateFrom
      *
-     * @return self
+     * @return Search
      */
     public function setDateFrom($dateFrom)
     {
@@ -158,7 +165,7 @@ class Search
     /**
      * Get the value of Date To.
      *
-     * @return string
+     * @return DateTime|null
      */
     public function getDateTo()
     {
@@ -168,9 +175,9 @@ class Search
     /**
      * Set the value of Date To.
      *
-     * @param string dateTo
+     * @param DateTime|null $dateTo
      *
-     * @return self
+     * @return Search
      */
     public function setDateTo($dateTo)
     {
@@ -192,9 +199,9 @@ class Search
     /**
      * Set the value of Coords.
      *
-     * @param Point coords
+     * @param Point $coords
      *
-     * @return self
+     * @return Search
      */
     public function setCoords(Point $coords)
     {
@@ -216,9 +223,9 @@ class Search
     /**
      * Set the value of Distance.
      *
-     * @param int distance
+     * @param int $distance
      *
-     * @return self
+     * @return Search
      */
     public function setDistance($distance)
     {
@@ -240,9 +247,9 @@ class Search
     /**
      * Set the value of Type.
      *
-     * @param string type
+     * @param string $type
      *
-     * @return self
+     * @return Search
      */
     public function setType($type)
     {
@@ -264,9 +271,9 @@ class Search
     /**
      * Set the value of Category.
      *
-     * @param string category
+     * @param string $category
      *
-     * @return self
+     * @return Search
      */
     public function setCategory($category)
     {
@@ -288,9 +295,9 @@ class Search
     /**
      * Set the value of Sort.
      *
-     * @param string sort
+     * @param string $sort
      *
-     * @return self
+     * @return Search
      */
     public function setSort($sort)
     {
@@ -312,9 +319,9 @@ class Search
     /**
      * Set the value of Order.
      *
-     * @param string order
+     * @param string $order
      *
-     * @return self
+     * @return Search
      */
     public function setOrder($order)
     {
@@ -336,9 +343,9 @@ class Search
     /**
      * Set the value of Distance From.
      *
-     * @param string distanceFrom
+     * @param string $distanceFrom
      *
-     * @return self
+     * @return Search
      */
     public function setDistanceFrom($distanceFrom)
     {
@@ -360,9 +367,9 @@ class Search
     /**
      * Set the value of Distance To.
      *
-     * @param string distanceTo
+     * @param string $distanceTo
      *
-     * @return self
+     * @return Search
      */
     public function setDistanceTo($distanceTo)
     {
@@ -372,7 +379,7 @@ class Search
     }
 
     /**
-     * Get the value of Limit
+     * Get the value of Limit.
      *
      * @return int
      */
@@ -381,16 +388,16 @@ class Search
         if ($this->limit === null) {
             return 10;
         }
-        
+
         return $this->limit;
     }
 
     /**
-     * Set the value of Limit
+     * Set the value of Limit.
      *
-     * @param int limit
+     * @param int $limit
      *
-     * @return self
+     * @return Search
      */
     public function setLimit($limit)
     {
@@ -400,7 +407,7 @@ class Search
     }
 
     /**
-     * Get the value of Offset
+     * Get the value of Offset.
      *
      * @return int
      */
@@ -410,11 +417,11 @@ class Search
     }
 
     /**
-     * Set the value of Offset
+     * Set the value of Offset.
      *
-     * @param int offset
+     * @param int $offset
      *
-     * @return self
+     * @return Search
      */
     public function setOffset($offset)
     {
@@ -423,4 +430,27 @@ class Search
         return $this;
     }
 
+    /**
+     * Get the value of Attributes.
+     *
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * Set the value of Attributes.
+     *
+     * @param array $attributes
+     *
+     * @return Search
+     */
+    public function setAttributes($attributes)
+    {
+        $this->attributes = $attributes;
+
+        return $this;
+    }
 }

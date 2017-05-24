@@ -23,7 +23,7 @@ class UpdateRaceEventLocationsCommand extends ContainerAwareCommand
     {
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $mapboxAPI = $this->getContainer()->get('app.services.mapbox_api');
-        $regionRepository = $this->getContainer()->get('app.region.repository');
+        $regionRepository = $this->getContainer()->get('app.repository.region');
         $id = $input->getArgument('id');
 
         if ($id == null) {

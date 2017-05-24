@@ -5,6 +5,7 @@ namespace AppBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use AppBundle\Entity\Region;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use AppBundle\DBAL\Types\RegionType;
 
 
 /**
@@ -52,6 +53,22 @@ class RegionRepository extends BaseRepository
         }
         
         return substr($name, 0, strpos($name, ','));
+    }
+    
+    /**
+     * @return int
+     */
+    public function getCountryCount()
+    {
+        $qb = $this->getQB();
+        $qb
+            ->select('count(distinct r.name)')
+            ->andWhere('r.type = :type')
+            ->setParameter('type', RegionType::COUNTRY);
+
+        $count = $qb->getQuery()->getSingleScalarResult();
+
+        return $count;
     }
     
 }

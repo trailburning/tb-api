@@ -1,0 +1,23 @@
+# Form field labels
+registration:
+    email:
+        subject: Welcome to RaceBase World!
+        message: |
+            Hello, Bonjour, Hallo, Ciao, Hola!
+
+            You are seconds away from activating your account!
+
+            Please click <a href="%confirmationUrl%">here</a> and start to Explore, Discover and Race the world!
+
+            Happy Running!
+            The RaceBase World Team
+resetting:
+    email:
+        subject: RaceBase World - Reset Password
+        message: |
+            Hello %username%,
+
+            To reset your password please click <a href="%confirmationUrl%">here</a>.
+
+            Happy Running!
+            The RaceBase World Team

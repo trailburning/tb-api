@@ -18,7 +18,6 @@ class RaceData extends AbstractFixture implements FixtureInterface, DependentFix
         $race = new Race();
         $race->setName('Grand 46K');
         $race->setDate(new \DateTime('2017-05-16'));
-        $race->setType('road');
         $race->setCategory('marathon');
         $race->setDistance(46000);
         $race->setRaceEvent($this->getReference('RaceEvent-1'));
@@ -28,7 +27,6 @@ class RaceData extends AbstractFixture implements FixtureInterface, DependentFix
         $race = new Race();
         $race->setName('Media 30K');
         $race->setDate(new \DateTime('2017-05-17'));
-        $race->setType('road');
         $race->setDistance(30000);
         $race->setCategory('half_marathon');
         $race->setRaceEvent($this->getReference('RaceEvent-1'));
@@ -38,7 +36,6 @@ class RaceData extends AbstractFixture implements FixtureInterface, DependentFix
         $race = new Race();
         $race->setName('Berlin Marathon');
         $race->setDate(new \DateTime('2017-06-01'));
-        $race->setType('road');
         $race->setDistance(42000);
         $race->setCategory('half_marathon');
         $race->setRaceEvent($this->getReference('RaceEvent-2'));

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace tests\AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Tests\AppBundle\BaseWebTestCase;
@@ -14,7 +14,7 @@ class DefaultControllerTest extends BaseWebTestCase
         $client->request('GET', '/');
         $this->assertEquals(Response::HTTP_OK,  $client->getResponse()->getStatusCode());
     }
-    
+
     public function testStatusAction()
     {
         $client = $this->makeClient();

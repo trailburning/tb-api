@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 use JMS\Serializer\Annotation as Serializer;
@@ -26,13 +27,14 @@ class Media
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
+
     /**
      * @var string
      * @ORM\Column(type="string", length=22, unique=true)
      * @SWG\Property(property="id")
      * @Serializer\Expose
      * @Serializer\SerializedName("id")
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $oid;
 
@@ -42,9 +44,10 @@ class Media
      * @ORM\Column(type="string", length=255)
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $path;
-    
+
     /**
      * @var string
      *
@@ -52,15 +55,20 @@ class Media
      * @ORM\Column(type="MIMEType")
      * @SWG\Property()
      * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
      */
     private $mimeType;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Asset", inversedBy="medias")
-     * @ORM\JoinColumn(nullable=false)
      */
     protected $asset;
-    
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RaceEvent", inversedBy="medias")
+     */
+    protected $raceEvent;
+
     /**
      * @var MediaAttribute[]
      *
@@ -69,54 +77,95 @@ class Media
     private $attributes;
 
     /**
-     * ################################################################################################################
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
+     */
+    private $credit;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
+     */
+    private $creditUrl;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
+     */
+    private $sharePath;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", options={"default" = false})
+     * @SWG\Property()
+     * @Serializer\Expose
+     * @Serializer\Groups({"raceEvent", "user"})
+     */
+    private $publish = false;
+
+    /**
+     * ################################################################################################################.
      *
      *                                         User Defined
      *
      * ################################################################################################################
      */
-
     public function __construct()
     {
         $this->oid = str_replace('.', '', uniqid(null, true));
+        $this->attributes = new ArrayCollection();
     }
-    
+
     /**
      * @Serializer\VirtualProperty()
      * @Serializer\SerializedName("metadata")
      * @SWG\Property(property="metadata")
+     * @Serializer\Groups({"raceEvent", "user"})
+     *
      * @return array
      */
-    public function getMetadata() 
+    public function getMetadata()
     {
         if (count($this->getAttributes()) === 0) {
             return null;
         }
-        
+
         $fields = [];
         foreach ($this->getAttributes() as $attribute) {
             $fields[$attribute->getKey()] = $attribute->getValue();
         }
-        
+
         return $fields;
     }
 
     /**
-     * ################################################################################################################
+     * @return int
+     */
+
+    /**
+     * ################################################################################################################.
      *
      *                                         Getters and Setters
      *
      * ################################################################################################################
      */
-
-    /**
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
-
     /**
      * @return string
      */
@@ -144,15 +193,16 @@ class Media
     {
         return $this->path;
     }
-    
+
     /**
      * @param string $mimeType
+     *
      * @return self
      */
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
-    
+
         return $this;
     }
 
@@ -163,15 +213,16 @@ class Media
     {
         return $this->mimeType;
     }
-    
+
     /**
      * @param Asset $asset
+     *
      * @return self
      */
     public function setAsset(Asset $asset)
     {
         $this->asset = $asset;
-    
+
         return $this;
     }
 
@@ -182,9 +233,30 @@ class Media
     {
         return $this->asset;
     }
-    
+
+    /**
+     * @param RaceEvent $raceEvent
+     *
+     * @return Media
+     */
+    public function setRaceEvent(RaceEvent $raceEvent)
+    {
+        $this->raceEvent = $raceEvent;
+
+        return $this;
+    }
+
+    /**
+     * @return RaceEvent
+     */
+    public function getRaceEvent()
+    {
+        return $this->raceEvent;
+    }
+
     /**
      * @param MediaAttribute $attribute
+     *
      * @return self
      */
     public function addAttribute(MediaAttribute $attribute)
@@ -200,20 +272,21 @@ class Media
      */
     public function removeAttribute(MediaAttribute $attribute)
     {
-        $this->medias->removeElement($attribute);
+        $this->attributes->removeElement($attribute);
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAttributes()
     {
         return $this->attributes;
     }
-    
+
     /**
-     * @param MediaAttribute $attribute
-     * @return self
+     * @param array $attributes
+     *
+     * @return Media
      */
     public function setAttributes(array $attributes)
     {
@@ -222,5 +295,89 @@ class Media
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $sharePath
+     *
+     * @return self
+     */
+    public function setSharePath($sharePath)
+    {
+        $this->sharePath = $sharePath;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSharePath()
+    {
+        return $this->sharePath;
+    }
+
+    /**
+     * @param string $credit
+     *
+     * @return self
+     */
+    public function setCredit($credit)
+    {
+        $this->credit = $credit;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCredit()
+    {
+        return $this->credit;
+    }
+
+    /**
+     * @param string $creditUrl
+     *
+     * @return self
+     */
+    public function setCreditUrl($creditUrl)
+    {
+        $this->creditUrl = $creditUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreditUrl()
+    {
+        return $this->creditUrl;
+    }
+
+    /**
+     * @param bool $publish
+     *
+     * @return self
+     */
+    public function setPublish($publish)
+    {
+        if ($publish === null) {
+            return $this;
+        }
+
+        $this->publish = boolval($publish);
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublish()
+    {
+        return $this->publish;
     }
 }

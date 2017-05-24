@@ -11,6 +11,7 @@ SwaggerUi.Views.ResourceView = Backbone.View.extend({
     if (this.model.description) {
       this.model.summary = this.model.description;
     }
+    this.number = 0;
   },
 
   render: function(){
@@ -34,6 +35,7 @@ SwaggerUi.Views.ResourceView = Backbone.View.extend({
 
       operation.nickname = id;
       operation.parentId = this.model.id;
+      operation.definitions = this.model.definitions; // make Json Schema available for JSonEditor in this operation
       this.addOperation(operation);
     }
 
@@ -50,7 +52,7 @@ SwaggerUi.Views.ResourceView = Backbone.View.extend({
 
     // Render an operation and add it to operations li
     var operationView = new SwaggerUi.Views.OperationView({
-      model: operation,
+      model: $.extend(true,{},operation),
       router: this.router,
       tagName: 'li',
       className: 'endpoint',

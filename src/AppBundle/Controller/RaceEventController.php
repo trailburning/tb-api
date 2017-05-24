@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Model\APIResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Swagger\Annotations as SWG;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -9,6 +10,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Delete;
+use FOS\RestBundle\Controller\Annotations\View;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -43,6 +45,7 @@ class RaceEventController extends Controller implements ClassResourceInterface
      * )
      *
      * @Get("/raceevents/{id}")
+     * @View(serializerGroups={"raceEvent"})
      *
      * @param string $id
      *
@@ -93,6 +96,7 @@ class RaceEventController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(name="email", type="string", in="formData", description="The contact email of the race event"),
      *     @SWG\Parameter(name="coords", type="string", in="formData", description="The GPS coordinates of the race event in the format '(LNG, LAT)'", required="true"),
      *     @SWG\Parameter(name="location", type="string", in="formData", description="The location of the race event, will be determined from 'coords' if 'location' is not set", required=false),
+     *     @SWG\Parameter(name="type", type="string", in="formData", description="The type of the race event (road_run, trail_run)"),
      *     @SWG\Response(response=201, description="Successful operation. The Location header contains a link to the new race event.",
      *        @SWG\Header(header="location", type="string", description="Link to the new race event.")),
      *     @SWG\Response(response="400", description="Invalid data."),
@@ -107,7 +111,7 @@ class RaceEventController extends Controller implements ClassResourceInterface
     {
         $raceEventHandler = $this->get('app.handler.race_event');
 
-        return $raceEventHandler->handleCreateOrUpdate($request->request->all());;
+        return $raceEventHandler->handleCreateOrUpdate($request->request->all());
     }
 
     /**
@@ -124,6 +128,7 @@ class RaceEventController extends Controller implements ClassResourceInterface
      *     @SWG\Parameter(name="email", type="string", in="formData", description="The contact email of the race event"),
      *     @SWG\Parameter(name="coords", type="string", in="formData", description="The GPS coordinates of the race event in the format '(LNG, LAT)'"),
      *     @SWG\Parameter(name="location", type="string", in="formData", description="The location of the race event, will be determined from 'coords' if 'location' is not set", required=false),
+     *     @SWG\Parameter(name="type", type="string", in="formData", description="The type of the race event (road_run, trail_run)"), 
      *     @SWG\Response(response=204, description="Successful operation"),
      *     @SWG\Response(response="400", description="Invalid data."),
      * )

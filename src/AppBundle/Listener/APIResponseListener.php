@@ -5,6 +5,7 @@ namespace AppBundle\Listener;
 use AppBundle\Model\APIResponse;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use JMS\Serializer\SerializationContext;
 
 /**
  * Class APIResponseListener.
@@ -22,6 +23,9 @@ class APIResponseListener
         }
 
         $view = new View($apiResponse, $apiResponse->getStatusCode());
+        if (count($apiResponse->getResonseGroups()) > 0) {
+            $view->setSerializationContext(SerializationContext::create()->setGroups($apiResponse->getResonseGroups()));
+        }
         foreach ($apiResponse->getHeaders() as $name => $value) {
             $view->setHeader($name, $value);
         }

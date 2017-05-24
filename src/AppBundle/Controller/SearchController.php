@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Model\APIResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Swagger\Annotations as SWG;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -63,7 +64,7 @@ class SearchController extends Controller implements ClassResourceInterface
      *         type="integer",
      *     ),
      *     @SWG\Parameter(
-     *         description="Filter the search results by type. Valid options are: 'road'.",
+     *         description="Filter the search results by type. Valid options are: 'road_run', 'trail_run'.",
      *         in="query",
      *         name="type",
      *         type="string",
@@ -72,6 +73,12 @@ class SearchController extends Controller implements ClassResourceInterface
      *         description="Filter the search results by category. Valid options are: 'marathon', 'half_marathon', '10k', '5k'.",
      *         in="query",
      *         name="category",
+     *         type="string",
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Filter the search results by attribute ID, separate multiple attributes with comma.",
+     *         in="query",
+     *         name="attributes",
      *         type="string",
      *     ),
      *     @SWG\Parameter(
@@ -97,7 +104,11 @@ class SearchController extends Controller implements ClassResourceInterface
      *         in="query",
      *         name="offset",
      *         type="string",
-     *     ),    
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
      * )
      *
      * @Get("/search")

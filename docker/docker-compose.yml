@@ -18,7 +18,8 @@ php:
 
 postgres:
     container_name: tb_api_postgres
-    build: postgres
+    # build: postgres
+    image: camptocamp/postgis
     ports:
         - 5432:5432
     environment:
@@ -41,6 +42,8 @@ nginx:
 elasticsearch:
     container_name: tb_api_elasticsearch
     build: elasticsearch
+    environment:
+         - ES_JAVA_OPTS=-Xms2g -Xmx2g
     ports: 
         - 9200:9200
         

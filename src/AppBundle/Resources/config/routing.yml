@@ -13,6 +13,11 @@ race:
     type: rest
     prefix: /v2
 
+race_event_attributes:
+    resource: "AppBundle\Controller\RaceEventAttributeController"
+    type:  rest
+    prefix: /v2
+
 race_events:
     resource: "AppBundle\Controller\RaceEventController"
     type:  rest
@@ -20,32 +25,88 @@ race_events:
 
 default:
     resource: AppBundle\Controller\DefaultController
-    
+
 swagger:
     path:   /v2/swagger.json
     defaults: { _controller: AppBundle:Swagger:index, _format: json }
-    
+
 status:
     type:   rest
     resource: AppBundle\Controller\StatusController
     prefix: /v2
-    
+
 journeys:
     type:   rest
     resource: AppBundle\Controller\JourneysController
     prefix: /v2
-    
+
 events:
     type:   rest
     resource: AppBundle\Controller\EventsController
     prefix: /v2
-    
+
 assets:
     type:   rest
     resource: AppBundle\Controller\AssetsController
     prefix: /v2
-    
-medias:
+
+asset_medias:
     type:   rest
-    resource: AppBundle\Controller\MediaController
+    resource: AppBundle\Controller\AssetsMediaController
     prefix: /v2
+
+race_event_medias:
+    type:   rest
+    resource: AppBundle\Controller\RaceEventMediaController
+    prefix: /v2
+
+register:
+    type:   rest
+    resource: AppBundle\Controller\RegistrationController
+    prefix: /v2
+
+security:
+    type:   rest
+    resource: AppBundle\Controller\SecurityController
+    prefix: /v2
+
+profile:
+    type:   rest
+    resource: AppBundle\Controller\ProfileController
+    prefix: /v2
+
+restting:
+    type:   rest
+    resource: AppBundle\Controller\ResettingController
+    prefix: /v2
+
+race_event_completed:
+    type:   rest
+    resource: AppBundle\Controller\RaceEventCompletedController
+    prefix: /v2
+
+race_event_wishlist:
+    type:   rest
+    resource: AppBundle\Controller\RaceEventWishlistController
+    prefix: /v2
+
+race_event_doing:
+    type:   rest
+    resource: AppBundle\Controller\RaceEventDoingController
+    prefix: /v2
+
+fos_user_registration_confirm:
+    host: racebase.world
+    path: /register/confirm/{token}
+
+fos_user_registration_check_email:
+    host: racebase.world
+    path: /register/check
+
+fos_user_resetting_reset:
+    host: racebase.world
+    path: /reset/{token}
+
+fos_user_resetting_request:
+    host: racebase.world
+    path: /reset/request/

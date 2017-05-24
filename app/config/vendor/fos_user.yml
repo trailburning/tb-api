@@ -2,3 +2,27 @@ fos_user:
     db_driver: orm
     firewall_name: main
     user_class: AppBundle\Entity\User
+    registration:
+        form:
+            type: AppBundle\Form\Type\RegistrationFormType
+            name:  ''
+        confirmation:
+            enabled: true
+            template: Registration/email.twig
+    profile:
+        form:
+            type: AppBundle\Form\Type\ProfileFormType
+            name:  ''
+    resetting:
+        form:
+            type: AppBundle\Form\Type\ResettingFormType
+            name:  ''
+        email:
+          template: Resetting/email.twig
+    from_email:
+        address: hello@racebase.world
+        sender_name: RaceBase
+
+    service:
+        user_manager: app.security.user_manager
+        mailer: fos_user.mailer.twig_swift

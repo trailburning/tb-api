@@ -3,7 +3,7 @@
 namespace AppBundle\Handler;
 
 use Exception;
-use AppBundle\Response\APIResponse;
+use AppBundle\Model\APIResponse;
 use AppBundle\Services\APIResponseBuilder;
 use AppBundle\Repository\RaceRepository;
 use Symfony\Component\Form\FormFactoryInterface;

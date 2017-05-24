@@ -5,13 +5,14 @@ namespace AppBundle\Controller;
 use AppBundle\Model\APIResponse;
 use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Controller\Annotations\Get;
 
 class StatusController extends Controller
 {
+
     /**
      * @SWG\Get(
-     *     path="/",
+     *     path="/summary",
      *     summary="",
      *     tags={"Status"},
      *     produces={"application/json"},
@@ -20,11 +21,15 @@ class StatusController extends Controller
      *         description="successful operation",
      *     )
      * )
+    *
+    * @Get("/summary")
      *
      * @return APIResponse
      */
-    public function getAction()
+    public function getSummaryAction()
     {
-        return new APIResponse();
+        $handler = $this->get('app.handler.summary');
+
+        return $handler->handleGet();
     }
 }

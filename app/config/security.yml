@@ -20,12 +20,33 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        main:
-            anonymous: ~
-            # activate different ways to authenticate
+        api_login:
+            pattern:  ^/v2/user/login
+            stateless: true
+            anonymous: true
+            form_login:
+                check_path:               /v2/user/login
+                require_previous_session: false
+                username_parameter:       username
+                password_parameter:       password
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
 
-            # http_basic: ~
-            # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
+        api:
+            pattern:   ^/v2/user
+            stateless: true
+            anonymous: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
 
-            # form_login: ~
-            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+    access_control:
+        - { path: ^/v2/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/v2/user/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/v2/user/confirm, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/v2/user/password/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/v2/user/password/request, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/v2/user/profile, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/v2/user/connect, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/v2/user/latest, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/v2/user, roles: IS_AUTHENTICATED_FULLY }
