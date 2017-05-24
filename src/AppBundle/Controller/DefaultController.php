@@ -13,7 +13,7 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return new Response('Trailburning Journey API');
+        return new Response('Trailburning® Platform API');
     }
     
     /**

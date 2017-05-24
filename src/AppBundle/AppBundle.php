@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 /**
  * @SWG\Info(
  *   version="2.0",
- *   title="Trailburning Journey API",
+ *   title="Trailburning® Platform API",
  *   @SWG\Contact(
  *     name="Matt Allbuery",
  *     email="matt@trailburning.com",
