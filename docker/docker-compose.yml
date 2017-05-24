@@ -31,7 +31,7 @@ nginx:
     container_name: tb_api_nginx
     build: nginx
     ports:
-        - 80:80
+        - 8080:80
     links:
         - php
     volumes_from:
