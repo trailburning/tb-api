@@ -1,4 +1,4 @@
-# Trailburning Journey API
+# Trailburning® Platform API
 
 ## Installation
 
