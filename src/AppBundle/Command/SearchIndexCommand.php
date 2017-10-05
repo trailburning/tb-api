@@ -102,11 +102,19 @@ class SearchIndexCommand extends ContainerAwareCommand
         foreach ($regions as $region) {
             $coords = [floatval($region['lng']), floatval($region['lat'])];
             $doc = [
-                'suggest_text' => $region['name'],
                 'name' => $region['name'],
-                'coords' => $coords,
-                'bbox_radius' => $region['bbox_radius'],
-                'type' => $region['type'],
+                'suggest' => [
+                    'input' => [
+                        $this->createShingles($region['name']),
+                    ],
+                    'output' => $region['name'],
+                    'payload' => [
+                        'type' => $region['type'],
+                        'id' => $region['id'],
+                        'coords' => $coords,
+                        'bbox_radius' => $region['bbox_radius'],
+                    ],
+                ],
             ];
 
             $params = [
@@ -139,9 +147,17 @@ class SearchIndexCommand extends ContainerAwareCommand
         
         foreach ($raceEvents as $raceEvent) {
             $doc = [
-                'suggest_text' => $raceEvent->getName(),
                 'name' => $raceEvent->getName(),
-                'oid' => $raceEvent->getOid(),
+                'suggest' => [
+                    'input' => [
+                        $this->createShingles($raceEvent->getName()),
+                    ],
+                    'output' => $raceEvent->getName(),
+                    'payload' => [
+                        'type' => 'race_event',
+                        'id' => $raceEvent->getId() ,
+                    ],
+                ],
             ];
 
             $params = [
@@ -152,7 +168,28 @@ class SearchIndexCommand extends ContainerAwareCommand
             ];
             $this->client->index($params);
         }
-        
+
         $output->writeln(sprintf('%s document(s) were indexed for type "autosuggest_race_event"', count($raceEvents)));
+    }
+
+    private function createShingles($text)
+    {
+        $elements = explode(" ", $text);
+        $count = count($elements);
+        $shingleLength = 19;
+
+        if ($count > $shingleLength) {
+            $count = $count - $shingleLength  + 1;
+        } else {
+            $shingleLength = $count;
+        }
+        $shingles = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            $shingle = implode(" ", array_slice($elements, $i, $shingleLength));
+            $shingles[] = $shingle;
+        }
+
+        return $shingles;
     }
 }

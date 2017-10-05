@@ -204,7 +204,7 @@ class RaceEventCompleted
     /**
      * @return Datetime
      */
-    public function getTimestamp(): Datetime
+    public function getTimestamp()
     {
         return $this->timestamp;
     }
