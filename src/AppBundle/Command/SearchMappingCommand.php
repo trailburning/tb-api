@@ -112,7 +112,7 @@ class SearchMappingCommand extends ContainerAwareCommand
                         ],
                         'suggest' => [
                             'type' => 'completion',
-                            'index_analyzer' => 'simple',
+                            'analyzer' => 'simple',
                             'search_analyzer' => 'simple',
                             'payloads' => true,
                             'preserve_separators' => false,
