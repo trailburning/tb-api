@@ -104,9 +104,7 @@ class SearchIndexCommand extends ContainerAwareCommand
             $doc = [
                 'name' => $region['name'],
                 'suggest' => [
-                    'input' => [
-                        $this->createShingles($region['name']),
-                    ],
+                    'input' => $this->createShingles($region['name']),
                     'output' => $region['name'],
                     'payload' => [
                         'type' => $region['type'],
@@ -123,6 +121,8 @@ class SearchIndexCommand extends ContainerAwareCommand
                 'type' => 'location',
                 'id' => $region['id'],
             ];
+            var_export($params);
+            echo "\n\n";
             $this->client->index($params);
         }
         
@@ -149,9 +149,7 @@ class SearchIndexCommand extends ContainerAwareCommand
             $doc = [
                 'name' => $raceEvent->getName(),
                 'suggest' => [
-                    'input' => [
-                        $this->createShingles($raceEvent->getName()),
-                    ],
+                    'input' => $this->createShingles($raceEvent->getName()),
                     'output' => $raceEvent->getName(),
                     'payload' => [
                         'type' => 'race_event',
