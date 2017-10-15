@@ -121,8 +121,6 @@ class SearchIndexCommand extends ContainerAwareCommand
                 'type' => 'location',
                 'id' => $region['id'],
             ];
-            var_export($params);
-            echo "\n\n";
             $this->client->index($params);
         }
         
