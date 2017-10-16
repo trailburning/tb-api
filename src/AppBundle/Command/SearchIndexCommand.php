@@ -151,7 +151,7 @@ class SearchIndexCommand extends ContainerAwareCommand
                     'output' => $raceEvent->getName(),
                     'payload' => [
                         'type' => 'race_event',
-                        'id' => $raceEvent->getId() ,
+                        'id' => $raceEvent->getOid() ,
                     ],
                 ],
             ];
@@ -160,7 +160,7 @@ class SearchIndexCommand extends ContainerAwareCommand
                 'body' => $doc,
                 'index' => $indexName,
                 'type' => 'race_event',
-                'id' => $raceEvent->getId(),
+                'id' => $raceEvent->getOid(),
             ];
             $this->client->index($params);
         }
